@@ -1,18 +1,31 @@
 #!/bin/bash
 
-#SBATCH --time=24:00:00
-#SBATCH --cpus-per-task=128
-#SBATCH --gres=gpu:8
-#SBATCH --constraint=h100
-#SBATCH --job-name=trasformer_profiling_test
-#SBATCH --error=transformer_profiling_test.txt
-#SBATCH --output=transformer_profiling_test.txt
+#SBATCH --account=bebv-delta-gpu
+#SBATCH --time=4:00:00
+#SBATCH --cpus-per-task=1
+#SBATCH --ntasks=8
+#SBATCH --partition=gpuA100x4,gpuA100x8
+#SBATCH --gres=gpu:1
+#SBATCH --mem=16g
+#SBATCH --job-name=swinv2_profiling_small
+#SBATCH --error=output/swinv2_error_small.txt
+#SBATCH --output=output/swinv2_profiling_small.txt
+
+module load python
+module load anaconda3_gpu
+module load cuda
+
+# Initialize conda properly for bash script
+source $(conda info --base)/etc/profile.d/conda.sh
+
+conda deactivate
+conda activate mugi_profiling
+
+cd ~/mugi_profiling
 
 # Configuration files to process
-model_configs=("config/model_config/llama/llama_2_70b.yaml"
-               "config/model_config/llama/llama_3_70b.yaml"
-               "config/model_config/llama/llama_3_405b.yaml")
-nonlinear_config="config/nonlinear_config/nonlinear_config.yaml"
+model_configs=("config/model_config/swin/swinv2_small.yaml")
+nonlinear_config="config/nonlinear_config/taylor_config.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
@@ -33,14 +46,17 @@ for model_config in "${model_configs[@]}"; do
     # Run the transformer script with the current config
     python model_script.py --model_config "$model_config" \
                                 --nonlinear_config "$nonlinear_config" \
-                                --parameter_config "$parameter_config" #\
-                                #--hf_token "$hf_token"
+                                --parameter_config "$parameter_config"
+    
+    # Capture the exit code
+    exit_code=$?
     
     # Check if the script ran successfully
-    if [ $? -eq 0 ]; then
+    if [ $exit_code -eq 0 ]; then
         echo "✓ Successfully completed experiment with $model_config"
     else
-        echo "✗ Error occurred while running experiment with $model_config"
+        echo "✗ Error occurred while running experiment with $model_config (exit code: $exit_code)"
+        echo "Check swinv2_detailed_log.txt and swinv2_error.txt for details"
         echo "Continuing with next configuration..."
     fi
     

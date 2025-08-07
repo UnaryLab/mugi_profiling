@@ -7,53 +7,56 @@ import os
 # Edit segment_0 to set range (GeLU range is set on both sides ex. 4 = [-4, 4])
 
 class PWLGelu(CustomGelu):
-    def __init__(self, segments, segment_0, layer, device, profile_path, profile_dims, blocks=None, keys=None):
-        super(PWLGelu, self).__init__(layer, device, profile_path, profile_dims, blocks, keys)
-        self.segments = segments - 2
-        self.segment_0 = -segment_0
-        self.segment_f = segment_0
+    def __init__(self, segments, segment_0, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
+        super(PWLGelu, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
+        self.segments = torch.tensor(segments)
+        self.segment_0 = torch.tensor(-segment_0)
+        self.segment_f = torch.tensor(segment_0)
         self.device = device
 
         self.build_lut()
 
     def reset_lut(self, segments, segment_0):
-        self.segments = segments - 2
-        self.segment_0 = -segment_0
-        self.segment_f = segment_0
+        self.segments = torch.tensor(segments - 1)
+        self.segment_0 = torch.tensor(-segment_0)
+        self.segment_f = torch.tensor(segment_0)
 
         self.build_lut()
 
     def build_lut(self):
-        self.x_segments = torch.linspace(self.segment_0, self.segment_f, self.segments + 1, dtype = torch.bfloat16).to(self.device)
-        self.y_segments = torch.nn.functional.gelu(self.x_segments).to(self.device).to(torch.bfloat16)
-        mb = [self.ymxb(self.y_segments[i], self.y_segments[i+1], self.x_segments[i], self.x_segments[i+1]) for i in range(0, self.segments)]
-        self.m = torch.tensor([mb[i][0].item() for i in range(0, self.segments)], dtype=torch.bfloat16).to(self.device)
-        self.b = torch.tensor([mb[i][1].item() for i in range(0, self.segments)], dtype=torch.bfloat16).to(self.device)
-
-    def ymxb(self, y0, y1, x0, x1):
-        m = (y1 - y0) / (x1 - x0)
-        b = (y0 - m * x0)
-        return m, b
+        self.step = torch.abs(self.segment_f - self.segment_0) / (self.segments)
+        self.step = self.step.to(torch.float32)
     
     def nonlinear(self, x):
+        self.step = self.step.to(self.device)
+        self.segment_0 = self.segment_0.to(self.device)
+        self.segments = self.segments.to(self.device)
+
         x = x.to(torch.bfloat16)
 
-        segment_indices = torch.clamp(x, min=self.x_segments[0], max=self.x_segments[-2])
-        segment_indices = torch.bucketize(segment_indices, self.x_segments, right=True)
-        segment_indices -= 1
-        segment_indices = torch.clamp(segment_indices, 0, self.segments - 1)
-        
-        m = self.m[segment_indices]
-        b = self.b[segment_indices]
+        x_0 = x - self.segment_0
+        x_0.div_(self.step)
+        x_0.floor_()
+        x_0.clamp_(min=0, max=self.segments.item())
+        x_1 = x_0 + 1
+
+        x_0.mul_(self.step)
+        x_0.add_(self.segment_0)
+
+        x_1.mul_(self.step)
+        x_1.add_(self.segment_0)
+
+        y_1 = torch.nn.functional.gelu(x_1)
+        del x_1
+        y_0 = torch.nn.functional.gelu(x_0)
+
+        m = (y_1 - y_0) / self.step
+        del y_1
+        b = y_0 - m * x_0
+        del x_0, y_0
+
         gelu_output = m * x + b
-
-        # mask = (x.unsqueeze(-1) >= self.x_segments[:-1])
-        # coeffs = mask * (self.m.unsqueeze(0) * x.unsqueeze(-1) + self.b.unsqueeze(0))
-        # mask = mask.long().sum(dim=-1) - 1
-        # mask = torch.clamp(mask, 0, len(self.m)-1)
-
-        # gelu_output = torch.gather(coeffs, -1, mask.unsqueeze(-1)).squeeze(-1).to(torch.bfloat16)
-        gelu_output = torch.where(x < self.x_segments[0], 0, gelu_output).to(torch.bfloat16)
-        gelu_output = torch.where(x >= self.x_segments[-1], x, gelu_output).to(torch.bfloat16)
+        gelu_output[x < self.segment_0] = 0
+        gelu_output[x > self.segment_f] = x[x > self.segment_f]
 
         return gelu_output

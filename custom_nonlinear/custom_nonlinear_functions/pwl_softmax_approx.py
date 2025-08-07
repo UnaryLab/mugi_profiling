@@ -7,50 +7,62 @@ import os
 # Edit segment_0 to set range (softmax range is set from segment_0 to 0 ex. -20 = [-20, 0])
 
 class PWLSoftmax(CustomSoftmax):
-    def __init__(self, segments, segment_0, layer, device, profile_path, profile_dims, blocks=None, keys=None):
-        super(PWLSoftmax, self).__init__(layer, device, profile_path, profile_dims, blocks, keys)
-        self.segments = segments - 1
-        self.segment_0 = segment_0
-        self.segment_f = 0
+    def __init__(self, segments, segment_0, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
+        super(PWLSoftmax, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
+        self.segments = torch.tensor(segments)
+        self.segment_0 = torch.tensor(segment_0)
+        self.segment_f = torch.tensor(0.0)
         self.device = device
 
         self.build_lut()
 
     def reset_lut(self, segments, segment_0):
-        self.segments = segments - 1
-        self.segment_0 = -segment_0
-        self.segment_f = 0
+        self.segments = torch.tensor(segments)
+        self.segment_0 = torch.tensor(-segment_0)
+        self.segment_f = torch.tensor(0.0)
         self.build_lut()
 
     def build_lut(self):
-        self.x_segments = torch.linspace(self.segment_0, self.segment_f, self.segments + 1, dtype = torch.bfloat16).to(self.device)
-        self.y_segments = torch.exp(self.x_segments).to(self.device).to(torch.bfloat16)
-        mb = [self.ymxb(self.y_segments[i], self.y_segments[i+1], self.x_segments[i], self.x_segments[i+1]) for i in range(0, self.segments)]
-        self.m = torch.tensor([mb[i][0].item() for i in range(0, self.segments)], dtype=torch.bfloat16).to(self.device)
-        self.b = torch.tensor([mb[i][1].item() for i in range(0, self.segments)], dtype=torch.bfloat16).to(self.device)
-
-    def ymxb(self, y0, y1, x0, x1):
-        m = (y1 - y0) / (x1 - x0)
-        b = (y0 - m * x0)
-        return m, b
+        self.step = torch.abs(self.segment_f - self.segment_0) / (self.segments)
+        self.step = self.step.to(torch.float32)
     
     def nonlinear(self, attn_weights, dim=-1, dtype=torch.bfloat16):
+        self.step = self.step.to(self.device)
+        self.segment_0 = self.segment_0.to(self.device)
+        self.segments = self.segments.to(self.device)
+
         attn_weights = attn_weights.to(torch.bfloat16)
         attn_weights_max = torch.max(attn_weights, dim = dim, keepdim = True)[0]
         attn_weights = attn_weights - attn_weights_max
         del attn_weights_max
 
-        segment_indices = torch.clamp(attn_weights, min=self.x_segments[0], max=self.x_segments[-2])
-        segment_indices = torch.bucketize(segment_indices, self.x_segments, right=True)
-        segment_indices -= 1
-        segment_indices = torch.clamp(segment_indices, 0, self.segments - 1)
-        
-        m = self.m[segment_indices]
-        b = self.b[segment_indices]
-        attn_weights_exp = m * attn_weights + b
+        x = attn_weights - self.segment_0
+        x.div_(self.step)
+        x.floor_()
+        x.clamp_(min=0, max=self.segments.item())
+        x_1 = x + 1
 
-        attn_weights_exp = torch.where(attn_weights < self.x_segments[0], 0, attn_weights_exp)
-        attn_weights_exp = torch.where(attn_weights > self.x_segments[-1], self.m[-1] * attn_weights + self.b[-1], attn_weights_exp)
+        x.mul_(self.step)
+        x.add_(self.segment_0)
+
+        x_1.mul_(self.step)
+        x_1.add_(self.segment_0)
+
+        y_1 = torch.exp(x_1)
+        del x_1
+        y = torch.exp(x)
+
+        m = (y_1 - y) / self.step
+        del y_1
+        b = y - m * x
+        del x, y
+        
+        attn_weights_exp = m * attn_weights + b
+        del m, b
+        attn_mask = attn_weights < self.segment_0
+        del attn_weights
+
+        attn_weights_exp[attn_mask] = 0
         attn_weights = torch.sum(attn_weights_exp, dim = dim, keepdim = True)
         attn_weights = attn_weights_exp / attn_weights
         del attn_weights_exp

@@ -1,0 +1,4 @@
+[33m⚠️  Warning: 'huggingface-cli login' is deprecated. Use 'hf auth login' instead.[0m
+
+Running experiment with configuration: config/model_config/llama/llama_3_70b.yaml
+----------------------------------------

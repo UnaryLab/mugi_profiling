@@ -15,15 +15,17 @@ class VideoModel(InferenceModel):
 
     def load_model(self):
         self.processor = AutoProcessor.from_pretrained(self.model_name, use_fast=True)
-        self.model = AutoModelForVideoClassification.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map='auto', use_cache=False)
+        self.model = AutoModelForVideoClassification.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map='auto')
         self.num_frames = self.model.config.num_frames
         self.max_length = self.model.config.image_size
 
     def process_dataset(self):
-        self.subset = list(self.dataset.take(self.n_samples))
+        self.subset = list(self.dataset.take(int(self.n_samples * 1.5)))
         self.inputs = []
 
-        for example in self.subset:
+        for i, example in enumerate(self.subset):
+            if i >= self.n_samples:
+                break
             video_reader = VideoReader(io.BytesIO(example['video']), ctx=cpu(0))
             frames_array = video_reader.get_batch(range(min(self.num_frames, len(video_reader)))).asnumpy()
             
@@ -31,6 +33,8 @@ class VideoModel(InferenceModel):
             inputs = self.processor(frames_pil, return_tensors='pt')
 
             inputs["pixel_values"] = inputs["pixel_values"].to(torch.float16)
+            if inputs['pixel_values'].shape[1] != 32:
+                continue
             label = example["label"]
 
             processed_example = {
@@ -45,8 +49,8 @@ class VideoModel(InferenceModel):
         return self.total_loss / self.num_batches
 
     def compute_loss(self, batch):
-        pixel_values = torch.stack([ex["pixel_values"].squeeze(0) for ex in batch]).to(self.model.device).to(torch.float16)
-        labels = torch.stack([ex["labels"] for ex in batch]).squeeze(-1).to(self.model.device)
+        pixel_values = torch.stack([ex["pixel_values"].squeeze(0) for ex in batch]).to(self.device).to(torch.float16)
+        labels = torch.stack([ex["labels"] for ex in batch]).squeeze(-1).to(self.device)
         with torch.no_grad():
             outputs = self.model(pixel_values=pixel_values, labels=labels)
 

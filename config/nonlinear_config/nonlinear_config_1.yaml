@@ -1,0 +1,27 @@
+functions:
+  torch:
+    attention:
+      - softmax
+    ffn:
+      - silu
+      - gelu
+      - fast_gelu
+  vlp:
+    attention:
+      - softmax
+    ffn:
+      - silu
+      - gelu
+      - fast_gelu
+params:
+  vlp:
+    attention:
+      exp_dim: [8, 9, 10, 11, 12]
+      max_exp: [-4, -3, -2, -1, 0, 1, 2, 3, 4]
+      min_exp: [-4]
+      window_size: [256]
+      lut_build: ['max']
+    ffn:
+      exp_dim: [8, 9, 10, 11, 12]
+      max_pos_exp: [-4, -3, -2, -1, 0, 1, 2, 3, 4]
+      window_size: [256]

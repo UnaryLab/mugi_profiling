@@ -42,8 +42,8 @@ class VisionModel(InferenceModel):
         return self.total_loss / self.num_batches
     
     def compute_loss(self, batch):
-        pixel_values = torch.stack([ex["pixel_values"].squeeze(0) for ex in batch]).to(self.model.device).to(torch.float16)
-        labels = torch.stack([ex["labels"] for ex in batch]).squeeze(-1).to(self.model.device)
+        pixel_values = torch.stack([ex["pixel_values"].squeeze(0) for ex in batch]).to(self.device).to(torch.float16)
+        labels = torch.stack([ex["labels"] for ex in batch]).squeeze(-1).to(self.device)
         with torch.no_grad():
             outputs = self.model(pixel_values=pixel_values, labels=labels)
 

@@ -5,18 +5,20 @@ from custom_nonlinear.custom_approx import CustomSilu
 # Edit exp_dim to adjust the LUT size
 # Edit max exp to adjust the maximum exponent of the LUT
 class VLPSilu(CustomSilu):
-    def __init__(self, exp_dim, max_pos_exp, max_neg_exp, window_size, layer, device, profile_path, profile_dims, blocks=None, keys=None):
-        super(VLPSilu, self).__init__(layer, device, profile_path, profile_dims, blocks, keys)
+    def __init__(self, exp_dim, max_pos_exp, window_size, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
+        super(VLPSilu, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
         self.exp_dim = exp_dim
         self.max_pos_exp = max_pos_exp
-        self.max_neg_exp = max_neg_exp
+        self.max_neg_exp = max_pos_exp
         self.window_size = window_size
         self.build_lut()
 
-    def reset_lut(self, exp_dim, max_pos_exp, max_neg_exp, window_size):
+        self.mant_dim = 8
+
+    def reset_lut(self, exp_dim, max_pos_exp, window_size):
         self.exp_dim = exp_dim
         self.max_pos_exp = max_pos_exp
-        self.max_neg_exp = max_neg_exp
+        self.max_neg_exp = max_pos_exp
         self.window_size = window_size
         self.build_lut()
 
@@ -72,11 +74,13 @@ class VLPSilu(CustomSilu):
         # apply exp to create LUT
         self.neg_lut = torch.nn.functional.silu(lookup_table).to(torch.bfloat16).to(self.device)
 
-    def window_silu_approx(self, exp, mant):
+    def window_silu_approx(self, exp, mant, positive, negative):
         input_shape = exp.shape
 
         exp = exp.reshape(-1, input_shape[-1])
         mant = mant.reshape(-1, input_shape[-1])
+        positive = positive.reshape(-1, input_shape[-1])
+        negative = negative.reshape(-1, input_shape[-1])
 
         inter_shape = exp.shape
 
@@ -86,124 +90,109 @@ class VLPSilu(CustomSilu):
             padding_shape = [0] * len(exp.shape) * 2
             padding_shape[0] = padding
 
-            pos_padded_exp = torch.nn.functional.pad(exp, pad=tuple(padding_shape), value=1000)
-            neg_padded_exp = torch.nn.functional.pad(exp, pad=tuple(padding_shape), value=-1000)
-            pos_padded_mant = torch.nn.functional.pad(mant, pad=tuple(padding_shape), value=1000)
-            neg_padded_mant = torch.nn.functional.pad(mant, pad=tuple(padding_shape), value=-1000)
-        else:
-            pos_padded_exp = exp
-            neg_padded_exp = exp
-            pos_padded_mant = mant
-            neg_padded_mant = mant
+            exp = torch.nn.functional.pad(exp, pad=tuple(padding_shape), value=127)
+            mant = torch.nn.functional.pad(mant, pad=tuple(padding_shape), value=-128)
+            positive = torch.nn.functional.pad(positive, pad=tuple(padding_shape), value=False)
+            negative = torch.nn.functional.pad(negative, pad=tuple(padding_shape), value=False)
 
-        del exp, mant
-
-        pos_padded_exp = pos_padded_exp.reshape(pos_padded_exp.shape[0], pos_padded_exp.shape[1] // self.window_size, self.window_size)
-        neg_padded_exp = neg_padded_exp.reshape(neg_padded_exp.shape[0], neg_padded_exp.shape[1] // self.window_size, self.window_size)
-        pos_padded_mant = pos_padded_mant.reshape(pos_padded_mant.shape[0], pos_padded_mant.shape[1] // self.window_size, self.window_size)
-        neg_padded_mant = neg_padded_mant.reshape(neg_padded_mant.shape[0], neg_padded_mant.shape[1] // self.window_size, self.window_size)
+        exp = exp.reshape(inter_shape[0], inter_shape[1] // self.window_size, self.window_size)
+        mant = mant.reshape(inter_shape[0], inter_shape[1] // self.window_size, self.window_size)
+        positive = positive.reshape(inter_shape[0], inter_shape[1] // self.window_size, self.window_size)
+        negative = negative.reshape(inter_shape[0], inter_shape[1] // self.window_size, self.window_size)
 
         # calculate pos min and max windows
-        pos_max_exp_window = torch.max(pos_padded_exp, dim = -1, keepdim=True)[0].expand_as(pos_padded_exp)
-        pos_max_exp_window = torch.where(pos_max_exp_window > self.max_pos_exp, self.max_pos_exp, pos_max_exp_window)
+        pos_max_exp_window = torch.max(exp, dim = -1, keepdim=True)[0]
+        pos_max_exp_window[pos_max_exp_window > self.max_pos_exp] = self.max_pos_exp
         pos_min_exp_window = pos_max_exp_window - 7
-        pos_min_exp_window = torch.where(pos_min_exp_window < self.pos_min_exp, self.pos_min_exp, pos_min_exp_window)
+        pos_min_exp_window[pos_min_exp_window < self.pos_min_exp] = self.pos_min_exp
 
         # calculate neg min and max windows
-        neg_max_exp_window = torch.max(neg_padded_exp, dim = -1, keepdim=True)[0].expand_as(neg_padded_exp)
-        neg_max_exp_window = torch.clamp(neg_max_exp_window, max=self.max_neg_exp)
-        # cneg_max_exp_window = torch.where(neg_max_exp_window > self.max_neg_exp, self.max_neg_exp, neg_max_exp_window)
+        neg_max_exp_window = torch.max(exp, dim = -1, keepdim=True)[0]
+        neg_max_exp_window[neg_max_exp_window > self.max_neg_exp] = self.max_neg_exp
         neg_min_exp_window = neg_max_exp_window - 7
-        neg_min_exp_window = torch.clamp(neg_min_exp_window, min=self.neg_min_exp)
-        # neg_min_exp_window = torch.where(neg_min_exp_window < self.neg_min_exp, self.neg_min_exp, neg_min_exp_window)
+        neg_min_exp_window[neg_min_exp_window < self.neg_min_exp] = self.neg_min_exp
 
         # compare to pos min and max values
-        #pos_exp_window_max = torch.where(pos_padded_exp <= pos_max_exp_window, pos_padded_exp, pos_max_exp_window)
-        pos_exp_window = torch.clamp(pos_padded_exp, max=pos_max_exp_window, min=pos_min_exp_window)
-        #pos_exp_window = torch.where(pos_exp_window_max >= pos_min_exp_window, pos_exp_window_max, torch.where(pos_exp_window_max == -1000, pos_exp_window_max, pos_min_exp_window))
-        
-        pos_mant_window = torch.where(pos_padded_exp <= pos_max_exp_window, pos_padded_mant, 7)
-        pos_mant_window = torch.where(pos_padded_exp >= pos_min_exp_window, pos_mant_window, 0)
+        exp[positive] = torch.clamp(exp, max=pos_max_exp_window, min=pos_min_exp_window)[positive]
+        mant[positive] = torch.where(exp <= pos_max_exp_window, mant, self.mant_dim - 1)[positive]
+        mant[positive] = torch.where(exp >= pos_min_exp_window, mant, 0)[positive]
         
         # compare to pos min and max values
-        neg_exp_window = torch.clamp(neg_padded_exp, max=neg_max_exp_window, min=neg_min_exp_window)
-        # neg_exp_window_max = torch.where(neg_padded_exp <= neg_max_exp_window, neg_padded_exp, neg_max_exp_window)
-        # neg_exp_window = torch.where(neg_exp_window_max >= neg_min_exp_window, neg_exp_window_max, torch.where(neg_exp_window_max == -1000, neg_exp_window_max, neg_min_exp_window))
-        
-        neg_mant_window = torch.where(neg_padded_exp <= neg_max_exp_window, neg_padded_mant, 7)
-        neg_mant_window = torch.where(neg_padded_exp >= neg_min_exp_window, neg_mant_window, 0)
-
-        # adjust to index lut
-        pos_exp_window = pos_exp_window - self.pos_min_exp
-        neg_exp_window = neg_exp_window - self.neg_min_exp
+        exp[negative] = torch.clamp(exp, max=neg_max_exp_window, min=neg_min_exp_window)[negative]
+        mant[negative] = torch.where(exp <= neg_max_exp_window, mant, self.mant_dim - 1)[negative]
+        mant[negative] = torch.where(exp >= neg_min_exp_window, mant, 0)[negative]
 
         # Unpad and reshape tensors to original shape
-        pos_exp_window = pos_exp_window.view(-1, input_shape[-1])
-        pos_mant_window = pos_mant_window.view(-1, input_shape[-1])
-        neg_exp_window = neg_exp_window.view(-1, input_shape[-1])
-        neg_mant_window = neg_mant_window.view(-1, input_shape[-1])
+        exp = exp.view(*exp.shape[:-2], -1)
+        mant = mant.view(*mant.shape[:-2], -1)
 
-        pos_exp_window = pos_exp_window[:inter_shape[0], :]
-        pos_mant_window = pos_mant_window[:inter_shape[0], :]
-        neg_exp_window = neg_exp_window[:inter_shape[0], :]
-        neg_mant_window = neg_mant_window[:inter_shape[0], :]
+        exp = exp[:, -input_shape[-1]:]
+        mant = mant[:, -input_shape[-1]:]
 
-        pos_exp_window = pos_exp_window.view(*input_shape)
-        pos_mant_window = pos_mant_window.view(*input_shape)
-        neg_exp_window = neg_exp_window.view(*input_shape)
-        neg_mant_window = neg_mant_window.view(*input_shape)
+        exp = exp.view(-1, input_shape[-1])
+        mant = mant.view(-1, input_shape[-1])
 
-        return pos_exp_window, pos_mant_window, neg_exp_window, neg_mant_window
+        exp = exp[:inter_shape[0], :]
+        mant = mant[:inter_shape[0], :]
 
-    def lut_index(self, x, pos_exp, pos_mant, neg_exp, neg_mant, exp):
+        exp = exp.view(*input_shape)
+        mant = mant.view(*input_shape)
 
-        silu = torch.zeros_like(x, dtype=torch.bfloat16, device=self.device)
-        zero_tensor = torch.zeros_like(x, dtype=torch.bfloat16, device=self.device)
+        return exp, mant
 
-        # Masks
+    def nonlinear(self, x):
+        # self.pos_lut = self.pos_lut.to(self.device)
+        # self.neg_lut = self.neg_lut.to(self.device)
+        # Split exponent and signed mantissa, bitshift mantissa to 4 bits (assumes leading 0).
+        x = x.to(torch.bfloat16)
+
+        zero_mask = (x == 0)
         positive = (x > 0)
         negative = (x < 0)
+
+        mant, exp = torch.frexp(x)
+
+        exp = exp.to(torch.int8)
+
+        mant.mul_(16)
+        mant.round_()
+        mant.abs_()
+        mant = mant.to(torch.int8)
+
+        # Increment exponent where mantissa has overflow (i.e., mantissa is 16 / needs)
+        exp = torch.where(mant == 16, exp + 1, exp)
+        exp = torch.where(~zero_mask, exp - 1, exp)
+
         pos_exp_greater = positive & (exp > self.max_pos_exp)
         pos_exp_less = positive & (exp < self.pos_min_exp)
         neg_exp_greater = negative & (exp > self.max_neg_exp)
         neg_exp_less = negative & (exp < self.neg_min_exp)
-        zero_mask = (x == 0)
 
-        # Apply LUT index masks
-        silu[positive] = self.pos_lut[pos_exp[positive], pos_mant[positive]]
-        silu[negative] = self.neg_lut[neg_exp[negative], neg_mant[negative]]
+        # Convert mantissa to unsigned 3 bit integer
+        mant &= 0x7
+
+        exp, mant = self.window_silu_approx(exp, mant, positive, negative)
+
+        mant = mant.to(torch.bfloat16)
+        mant.div_(8).add_(1)
+        mant = torch.where(negative, mant * -1, mant)
+        mant[zero_mask] = 0
+
+        exp[zero_mask] = 0
+        exp = exp.to(torch.bfloat16)
+        exp = torch.pow(2, exp)
+
+        silu = mant * exp
+
+        del exp, mant
+
+        silu = torch.nn.functional.silu(silu)
 
         # Apply conditions for out of bounds values
         silu[pos_exp_greater] = x[pos_exp_greater]
-        silu[pos_exp_less] = zero_tensor[pos_exp_less]
-        silu[neg_exp_greater] = zero_tensor[neg_exp_greater]
-        silu[neg_exp_less] = zero_tensor[neg_exp_less]
-        silu[zero_mask] = zero_tensor[zero_mask]
-
-        return silu
-
-    def nonlinear(self, x):
-        # Split exponent and signed mantissa, bitshift mantissa to 4 bits (assumes leading 0).
-        x = x.to(torch.bfloat16)
-        mant, exp = torch.frexp(x)
-        mant = torch.round(mant * 16)
-
-        # Increment exponent where mantissa has overflow (i.e., mantissa is 16 / needs)
-        exp = torch.where(torch.abs(mant) == 16, exp + 1, exp)
-        exp = torch.where(x == 0, exp, exp - 1)
-
-        # Convert mantissa to unsigned 3 bit integer
-        mant = torch.abs(mant.to(torch.int32)) & 0x7
-
-        # Increase exponent size for stability
-        exp = exp.to(torch.int32)
-        mant = mant.to(torch.int32)
-
-        pos_exp, pos_mant, neg_exp, neg_mant = self.window_silu_approx(exp, mant)
-
-        pos_mant = pos_mant.to(torch.int32)
-        neg_mant = neg_mant.to(torch.int32)
-
-        silu = self.lut_index(x, pos_exp, pos_mant, neg_exp, neg_mant, exp)
+        silu[pos_exp_less] = 0
+        silu[neg_exp_greater] = 0
+        silu[neg_exp_less] = 0
+        silu[zero_mask] = 0
 
         return silu

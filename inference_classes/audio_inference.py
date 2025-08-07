@@ -110,8 +110,8 @@ class AudioModel(InferenceModel):
         return batch
 
     def compute_loss(self, batch):
-        input_features = batch["input_features"].to(self.model.device)
-        labels = batch["labels"].to(self.model.device)
+        input_features = batch["input_features"].to(self.device)
+        labels = batch["labels"].to(self.device)
         labels[labels == self.model.config.pad_token_id] = -100
         with torch.no_grad():
             outputs = self.model(input_features=input_features, labels=labels, use_cache=False)

@@ -1,0 +1,13 @@
+[33m⚠️  Warning: 'huggingface-cli login' is deprecated. Use 'hf auth login' instead.[0m
+
+Running experiment with configuration: config/model_config/swin/swinv2_base.yaml
+----------------------------------------
+Loading model
+Loading dataset
+Processing dataset
+Batching dataset
+Looping through configurations
+Saving results
+csv/microsoft/swinv2-base-patch4-window8-256/metric.csv
+✓ Successfully completed experiment with config/model_config/swin/swinv2_base.yaml
+----------------------------------------

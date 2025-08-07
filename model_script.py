@@ -2,6 +2,7 @@ import argparse
 import yaml
 import torch
 import os
+import pandas as pd
 
 from utils import huggingface_login, validate_config
 from inference_classes.audio_inference import AudioModel
@@ -32,11 +33,10 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict):
         
         inference_model.csv_file = f'csv/{inference_model.model_name}/metric.csv'
         if os.path.exists(inference_model.csv_file):
-            os.remove(inference_model.csv_file)
+            inference_model.df = pd.read_csv(inference_model.csv_file)
         else:
             os.makedirs(os.path.dirname(inference_model.csv_file), exist_ok=True)
-
-        inference_model.df = None
+            inference_model.df = None
 
         print('Loading model')
         inference_model.load_model()

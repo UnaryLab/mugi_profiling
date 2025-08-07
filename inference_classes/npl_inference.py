@@ -17,8 +17,8 @@ class NLPModel(InferenceModel):
             self.tokenizer.pad_token = self.tokenizer.eos_token
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map='auto', use_cache=False)
         self.max_length = self.model.config.max_position_embeddings
-        if self.max_length > 16384:
-            self.max_length = 16384
+        if self.max_length > 8192:
+            self.max_length = 8192
 
     def process_dataset(self):
         self.inputs = []
@@ -36,11 +36,12 @@ class NLPModel(InferenceModel):
                     self.inputs.append(tokenized_example)
 
     def batch_dataset(self):
-        assert self.n_samples % self.batch_size == 0, "Number of samples must be divisible by batch size."
-
         batched_data = []
         for i in range(0, self.n_samples, self.batch_size):
-            batch = self.inputs[i:i + self.batch_size]
+            if i + self.batch_size > self.n_samples:
+                batch = self.inputs[i:]
+            else:
+                batch = self.inputs[i:i + self.batch_size]
 
             batch_max_len = max(ex['input_ids'].shape[1] for ex in batch)
             padded_batch = []
@@ -71,9 +72,9 @@ class NLPModel(InferenceModel):
         return math.exp(self.total_loss / self.num_batches)
     
     def compute_loss(self, batch):
-        input_ids = torch.stack([ex["input_ids"] for ex in batch]).to(self.model.device)
-        attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).to(self.model.device).bool()
-        with torch.no_grad():
+        input_ids = torch.stack([ex["input_ids"] for ex in batch]).to(self.device)
+        attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).to(self.device).bool()
+        with torch.inference_mode():
             outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids, use_cache=False)
         del input_ids, attention_mask
         loss = outputs.loss

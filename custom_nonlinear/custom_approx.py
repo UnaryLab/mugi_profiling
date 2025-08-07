@@ -3,7 +3,7 @@ import os
 from transformers.activations import FastGELUActivation
 
 class CustomNonlinear(torch.nn.Module):
-    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None):
+    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         super(CustomNonlinear, self).__init__()
         self.layer = layer
         self.device = device
@@ -11,7 +11,8 @@ class CustomNonlinear(torch.nn.Module):
         self.profile_dims = profile_dims
         self.blocks = blocks
         self.keys = keys
-        if not os.path.exists(self.profile_path):
+        self.profile_tensors = profile
+        if not os.path.exists(self.profile_path) and self.profile_tensors:
             os.makedirs(self.profile_path, exist_ok=True)
 
     def process_tensor(self, tensor):
@@ -19,12 +20,25 @@ class CustomNonlinear(torch.nn.Module):
             tensor = tensor.to(torch.bfloat16)
         return tensor
 
+    def nonlinear_forward(self, *args, **kwargs):
+        return
+
+    def forward(self, *args, **kwargs):
+        #torch.cuda.reset_peak_memory_stats()
+        outputs = self.nonlinear_forward(*args, **kwargs)
+        #peak = torch.cuda.max_memory_allocated() / (2**20)
+        #print(f'{self.profile_path} {peak:.2f} MB\t{peak/(2**10):.2f} GB')
+        return outputs
+
     def index_tensor(self, tensor, dim, index):
         indexer = [slice(None)] * tensor.ndim
         indexer[dim] = index
         return tensor[tuple(indexer)]
 
     def profile(self, tensor, dim, profile_path, left_value_edge, right_value_edge, value_index):
+        if not self.profile_tensors:
+            return
+
         dim_len = tensor.shape[dim]
         if self.profile_dims == -1:
             self.profile_dims = [(dim_len - 1) // 4,
@@ -95,11 +109,11 @@ class CustomNonlinear(torch.nn.Module):
                 break
 
 class CustomSoftmax(CustomNonlinear):
-    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None):
+    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         profile_path += 'softmax/'
-        super().__init__(layer, device, profile_path, profile_dims, blocks, keys)
+        super().__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
 
-    def forward(self, attn_weights, dim=-1, dtype=torch.float32):
+    def nonlinear_forward(self, attn_weights, dim=-1, dtype=torch.float32):
         self.profile(attn_weights,
                      dim=dim,
                      profile_path='pre_softmax',
@@ -122,11 +136,11 @@ class CustomSoftmax(CustomNonlinear):
         return torch.nn.functional.softmax(attn_weights, dim=dim, dtype=dtype)
 
 class CustomSilu(CustomNonlinear):
-    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None):
+    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         profile_path += 'silu/'
-        super().__init__(layer, device, profile_path, profile_dims, blocks, keys)
-
-    def forward(self, x):
+        super().__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
+    
+    def nonlinear_forward(self, x):
         self.profile(x,
                      dim=1,
                      profile_path='pre_silu',
@@ -146,11 +160,11 @@ class CustomSilu(CustomNonlinear):
         return torch.nn.functional.silu(x)
 
 class CustomGelu(CustomNonlinear):
-    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None):
+    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         profile_path += 'gelu/'
-        super().__init__(layer, device, profile_path, profile_dims, blocks, keys)
+        super().__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
 
-    def forward(self, x):
+    def nonlinear_forward(self, x):
         self.profile(x,
                      dim=1,
                      profile_path='pre_gelu',
@@ -170,9 +184,9 @@ class CustomGelu(CustomNonlinear):
         return torch.nn.functional.gelu(x)
     
 class CustomFastGelu(CustomNonlinear):
-    def __init__(self, layer, device, profile_path, profile_dims, blocks=None):
+    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         profile_path += 'gelu/'
-        super().__init__(layer, device, profile_path, profile_dims, blocks)
+        super().__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
         self.fast_gelu = FastGELUActivation()
 
     def forward(self, x):

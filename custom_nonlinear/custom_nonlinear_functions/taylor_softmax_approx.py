@@ -8,9 +8,9 @@ import os
 # Edit degrees to adjust number of polynomial degrees
 
 class TaylorSoftmax(CustomSoftmax):
-    def __init__(self, degree_center, degrees, layer, device, profile_path, profile_dims, blocks=None, keys=None):
-        super(TaylorSoftmax, self).__init__(layer, device, profile_path, profile_dims, blocks, keys)
-        self.degree_center = degree_center
+    def __init__(self, degree_center, degrees, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
+        super(TaylorSoftmax, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
+        self.degree_center = torch.tensor(degree_center)
         self.degrees = degrees
         self.device = device
 
@@ -33,7 +33,7 @@ class TaylorSoftmax(CustomSoftmax):
                 fac = torch.tensor(math.factorial(i), dtype=torch.float64)
                 intermediate = intermediate / fac
                 exp += intermediate
-            exp *= (torch.e ** (self.degree_center))
+            exp *= torch.exp(self.degree_center)
             if exp <= 0.001 or prev_exp < exp or torch.isinf(exp):
                 break
             else:
@@ -42,24 +42,30 @@ class TaylorSoftmax(CustomSoftmax):
         self.x_neg = x_neg.to(torch.bfloat16)
 
     def taylor_exp(self, x):
-        exp = 0
+        self.x_neg = self.x_neg.to(self.device)
+        exp = torch.zeros_like(x, dtype=torch.bfloat16)
         for i in range(self.degrees + 1):
             intermediate = x - self.degree_center
-            intermediate = intermediate ** i
-            fac = torch.tensor(math.factorial(i), dtype=torch.float64)
-            intermediate = intermediate / fac
-            exp += intermediate
-        exp *= (torch.e ** (self.degree_center))
-        exp = torch.where(x < self.x_neg, torch.tensor(0.0, dtype=torch.bfloat16), exp)
+            intermediate.pow_(i)
+            inv_fac = torch.exp(-torch.lgamma(torch.tensor(i + 1)))
+            intermediate.mul_(inv_fac)
+            exp.add_(intermediate)
+        del inv_fac
+        del intermediate
+        exp_pow = torch.exp(self.degree_center)
+        exp.mul_(exp_pow)
+        exp[x < self.x_neg] = 0
+
         return exp
     
     def nonlinear(self, attn_weights, dim=-1, dtype=torch.bfloat16):
         attn_weights = attn_weights.to(torch.bfloat16)
         attn_weights_max = torch.max(attn_weights, dim = dim, keepdim = True)[0]
-        attn_weights_scaled = attn_weights - attn_weights_max
+        attn_weights = attn_weights - attn_weights_max
+        del attn_weights_max
 
-        attn_weights_exp = self.taylor_exp(attn_weights_scaled)
+        attn_weights = self.taylor_exp(attn_weights)
 
-        attn_weights_sum_exp = torch.sum(attn_weights_exp, dim = dim, keepdim = True)
-        softmax_output = attn_weights_exp / attn_weights_sum_exp
-        return softmax_output
+        attn_weights_sum = torch.sum(attn_weights, dim = dim, keepdim = True)
+        attn_weights = attn_weights / attn_weights_sum
+        return attn_weights

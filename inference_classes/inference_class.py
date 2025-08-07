@@ -51,6 +51,7 @@ class InferenceModel:
         self.ffn_op = self.nonlinear_parameters.get('ffn')
 
         self.n_samples = parameter_dict.get('n_samples', 1)
+        self.profile = parameter_dict.get('profile', False)
         self.batch_size = self.inference_parameters.get('batch_size', 1)
         
         # Initialize DataFrame for collecting results
@@ -66,11 +67,12 @@ class InferenceModel:
         return batch
 
     def batch_dataset(self):
-        assert self.n_samples % self.batch_size == 0, 'Number of samples must be divisible by batch size.'
-
         batched_data = []
         for i in range(0, self.n_samples, self.batch_size):
-            batch = self.inputs[i:i + self.batch_size]
+            if i + self.batch_size > self.n_samples:
+                batch = self.inputs[i:]
+            else:
+                batch = self.inputs[i:i + self.batch_size]
             batch = self.process_batch(batch)
             batched_data.append(batch)
         self.inputs = batched_data
@@ -132,7 +134,21 @@ class InferenceModel:
     def set_profiling_dims(self):
         self.profile_dims = -1
 
+    def memory_profiled_forward(self, forward_fn, mem_stats_dict, name):
+        def wrapper(*args, **kwargs):
+            torch.cuda.reset_peak_memory_stats()
+            result = forward_fn(*args, **kwargs)
+            peak = torch.cuda.max_memory_allocated() / (2**20)  # MB
+            mem_stats_dict[name] = peak
+            return result
+        return wrapper
+
     def patch_model(self, function_name, attention_parameters={}, ffn_parameters={}, patch_attention=True, patch_ffn=True):
+
+        if function_name == 'torch':
+            self.profile = True
+        else:
+            self.profile = False
 
         attention_keys = []
         if attention_parameters:
@@ -183,10 +199,10 @@ class InferenceModel:
 
         attn_path = f'{function_name}_{self.attn_op}' if patch_attention else f'torch_{self.attn_op}'
         ffn_path = f'{function_name}_{self.ffn_op}' if patch_ffn else f'torch_{self.ffn_op}'
-
         path = f'profile/{self.model_name}/{attn_path}_{ffn_path}/'
 
-        os.makedirs(path, exist_ok=True)
+        if self.profile:
+            os.makedirs(path, exist_ok=True)
 
         attention_parameters = attention_parameters if attention_parameters else {}
         ffn_parameters = ffn_parameters if ffn_parameters else {}
@@ -197,24 +213,24 @@ class InferenceModel:
                 if i == 0:
                     self.device = layer_device
 
-                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profiling_dims, keys=attention_keys)
-                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profiling_dims, keys=ffn_keys)
+                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profiling_dims, keys=attention_keys, profile=self.profile)
+                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profiling_dims, keys=ffn_keys, profile=self.profile)
                 eager_attn_fn = LlamaEager(nonlinear_object=attention_object)
                 forward = llama_forward(eager_attn_fn)
                 
                 layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
                 layer.mlp.act_fn = ffn_object
-        
+
         elif 'whisper' in self.model_name:
             for i, layer in enumerate(self.model.model.encoder.layers):
                 layer_device = next(layer.parameters()).device
                 if i == 0:
                     self.device = layer_device
-                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=attention_keys)
-                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=ffn_keys)
+                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=attention_keys,  profile=self.profile)
+                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=ffn_keys,  profile=self.profile)
                 eager_attn_fn = WhisperEager(nonlinear_object=attention_object)
                 forward = whisper_forward(eager_attn_fn)
-                
+
                 layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
                 layer.activation_fn = ffn_object
 
@@ -222,21 +238,22 @@ class InferenceModel:
                 layer_device = next(layer.parameters()).device
                 if i == 0:
                     self.device = layer_device
-                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.target_profiling_dims, keys=attention_keys)
-                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.target_profiling_dims, keys=ffn_keys)
+                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.target_profiling_dims, keys=attention_keys, profile=self.profile)
+                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.target_profiling_dims, keys=ffn_keys, profile=self.profile)
                 eager_attn_fn = WhisperEager(nonlinear_object=attention_object)
                 forward = whisper_forward(eager_attn_fn)
-                
+
                 layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
                 layer.activation_fn = ffn_object
+
         elif 'swinv2' in self.model_name:
             for i, block in enumerate(self.model.swinv2.encoder.layers):
                 for j, layer in enumerate(block.blocks):
                     layer_device = next(layer.parameters()).device
                     if i == 0:
                         self.device = layer_device
-                    attention_object = attention_class(**attention_parameters, layer=j, blocks=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys)
-                    ffn_object = ffn_class(**ffn_parameters, layer=j, blocks=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys)
+                    attention_object = attention_class(**attention_parameters, layer=j, blocks=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys, profile=self.profile)
+                    ffn_object = ffn_class(**ffn_parameters, layer=j, blocks=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys, profile=self.profile)
                     forward = swin_forward(attention_object)
                     
                     layer.attention.self.forward = types.MethodType(forward, layer.attention.self)
@@ -247,29 +264,16 @@ class InferenceModel:
                 layer_device = next(layer.parameters()).device
                 if i == 0:
                     self.device = layer_device
-                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys)
-                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys)
+                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys, profile=self.profile)
+                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys, profile=self.profile)
                 eager_attn_fn = VivitEager(nonlinear_object=attention_object)
                 forward = vivit_forward(eager_attn_fn)
 
                 layer.attention.attention.forward = types.MethodType(forward, layer.attention.attention)
                 layer.intermediate.intermediate_act_fn = ffn_object
-
         
-        torch.cuda.empty_cache()
-        # print('pre_inference')
-        # for i in range(torch.cuda.device_count()):
-        #     device = torch.device(f"cuda:{i}")
-        #     print(f"\n=== CUDA Device {i}: {torch.cuda.get_device_name(device)} ===")
-        #     print(torch.cuda.memory_summary(device=device, abbreviated=True))
-        # print()
         self.run_inference()
-        # print('post_inference')
-        # for i in range(torch.cuda.device_count()):
-        #     device = torch.device(f"cuda:{i}")
-        #     print(f"\n=== CUDA Device {i}: {torch.cuda.get_device_name(device)} ===")
-        #     print(torch.cuda.memory_summary(device=device, abbreviated=True))
-        # print()
+
         torch.cuda.empty_cache()
         gc.collect()
 
@@ -338,7 +342,7 @@ class InferenceModel:
                 elif (attn_op and not ffn_op) or (attn_op and ffn_op and not ffn_parameters):
                     patch_attention = True
                     if attention_parameters:
-                        for attention_combination attention_parameters:
+                        for attention_combination in attention_parameters:
                             self.patch_model(function_name, attention_parameters=attention_combination, patch_attention=patch_attention, patch_ffn=patch_ffn)
                     else:
                         self.patch_model(function_name, patch_attention=patch_attention, patch_ffn=patch_ffn)

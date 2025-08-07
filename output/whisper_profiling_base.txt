@@ -1,0 +1,14 @@
+[33m⚠️  Warning: 'huggingface-cli login' is deprecated. Use 'hf auth login' instead.[0m
+
+Running experiment with configuration: config/model_config/whisper/whisper_base.yaml
+----------------------------------------
+Loading model
+Loading dataset
+Processing dataset
+Batching dataset
+Looping through configurations
+Saving results
+csv/openai/whisper-base/metric.csv
+/u/dprice1/.cache/huggingface/hub/models--openai--whisper-base/snapshots/e37978b90ca9030d5170a5c07aadb050351a65bb
+✓ Successfully completed experiment with config/model_config/whisper/whisper_base.yaml
+----------------------------------------
