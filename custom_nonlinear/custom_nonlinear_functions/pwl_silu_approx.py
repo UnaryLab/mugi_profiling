@@ -46,14 +46,14 @@ class PWLSilu(CustomSilu):
         x_1.mul_(self.step)
         x_1.add_(self.segment_0)
 
-        y_1 = torch.nn.functional.silu(x_1)
+        m = torch.nn.functional.silu(x_1)
         del x_1
-        y_0 = torch.nn.functional.silu(x_0)
+        b = torch.nn.functional.silu(x_0)
 
-        m = (y_1 - y_0) / self.step
-        del y_1
-        b = y_0 - m * x_0
-        del x_0, y_0
+        m.sub_(b)
+        m.div_(self.step)
+        b.sub_(m * x_0)
+        del x_0
 
         silu_output = m * x + b
         silu_output[x < self.segment_0] = 0

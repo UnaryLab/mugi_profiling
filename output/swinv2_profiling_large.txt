@@ -1,0 +1,8 @@
+[33m⚠️  Warning: 'huggingface-cli login' is deprecated. Use 'hf auth login' instead.[0m
+
+Running experiment with configuration: config/model_config/swin/swinv2_large.yaml
+----------------------------------------
+✗ Error occurred while running experiment with config/model_config/swin/swinv2_large.yaml (exit code: 1)
+Check swinv2_detailed_log.txt and swinv2_error.txt for details
+Continuing with next configuration...
+----------------------------------------

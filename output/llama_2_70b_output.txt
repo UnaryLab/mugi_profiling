@@ -3,3 +3,7 @@
 Running experiment with configuration: config/model_config/llama/llama_2_70b.yaml
 ----------------------------------------
 Loading model
+Loading dataset
+Processing dataset
+Batching dataset
+Looping through configurations

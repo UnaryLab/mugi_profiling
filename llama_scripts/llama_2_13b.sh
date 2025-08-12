@@ -24,7 +24,7 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_configs=("config/model_config/llama/llama_2_13b.yaml")
-nonlinear_config="config/nonlinear_config/nonlinear_config_2.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_taylor_softmax.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 

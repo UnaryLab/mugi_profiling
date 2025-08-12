@@ -4,6 +4,7 @@ import gc
 import shutil
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from huggingface_hub import snapshot_download
+import os
 
 from inference_classes.inference_class import InferenceModel
 
@@ -15,10 +16,14 @@ class NLPModel(InferenceModel):
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map='auto', use_cache=False)
+
+        if '405' in self.model_name:
+            self.model = AutoModelForCausalLM.from_pretrained(self.model_name, offload_folder=None, offload_state_dict=True, torch_dtype=torch.float16, attn_implementation='eager', device_map='auto', use_cache=False)
+        else:
+            self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map='auto', use_cache=False)
         self.max_length = self.model.config.max_position_embeddings
-        if self.max_length > 8192:
-            self.max_length = 8192
+        if self.max_length > 4096:
+            self.max_length = 4096
 
     def process_dataset(self):
         self.inputs = []

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #SBATCH --account=bebv-delta-gpu
-#SBATCH --time=1:00:00
-#SBATCH --cpus-per-task=8
+#SBATCH --time=12:00:00
+#SBATCH --cpus-per-task=32
 #SBATCH --partition=gpuH200x8
 #SBATCH --gres=gpu:2
-#SBATCH --mem=16g
+#SBATCH --mem=32g
 #SBATCH --job-name=llama_3_8b_profiling
 #SBATCH --error=output/llama_3_8b_error.txt
 #SBATCH --output=output/llama_3_8b_output.txt
@@ -24,7 +24,7 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_configs=("config/model_config/llama/llama_3_8b.yaml")
-nonlinear_config="config/nonlinear_config/nonlinear_test.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_vlp_attention.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 

@@ -7,3 +7,7 @@ Loading dataset
 Processing dataset
 Batching dataset
 Looping through configurations
+Saving results
+csv/meta-llama/Llama-2-13b-hf/metric.csv
+✓ Successfully completed experiment with config/model_config/llama/llama_2_13b.yaml
+----------------------------------------

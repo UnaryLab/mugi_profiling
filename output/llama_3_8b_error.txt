@@ -1,34 +1,15 @@
 A conda environment has been detected CONDA_PREFIX=
-/sw/external/python/anaconda3 anaconda3_gpu is loaded. Consider running conda deactivate and reloading it.
+/sw/external/python/anaconda3 
+anaconda3_gpu is loaded. Consider running conda deactivate and reloading it.
 The token has not been saved to the git credentials helper. Pass `add_to_git_credential=True` in this function directly or `--add-to-git-credential` if using via `hf`CLI if you want to set the git credential as well.
 Token is valid (permission: read).
-The token `newton_cluster` has been saved to /u/dprice1/.cache/huggingface/stored_tokens
-Traceback (most recent call last):
-  File "/u/dprice1/.conda/envs/mugi_profiling/bin/huggingface-cli", line 8, in <module>
-    sys.exit(main())
-             ~~~~^^
-  File "/u/dprice1/.conda/envs/mugi_profiling/lib/python3.13/site-packages/huggingface_hub/commands/huggingface_cli.py", line 61, in main
-    service.run()
-    ~~~~~~~~~~~^^
-  File "/u/dprice1/.conda/envs/mugi_profiling/lib/python3.13/site-packages/huggingface_hub/commands/user.py", line 113, in run
-    login(
-    ~~~~~^
-        token=self.args.token,
-        ^^^^^^^^^^^^^^^^^^^^^^
-        add_to_git_credential=self.args.add_to_git_credential,
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "/u/dprice1/.conda/envs/mugi_profiling/lib/python3.13/site-packages/huggingface_hub/utils/_deprecation.py", line 101, in inner_f
-    return f(*args, **kwargs)
-  File "/u/dprice1/.conda/envs/mugi_profiling/lib/python3.13/site-packages/huggingface_hub/utils/_deprecation.py", line 31, in inner_f
-    return f(*args, **kwargs)
-  File "/u/dprice1/.conda/envs/mugi_profiling/lib/python3.13/site-packages/huggingface_hub/_login.py", line 126, in login
-    _login(token, add_to_git_credential=add_to_git_credential)
-    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/u/dprice1/.conda/envs/mugi_profiling/lib/python3.13/site-packages/huggingface_hub/_login.py", line 412, in _login
-    _set_active_token(token_name=token_name, add_to_git_credential=add_to_git_credential)
-    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/u/dprice1/.conda/envs/mugi_profiling/lib/python3.13/site-packages/huggingface_hub/_login.py", line 457, in _set_active_token
-    raise ValueError(f"Token {token_name} not found in {constants.HF_STORED_TOKENS_PATH}")
-ValueError: Token newton_cluster not found in /u/dprice1/.cache/huggingface/stored_tokens
+The token `newton_cluster` has been saved to /projects/bebv/dprice1/huggingface/stored_tokens
+Your token has been saved to /projects/bebv/dprice1/huggingface/token
+Login successful.
+The current active token is: `newton_cluster`
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:  25%|██▌       | 1/4 [00:00<00:00,  5.60it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 22.37it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:47<02:21, 47.00s/it]Loading checkpoint shards:  50%|█████     | 2/4 [01:34<01:34, 47.13s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [02:19<00:46, 46.45s/it]Loading checkpoint shards: 100%|██████████| 4/4 [02:31<00:00, 32.60s/it]Loading checkpoint shards: 100%|██████████| 4/4 [02:31<00:00, 37.81s/it]
+Patching configurations:   0%|          | 0/1 [00:00<?, ?it/s]
+Processing torch combinations:   0%|          | 0/1 [00:00<?, ?it/s][A
+Processing torch combinations: 100%|██████████| 1/1 [01:49<00:00, 109.83s/it][AProcessing torch combinations: 100%|██████████| 1/1 [01:49<00:00, 109.83s/it]
+Patching configurations: 100%|██████████| 1/1 [01:49<00:00, 109.83s/it]Patching configurations: 100%|██████████| 1/1 [01:49<00:00, 109.83s/it]

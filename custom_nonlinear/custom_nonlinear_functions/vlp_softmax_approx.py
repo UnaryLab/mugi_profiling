@@ -165,14 +165,14 @@ class VLPSoftmax(CustomSoftmax):
         mant.mul_(-1)
 
         #exponentials = torch.ldexp(mant, exp)
-        exponentials = mant * exp
-        exponentials.exp_()
+        attn_weights = mant * exp
+        attn_weights.exp_()
 
-        exponentials[~attn_mask] = 1
-        exponentials[max_exp_mask] = 0
+        attn_weights[~attn_mask] = 1
+        attn_weights[max_exp_mask] = 0
 
         # Calculate softmax output
-        attn_weights = torch.sum(exponentials, dim = dim, keepdim = True)
-        attn_weights = exponentials / attn_weights
+        attn_weights_sum = torch.sum(attn_weights, dim = dim, keepdim = True)
+        attn_weights.div_(attn_weights_sum)
 
         return attn_weights

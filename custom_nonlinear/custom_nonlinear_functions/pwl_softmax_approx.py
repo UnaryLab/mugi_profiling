@@ -33,7 +33,7 @@ class PWLSoftmax(CustomSoftmax):
 
         attn_weights = attn_weights.to(torch.bfloat16)
         attn_weights_max = torch.max(attn_weights, dim = dim, keepdim = True)[0]
-        attn_weights = attn_weights - attn_weights_max
+        attn_weights.sub_(attn_weights_max)
         del attn_weights_max
 
         x = attn_weights - self.segment_0
@@ -48,23 +48,25 @@ class PWLSoftmax(CustomSoftmax):
         x_1.mul_(self.step)
         x_1.add_(self.segment_0)
 
-        y_1 = torch.exp(x_1)
+        m = torch.exp(x_1)
         del x_1
-        y = torch.exp(x)
+        b = torch.exp(x)
 
-        m = (y_1 - y) / self.step
-        del y_1
-        b = y - m * x
-        del x, y
+        m.sub_(b)
+        m.div_(self.step)
+        b.sub_(m * x)
+        del x
         
-        attn_weights_exp = m * attn_weights + b
-        del m, b
         attn_mask = attn_weights < self.segment_0
-        del attn_weights
+        attn_weights.mul_(m)
+        attn_weights.add_(b)
+        #attn_weights = m * attn_weights + b
+        del m, b
 
-        attn_weights_exp[attn_mask] = 0
-        attn_weights = torch.sum(attn_weights_exp, dim = dim, keepdim = True)
-        attn_weights = attn_weights_exp / attn_weights
-        del attn_weights_exp
+        attn_weights[attn_mask] = 0
+        del attn_mask
+
+        attn_weights_sum = torch.sum(attn_weights, dim = dim, keepdim = True)
+        attn_weights.div_(attn_weights_sum)
 
         return attn_weights

@@ -32,7 +32,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict):
             raise ValueError(f"Unsupported modality: {modality}")
         
         inference_model.csv_file = f'csv/{inference_model.model_name}/metric.csv'
-        if os.path.exists(inference_model.csv_file):
+        if os.file.exists(inference_model.csv_file):
             inference_model.df = pd.read_csv(inference_model.csv_file)
         else:
             os.makedirs(os.path.dirname(inference_model.csv_file), exist_ok=True)

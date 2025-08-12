@@ -44,6 +44,7 @@ class TaylorSoftmax(CustomSoftmax):
     def taylor_exp(self, x):
         self.x_neg = self.x_neg.to(self.device)
         exp = torch.zeros_like(x, dtype=torch.bfloat16)
+        
         for i in range(self.degrees + 1):
             intermediate = x - self.degree_center
             intermediate.pow_(i)
@@ -52,9 +53,13 @@ class TaylorSoftmax(CustomSoftmax):
             exp.add_(intermediate)
         del inv_fac
         del intermediate
+
+        zero_mask = x < self.x_neg
+        del x
+
         exp_pow = torch.exp(self.degree_center)
         exp.mul_(exp_pow)
-        exp[x < self.x_neg] = 0
+        exp[zero_mask] = 0
 
         return exp
     
@@ -67,5 +72,5 @@ class TaylorSoftmax(CustomSoftmax):
         attn_weights = self.taylor_exp(attn_weights)
 
         attn_weights_sum = torch.sum(attn_weights, dim = dim, keepdim = True)
-        attn_weights = attn_weights / attn_weights_sum
+        attn_weights.div_(attn_weights_sum)
         return attn_weights
