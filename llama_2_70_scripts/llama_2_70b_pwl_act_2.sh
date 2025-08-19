@@ -3,7 +3,7 @@
 #SBATCH --time=8:00:00
 #SBATCH --cpus-per-task=32
 #SBATCH --gres=gpu:8
-#SBATCH --constraint=h100
+#SBATCH --partition=highgpu
 #SBATCH --job-name=llama_2_70b_profiling
 #SBATCH --error=error/llama_2/llama_2_70b_error.txt
 #SBATCH --output=output/llama_2/llama_2_70b_output.txt
