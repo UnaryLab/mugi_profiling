@@ -1,27 +1,35 @@
-#!/bin/bash -l
+#!/bin/bash
 
 #SBATCH --time=8:00:00
 #SBATCH --cpus-per-task=32
 #SBATCH --gres=gpu:2
 #SBATCH --constraint=h100
-#SBATCH --job-name=llama_2_13b_profiling
-#SBATCH --error=error/llama_2/llama_2_13b_error.txt
-#SBATCH --output=output/llama_2/llama_2_13b_output.txt
+#SBATCH --job-name=llama_3_8b_profiling
+#SBATCH --error=error/llama_3/llama_2_8b_error.txt
+#SBATCH --output=output/llama_3/llama_2_8b_output.txt
 
 module load python
 module load anaconda
 module load cuda
 
 # Initialize conda properly for bash script
-#source $(conda info --base)/etc/profile.d/conda.sh
+source $(conda info --base)/etc/profile.d/conda.sh
 
-#conda activate mugi_profiling
+conda deactivate
+conda activate mugi_profiling
 
 cd ~/mugi_profiling
 
 # Configuration files to process
-model_configs=("config/model_config/llama/llama_2_13b.yaml")
-nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_ffn.yaml"
+model_configs=("config/model_config/llama/llama_3_8b.yaml")
+nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_mobilenet_activation.yaml"
+# nonlinear_config="config/nonlinear_config/large_model_configs/vlp_softmax_2.yaml"
+# nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_attn_1.yaml"
+# nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_attn_2.yaml"
+# nonlinear_config="config/nonlinear_config/large_model_configs/vlp_activation_1.yaml"
+# nonlinear_config="config/nonlinear_config/large_model_configs/vlp_activation_2.yaml"
+# nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_ffn_1.yaml"
+# nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_ffn_2.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
@@ -40,7 +48,7 @@ for model_config in "${model_configs[@]}"; do
     fi
     
     # Run the transformer script with the current config
-    conda run -n mugi_profiling python model_script.py --model_config "$model_config" \
+    python model_script.py --model_config "$model_config" \
                                 --nonlinear_config "$nonlinear_config" \
                                 --parameter_config "$parameter_config"
     
