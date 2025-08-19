@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 #SBATCH --time=8:00:00
 #SBATCH --cpus-per-task=32
