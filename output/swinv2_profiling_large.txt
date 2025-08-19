@@ -2,7 +2,12 @@
 
 Running experiment with configuration: config/model_config/swin/swinv2_large.yaml
 ----------------------------------------
-✗ Error occurred while running experiment with config/model_config/swin/swinv2_large.yaml (exit code: 1)
-Check swinv2_detailed_log.txt and swinv2_error.txt for details
-Continuing with next configuration...
+Loading model
+Loading dataset
+Processing dataset
+Batching dataset
+Looping through configurations
+Saving results
+csv/microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft/metric.csv
+✓ Successfully completed experiment with config/model_config/swin/swinv2_large.yaml
 ----------------------------------------

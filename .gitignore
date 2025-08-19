@@ -1,6 +1,4 @@
 # Ignore profiling data
-profile/
-
 # Ignore result outputs
 results/
 
@@ -10,3 +8,6 @@ null/
 *.pyc
 *.pyo
 *.pyd
+ profile/*
+
+ */profile
