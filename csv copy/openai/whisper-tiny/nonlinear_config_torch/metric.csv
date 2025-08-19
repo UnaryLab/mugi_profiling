@@ -1,0 +1,2 @@
+model,modality,value,function_name,patch_attention,patch_ffn,attn_fn,ffn_fn
+openai/whisper-tiny,audio,22.232662691545976,torch,True,False,CustomSoftmax,CustomGelu
