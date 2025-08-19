@@ -24,7 +24,7 @@ cd ~/mugi_profiling
 model_configs=("config/model_config/llama/llama_2_70b.yaml")
 #nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_ffn_2.yaml"
 #nonlinear_config="config/nonlinear_config/large_model_configs/pwl_softmax_2.yaml"
-nonlinear_config="config/nonlinear_config/large_model_configs/pwl_softmax_2.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/vlp_activation_1.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
