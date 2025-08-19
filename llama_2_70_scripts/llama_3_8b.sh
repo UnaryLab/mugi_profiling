@@ -22,7 +22,7 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_configs=("config/model_config/llama/llama_3_8b.yaml")
-nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_mobilenet_activation.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_attn.yaml"
 # nonlinear_config="config/nonlinear_config/large_model_configs/vlp_softmax_2.yaml"
 # nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_attn_1.yaml"
 # nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_attn_2.yaml"
