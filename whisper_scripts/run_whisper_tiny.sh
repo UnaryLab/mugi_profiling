@@ -25,7 +25,7 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_configs=("config/model_config/whisper/whisper_tiny.yaml")
-nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_torch.yaml"
+nonlinear_config="config/nonlinear_config/nonlinear_config.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
