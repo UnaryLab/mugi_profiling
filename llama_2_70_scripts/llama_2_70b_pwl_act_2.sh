@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#SBATCH --account=bebv-delta-gpu
 #SBATCH --time=8:00:00
 #SBATCH --cpus-per-task=64
 #SBATCH --partition=gpuH200x8
