@@ -258,5 +258,5 @@ def whisper_forward(whisper_eager):
         attn_output = attn_output.reshape(bsz, tgt_len, -1).contiguous()
         attn_output = self.out_proj(attn_output)
 
-        return attn_output, attn_weights, _
+        return attn_output, attn_weights, (past_key_value,) if past_key_value is not None else None
     return forward
