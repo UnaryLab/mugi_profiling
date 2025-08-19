@@ -45,7 +45,7 @@ class CustomNonlinear(torch.nn.Module):
                                  (dim_len - 1) // 2,
                                  (dim_len - 1)]
 
-        tensor = self.process_tensor(tensor)
+        #tensor = self.process_tensor(tensor)
         tensor_dim = tensor.shape[dim]
         break_loop = False
         for i, save_dim in enumerate(self.profile_dims):
@@ -56,12 +56,11 @@ class CustomNonlinear(torch.nn.Module):
             else:
                 write_dim = save_dim
             values = self.index_tensor(tensor, dim, save_dim).contiguous()
-
             mant, exp = torch.frexp(values)
             del mant
-
-            exp = torch.where(exp != 0, exp + 128, exp).flatten()
-            exp_count = torch.bincount(exp, minlength=256)
+            exp = torch.where(values != 0, exp + 16, exp + 15).flatten()
+            exp = torch.clamp(exp, min=0, max=31)
+            exp_count = torch.bincount(exp, minlength=32)
             del exp
 
             value_edges = torch.arange(right_value_edge, left_value_edge, value_index).flip(0).to(self.device)
@@ -117,8 +116,8 @@ class CustomSoftmax(CustomNonlinear):
         self.profile(attn_weights,
                      dim=dim,
                      profile_path='pre_softmax',
-                     left_value_edge=-20.25,
-                     right_value_edge=20,
+                     left_value_edge=-20.05,
+                     right_value_edge=0,
                      value_index=-0.05)
         original_dtype = attn_weights.dtype
         attn_weights = self.nonlinear(attn_weights, dim=dim, dtype=dtype)
@@ -127,7 +126,7 @@ class CustomSoftmax(CustomNonlinear):
         self.profile(attn_weights,
                      dim=dim,
                      profile_path='post_softmax',
-                     left_value_edge=-20.25,
+                     left_value_edge=-20.05,
                      right_value_edge=0,
                      value_index=-0.05)
         return attn_weights
@@ -144,14 +143,14 @@ class CustomSilu(CustomNonlinear):
         self.profile(x,
                      dim=1,
                      profile_path='pre_silu',
-                     left_value_edge=-10.25,
+                     left_value_edge=-10.05,
                      right_value_edge=10,
                      value_index=-0.05)
         x = self.nonlinear(x).to(x.dtype)
         self.profile(x,
                      dim=1,
                      profile_path='post_silu',
-                     left_value_edge=-10.25,
+                     left_value_edge=-10.05,
                      right_value_edge=10,
                      value_index=-0.05)
         return x
@@ -168,14 +167,14 @@ class CustomGelu(CustomNonlinear):
         self.profile(x,
                      dim=1,
                      profile_path='pre_gelu',
-                     left_value_edge=-10.25,
+                     left_value_edge=-10.05,
                      right_value_edge=10,
                      value_index=-0.05)
         x = self.nonlinear(x).to(x.dtype)
         self.profile(x,
                      dim=1,
                      profile_path='post_gelu',
-                     left_value_edge=-10.25,
+                     left_value_edge=-10.05,
                      right_value_edge=10,
                      value_index=-0.05)
         return x
@@ -193,14 +192,14 @@ class CustomFastGelu(CustomNonlinear):
         self.profile(x,
                      dim=1,
                      profile_path='pre_gelu',
-                     left_value_edge=-10.25,
+                     left_value_edge=-10.05,
                      right_value_edge=10,
                      value_index=-0.05)
         x = self.nonlinear(x).to(x.dtype)
         self.profile(x,
                      dim=1,
                      profile_path='post_gelu',
-                     left_value_edge=-10.25,
+                     left_value_edge=-10.05,
                      right_value_edge=10,
                      value_index=-0.05)
         return x

@@ -12,10 +12,12 @@ from inference_classes.vision_inference import VisionModel
 
 token = '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'
 
-def evaluate_model(model_dict, nonlinear_dict, parameter_dict):
+def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # Validate configurations
     modality = validate_config(model_dict, nonlinear_dict, parameter_dict)
+
+    nonlinear_config_path = nonlinear_config_path.split('/')[-1].split('.')[0]
 
     inference_model = None
     try:
@@ -31,7 +33,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict):
         else:
             raise ValueError(f"Unsupported modality: {modality}")
         
-        inference_model.csv_file = f'csv/{inference_model.model_name}/metric.csv'
+        inference_model.csv_file = f'csv/{inference_model.model_name}/{nonlinear_config_path}/metric.csv'
         if os.path.exists(inference_model.csv_file):
             inference_model.df = pd.read_csv(inference_model.csv_file)
         else:
@@ -78,7 +80,7 @@ def main():
     nonlinear_config = yaml.safe_load(open(args.nonlinear_config))
     parameter_config = yaml.safe_load(open(args.parameter_config))
 
-    evaluate_model(model_config, nonlinear_config, parameter_config)
+    evaluate_model(model_config, nonlinear_config, parameter_config, args.nonlinear_config)
 
 
 if __name__ == '__main__':

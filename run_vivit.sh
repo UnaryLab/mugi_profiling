@@ -7,8 +7,8 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=16g
 #SBATCH --job-name=vivit_profiling
-#SBATCH --error=output/vivit_error.txt
-#SBATCH --output=output/vivit_profiling.txt
+#SBATCH --error=error/vivit/vivit_error.txt
+#SBATCH --output=output/vivit/vivit_profiling.txt
 
 module load python
 module load anaconda3_gpu
@@ -24,7 +24,7 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_configs=("config/model_config/vivit/vivit-b-16x2.yaml")
-nonlinear_config="config/nonlinear_config/taylor_config.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_torch.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 

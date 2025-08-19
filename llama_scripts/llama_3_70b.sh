@@ -1,14 +1,14 @@
 #!/bin/bash
 
 #SBATCH --account=bebv-delta-gpu
-#SBATCH --time=12:00:00
+#SBATCH --time=8:00:00
 #SBATCH --cpus-per-task=64
 #SBATCH --partition=gpuH200x8
 #SBATCH --gres=gpu:2
 #SBATCH --mem=64g
 #SBATCH --job-name=llama_3_70b_profiling
-#SBATCH --error=output/llama_3_70b_error.txt
-#SBATCH --output=output/llama_3_70b_output.txt
+#SBATCH --error=error/llama_3/llama_3_70b_error.txt
+#SBATCH --output=output/llama_3/llama_3_70b_output.txt
 
 module load python
 module load anaconda3_gpu
@@ -24,7 +24,8 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_configs=("config/model_config/llama/llama_3_70b.yaml")
-nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_torch.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/vlp_activation_1.yaml"
+
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 

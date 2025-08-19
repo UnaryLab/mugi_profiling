@@ -7,8 +7,8 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=16g
 #SBATCH --job-name=llama_2_7b_profiling
-#SBATCH --error=output/llama_2_7b_error.txt
-#SBATCH --output=output/llama_2_7b_output.txt
+#SBATCH --error=error/llama_2/llama_2_7b_error.txt
+#SBATCH --output=output/llama_2/llama_2_7b_output.txt
 
 module load python
 module load anaconda3_gpu
@@ -24,7 +24,7 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_configs=("config/model_config/llama/llama_2_7b.yaml")
-nonlinear_config="config/nonlinear_config/nonlinear_config_2.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_ffn.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 

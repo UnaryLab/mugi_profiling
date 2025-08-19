@@ -1,15 +1,15 @@
 #!/bin/bash
 
 #SBATCH --account=bebv-delta-gpu
-#SBATCH --time=4:00:00
+#SBATCH --time=1:00:00
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=16
 #SBATCH --partition=gpuA100x4,gpuA100x8
 #SBATCH --gres=gpu:1
 #SBATCH --mem=16g
 #SBATCH --job-name=whisper_profiling_tiny
-#SBATCH --error=output/whisper_error_tiny.txt
-#SBATCH --output=output/whisper_profiling_tiny.txt
+#SBATCH --error=error/whisper/whisper_error_tiny.txt
+#SBATCH --output=output/whisper/whisper_profiling_tiny.txt
 
 module load python
 module load anaconda3_gpu
@@ -25,7 +25,7 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_configs=("config/model_config/whisper/whisper_tiny.yaml")
-nonlinear_config="config/nonlinear_config/nonlinear_config.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_torch.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 

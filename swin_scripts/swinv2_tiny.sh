@@ -8,8 +8,8 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=64g
 #SBATCH --job-name=swinv2_profiling_tiny
-#SBATCH --error=output/swinv2_error_tiny.txt
-#SBATCH --output=output/swinv2_profiling_tiny.txt
+#SBATCH --error=error/swin/swinv2_error_tiny.txt
+#SBATCH --output=output/swin/swinv2_profiling_tiny.txt
 
 module load python
 module load anaconda3_gpu
@@ -25,7 +25,7 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_configs=("config/model_config/swin/swinv2_tiny.yaml")
-nonlinear_config="config/nonlinear_config/taylor_config.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_torch.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
