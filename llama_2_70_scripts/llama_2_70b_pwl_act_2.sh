@@ -2,9 +2,8 @@
 
 #SBATCH --time=8:00:00
 #SBATCH --cpus-per-task=64
-#SBATCH --partition=gpuH200x8
-#SBATCH --gres=gpu:2
-#SBATCH --mem=64g
+#SBATCH --gres=gpu:4
+#SBATCH --constraint=h100
 #SBATCH --job-name=llama_2_70b_profiling
 #SBATCH --error=error/llama_2/llama_2_70b_error.txt
 #SBATCH --output=output/llama_2/llama_2_70b_output.txt
