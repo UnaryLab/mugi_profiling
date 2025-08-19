@@ -13,9 +13,9 @@ module load anaconda
 module load cuda
 
 # Initialize conda properly for bash script
-source $(conda info --base)/etc/profile.d/conda.sh
+#source $(conda info --base)/etc/profile.d/conda.sh
 
-conda activate mugi_profiling
+#conda activate mugi_profiling
 
 cd ~/mugi_profiling
 
@@ -39,7 +39,7 @@ for model_config in "${model_configs[@]}"; do
     fi
     
     # Run the transformer script with the current config
-    python model_script.py --model_config "$model_config" \
+    conda run -n mugi_profiling python model_script.py --model_config "$model_config" \
                                 --nonlinear_config "$nonlinear_config" \
                                 --parameter_config "$parameter_config"
     
