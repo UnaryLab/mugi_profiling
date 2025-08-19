@@ -1,8 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 import seaborn as sns
 import numpy as np
 import os
+
+# Set global font size
+plt.rcParams.update({'font.size': 5})
 
 def single_heatmap(data_dict: dict):
     """Create a single heatmap using only the first (key, value) from data_dict.
@@ -94,7 +98,8 @@ def single_heatmap(data_dict: dict):
         cmap='viridis',
         cbar=False,
         xticklabels=False,
-        yticklabels=False
+        yticklabels=False,
+        annot_kws={"fontsize": 5}
     )
 
     save_dir = os.path.expanduser('figures')
@@ -125,10 +130,8 @@ def plot_perplexity(data_dict: dict):
     per_fig_width = 506 / 72.27
     per_fig_height = per_fig_width * 0.5
 
-    fig_width = per_fig_width * max(1, n_models)
-    fig_height = per_fig_height * 5
-
-    fig, axes = plt.subplots(5, n_models, figsize=(fig_width, fig_height), squeeze=False)
+    fig = plt.figure(figsize=(per_fig_width, per_fig_height))
+    gs = gridspec.GridSpec(5, n_models, figure=fig, wspace=0.1, hspace=0.1)
 
     for i, (key, value) in enumerate(data_dict.items()):
         data = pd.read_csv(value)
@@ -139,7 +142,7 @@ def plot_perplexity(data_dict: dict):
 
             # Drop unrelated columns based on the original y_label (immutable for pivot logic)
             if y_label == 'VLPSoftmax':
-                plot_data = plot_data.drop(columns=['attn_lut_build', 'ffn_exp_dim','ffn_max_pos_exp','ffn_window_size','attn_segments','attn_segment_0','ffn_segments','ffn_segment_0','attn_degree_center','attn_degrees'])
+                plot_data = plot_data.drop(columns=['ffn_exp_dim','ffn_max_pos_exp','ffn_window_size','attn_segments','attn_segment_0','ffn_segments','ffn_segment_0','attn_degree_center','attn_degrees'])
             elif y_label == 'VLPActivation':
                 plot_data = plot_data.drop(columns=['attn_exp_dim','attn_max_exp','attn_min_exp','attn_window_size','attn_lut_build','attn_segments','attn_segment_0','ffn_segments','ffn_segment_0','attn_degree_center','attn_degrees'])
             elif y_label == 'PWLSoftmax':
@@ -161,17 +164,33 @@ def plot_perplexity(data_dict: dict):
                 plot_data = plot_data[plot_data['attn_fn'] == filter_label]
 
             # Remove fn columns now that filtering is applied
-            plot_data = plot_data.drop(columns=['attn_fn', 'ffn_fn'])
+            # plot_data = plot_data.drop(columns=['attn_fn', 'ffn_fn'])
 
             # Ensure numeric and drop missing 'value's to avoid duplicate/NaN issues
             plot_data['value'] = pd.to_numeric(plot_data['value'], errors='coerce')
             plot_data = plot_data.dropna(subset=['value'])
 
             # Pivot based on the ORIGINAL y_label
+
+            print(key, y_label)
             if y_label == 'VLPSoftmax':
-                heatmap_data = plot_data.pivot_table(index='attn_exp_dim', columns='attn_max_exp', values='value', aggfunc='mean')
+
+                max_heatmap_data = plot_data.pivot_table(index='attn_exp_dim', columns='attn_max_exp', values='value', aggfunc='mean')
+                min_heatmap_data = plot_data.pivot_table(index='attn_exp_dim', columns='attn_min_exp', values='value', aggfunc='mean')
+                min_heatmap_value = min_heatmap_data.min().min()
+                max_heatmap_value = max_heatmap_data.min().min()
+
+                heatmap_data = max_heatmap_data if max_heatmap_value > min_heatmap_value else min_heatmap_data
+
             elif y_label == 'VLPActivation':
-                heatmap_data = plot_data.pivot_table(index='ffn_exp_dim', columns='ffn_max_pos_exp', values='value', aggfunc='mean')
+                max_heatmap_data = plot_data.pivot_table(index='ffn_exp_dim', columns='ffn_max_pos_exp', values='value', aggfunc='mean')
+                min_heatmap_data = plot_data.pivot_table(index='ffn_exp_dim', columns='ffn_min_pos_exp', values='value', aggfunc='mean')
+
+                min_heatmap_value = min_heatmap_data.min().min()
+                max_heatmap_value = max_heatmap_data.min().min()
+
+                heatmap_data = max_heatmap_data if max_heatmap_value > min_heatmap_value else min_heatmap_data
+
             elif y_label == 'PWLSoftmax':
                 plot_data = plot_data[(plot_data['attn_segment_0'] >= -24) & (plot_data['attn_segment_0'] <= -19)]
                 heatmap_data = plot_data.pivot_table(index='attn_segments', columns='attn_segment_0', values='value', aggfunc='mean')
@@ -194,46 +213,43 @@ def plot_perplexity(data_dict: dict):
             except Exception:
                 pass
 
-            ax = axes[j, i]
-            show_y = (i == 0)
-            # Build mask and custom annotations to hide NaN cells
+            ax = fig.add_subplot(gs[j, i])
+            # Build mask to hide only NaN cells, keep colored cells for values > 10
             mask = heatmap_data.isna()
-            ann = heatmap_data.copy().applymap(lambda v: f"{v:.2f}" if pd.notna(v) else "")
+            ann = heatmap_data.copy().applymap(lambda v: f"{v:.2f}" if pd.notna(v) and v <= 10 else "")
             sns.heatmap(
-                heatmap_data,
-                mask=mask,
+                heatmap_data.values,
+                mask=mask.values,
                 ax=ax,
                 annot=ann.values,
                 fmt="",
                 cmap='viridis',
                 cbar=False,
                 xticklabels=False,
-                yticklabels=show_y
+                yticklabels=False,
+                annot_kws={"fontsize": 3}
             )
             # Add model key as title on the top row only
             if j == 0:
-                ax.set_title(key)
-            if show_y:
-                try:
-                    ax.set_yticklabels([str(v) for v in heatmap_data.index], rotation=0)
-                except Exception:
-                    pass
+                ax.set_title(key, fontsize=5)
+            
+            # Set tick parameters for consistent font size
+            ax.tick_params(axis='both', which='major', labelsize=5)
 
     # Save under local figures/ like single_heatmap and ensure path exists
     save_dir = os.path.expanduser('figures')
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
 
-    plt.tight_layout()
-    plt.savefig(os.path.join(save_dir, 'perplexity_plot.png'), dpi=300)
+    plt.savefig(os.path.join(save_dir, 'perplexity_plot.png'), dpi=1200, bbox_inches='tight', pad_inches=0.05)
 
 if __name__ == "__main__":
     data_dict = {
         'llama_2_7b': 'csv/meta-llama/Llama-2-7b-hf/metric.csv',
-        'llama_2_13b': 'csv/meta-llama/Llama-2-13b-hf/metric.csv',
-        'llama_2_7b': 'csv/meta-llama/Llama-2-7b-hf/metric.csv',
-        'llama_2_13b': 'csv/meta-llama/Llama-2-13b-hf/metric.csv',
-        'whisper_tiny': 'csv/openai/whisper-tiny/metric.csv',
+        'llama_2_13b': 'csv/meta-llamaLlama-2-7b-hf/metric.csv',
+        'llama_3_8b': 'csv/meta-llama/Llama-3.1-8B/metric.csv',
+        'llama_2_13b': 'csv/meta-llama/Llama-2-7b-hf/metric.csv',
+        'whisper_tiny': 'csv/openai/whisper-tiny/nonlinear_config/metric.csv',
         'whisper_large': 'csv/openai/whisper-large/metric.csv',
         'swin_tiny': 'csv/microsoft/swinv2-tiny-patch4-window8-256/metric.csv',
         'swin_large': 'csv/microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft/metric.csv',
