@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #SBATCH --time=8:00:00
-#SBATCH --cpus-per-task=32
-#SBATCH --gres=gpu:2
-#SBATCH --constraint=h100
+#SBATCH --cpus-per-task=64
+#SBATCH --gres=gpu:8
+#SBATCH --partition=highgpu
 #SBATCH --job-name=llama_2_70b_profiling
-#SBATCH --error=error/llama_2/llama_2_70b_error.txt
-#SBATCH --output=output/llama_2/llama_2_70b_output.txt
+#SBATCH --error=error/llama_2/llama_2_70b_error_2.txt
+#SBATCH --output=output/llama_2/llama_2_70b_output_2.txt
 
 module load python
 module load anaconda
@@ -24,7 +24,7 @@ cd ~/mugi_profiling
 model_configs=("config/model_config/llama/llama_2_70b.yaml")
 #nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_ffn_2.yaml"
 #nonlinear_config="config/nonlinear_config/large_model_configs/pwl_softmax_2.yaml"
-nonlinear_config="config/nonlinear_config/large_model_configs/vlp_activation_2.yaml"
+nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_ffn_1.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
