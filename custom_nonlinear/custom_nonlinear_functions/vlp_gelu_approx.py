@@ -19,6 +19,7 @@ class VLPGelu(CustomGelu):
         self.neg_min_exp = max_pos_exp - (exp_dim - 1)
         self.pos_max_exp = min_pos_exp + (exp_dim - 1)
         self.neg_max_exp = min_pos_exp + (exp_dim - 1)
+        self.build_lut()
 
         self.mant_dim = 8
 
