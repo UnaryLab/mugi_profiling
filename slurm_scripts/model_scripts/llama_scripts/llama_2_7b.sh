@@ -37,6 +37,9 @@ echo "Running experiment with configuration: $model_config"
 echo "----------------------------------------"
 
 # Run the transformer script with the current config
+export PYTHONPATH=~/mugi_profiling:$PYTHONPATH
+
+
 python src/model_script.py --model_config "$model_config" \
                             --nonlinear_config "$nonlinear_config" \
                             --parameter_config "$parameter_config"
