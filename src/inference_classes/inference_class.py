@@ -65,9 +65,9 @@ class InferenceModel(ABC):
 
         self.ds_model = deepspeed.init_inference(
             self.model,
-            mp_size=n_gpus,
             dtype=torch.float16,
-            replace_with_kernel_inject=False
+            replace_with_kernel_inject=False,
+            tensor_parallel={"tp_size": n_gpus}
         )
 
     def append_nonlinear_list(self, attention_class, ffn_class, attention_parameters, ffn_parameters, layer, device, path, attention_keys, ffn_keys):
