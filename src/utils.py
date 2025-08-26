@@ -30,7 +30,6 @@ def validate_config(model_dict, nonlinear_dict, parameter_dict):
     hf_path = dataset_parameters.get('hf_path')
 
     model_name = model_parameters.get('name')
-    model_modality = model_parameters.get('modality')
 
     attn_op = nonlinear_parameters.get('attention')
     ffn_op = nonlinear_parameters.get('ffn')
@@ -38,7 +37,6 @@ def validate_config(model_dict, nonlinear_dict, parameter_dict):
     assert dataset_name is not None, "Dataset name is not defined."
     assert hf_path is not None, "Hugging Face path for dataset is not defined."
     assert model_name is not None, "Model name is not defined."
-    assert model_modality is not None, "Model modality is not defined."
     assert attn_op is not None, "Attention operation is not defined."
     assert ffn_op is not None, "Feed-Forward network operation is not defined."
 
