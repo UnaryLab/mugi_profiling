@@ -4,7 +4,6 @@ dataset:
   split: test.clean
 model: 
   name: openai/whisper-base
-  modality: audio
 nonlinear:
   attention: softmax
   ffn: gelu

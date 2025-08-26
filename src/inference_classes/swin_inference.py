@@ -1,12 +1,16 @@
 import torch
 import gc
 import shutil
+import types
+
 from huggingface_hub import snapshot_download
 from transformers import AutoImageProcessor, AutoModelForImageClassification
 
-from inference_classes.inference_class import InferenceModel
+from src.inference_classes.inference_class import InferenceModel
+from src.custom_nonlinear.custom_eager import SwinEager
+from src.custom_nonlinear.custom_forward import swin_forward
 
-class VisionModel(InferenceModel):
+class SwinModel(InferenceModel):
     def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
         super().__init__(model_dict, nonlinear_dict, parameter_dict, device)
 
@@ -38,8 +42,21 @@ class VisionModel(InferenceModel):
 
             self.inputs.append(processed_example)
 
+    def patch_layers(self, attention_class, ffn_class, attention_parameters: dict = {}, ffn_parameters: dict = {}, attention_keys: list = [], ffn_keys: list = [], path: str = None):
+        for i, layers in enumerate(self.model.swinv2.encoder.layers):
+            for j, block in enumerate(block.blocks):
+                block_idx = i * len(layers) + j
+                layer_device = next(block.parameters()).device
+                
+                attention_object = attention_class(**attention_parameters, layer=block_idx, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys, profile=self.profile)
+                ffn_object = ffn_class(**ffn_parameters, layer=block_idx, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys, profile=self.profile)
+                forward = swin_forward(attention_object)
+                
+                block.attention.self.forward = types.MethodType(forward, block.attention.self)
+                block.intermediate.intermediate_act_fn = ffn_object
+
     def compute_metric(self):
-        return self.total_loss / self.num_batches
+        return self.compute_loss()
     
     def compute_loss(self, batch):
         pixel_values = torch.stack([ex["pixel_values"].squeeze(0) for ex in batch]).to(self.device).to(torch.float16)

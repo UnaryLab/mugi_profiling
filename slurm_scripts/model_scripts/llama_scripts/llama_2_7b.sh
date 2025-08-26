@@ -11,7 +11,7 @@
 #SBATCH --output=output/llama_2/llama_2_7b_output.txt
 
 module load python
-module load anaconda3_gpu
+module load anaconda
 module load cuda
 
 # Initialize conda properly for bash script

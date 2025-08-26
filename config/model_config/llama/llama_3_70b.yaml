@@ -5,7 +5,6 @@ dataset:
   split: validation
 model: 
   name: meta-llama/Llama-3.1-70B
-  modality: nlp
 nonlinear:
   attention: softmax
   ffn: silu

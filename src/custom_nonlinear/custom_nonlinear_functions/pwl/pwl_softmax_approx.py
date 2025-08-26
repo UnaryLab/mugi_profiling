@@ -9,22 +9,18 @@ import os
 class PWLSoftmax(CustomSoftmax):
     def __init__(self, segments, segment_0, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         super(PWLSoftmax, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
-        self.segments = torch.tensor(segments)
-        self.segment_0 = torch.tensor(segment_0)
-        self.segment_f = torch.tensor(0.0)
-        self.device = device
+        
+        self.set_params(
+            segments=segments,
+            segment_0=segment_0
+        )
 
-        self.build_lut()
-
-    def reset_lut(self, segments, segment_0):
+    def set_params(self, segments, segment_0):
         self.segments = torch.tensor(segments)
         self.segment_0 = torch.tensor(-segment_0)
         self.segment_f = torch.tensor(0.0)
-        self.build_lut()
-
-    def build_lut(self):
         self.step = torch.abs(self.segment_f - self.segment_0) / (self.segments)
-        self.step = self.step.to(torch.float32)
+        self.step = self.step.to(torch.bfloat16)
     
     def nonlinear(self, attn_weights, dim=-1, dtype=torch.bfloat16):
         self.step = self.step.to(self.device)
@@ -52,15 +48,11 @@ class PWLSoftmax(CustomSoftmax):
         del x_1
         b = torch.exp(x)
 
-        m.sub_(b)
-        m.div_(self.step)
-        b.sub_(m * x)
+        m.sub_(b).div_(self.step).sub_(m * x)
         del x
         
         attn_mask = attn_weights < self.segment_0
-        attn_weights.mul_(m)
-        attn_weights.add_(b)
-        #attn_weights = m * attn_weights + b
+        attn_weights.mul_(m).add_(b)
         del m, b
 
         attn_weights[attn_mask] = 0

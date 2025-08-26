@@ -5,80 +5,35 @@ from custom_nonlinear.custom_approx import CustomSilu
 # Edit exp_dim to adjust the LUT size
 # Edit max exp to adjust the maximum exponent of the LUT
 class VLPSilu(CustomSilu):
-    def __init__(self, exp_dim, max_pos_exp, min_pos_exp, window_size, lut_build, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
+    def __init__(self, exp_dim, mant_dim, max_pos_exp, min_pos_exp, window_size, lut_build, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         super(VLPSilu, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
-        self.exp_dim = exp_dim
-        self.max_pos_exp = max_pos_exp
-        self.max_neg_exp = max_pos_exp
-        self.min_pos_exp = min_pos_exp
-        self.min_neg_exp = min_pos_exp
-        self.window_size = window_size
-        self.pos_min_exp = max_pos_exp - (exp_dim - 1)
-        self.neg_min_exp = max_pos_exp - (exp_dim - 1)
-        self.pos_max_exp = min_pos_exp + (exp_dim - 1)
-        self.neg_max_exp = min_pos_exp + (exp_dim - 1)
+        self.set_params(
+            exp_dim=exp_dim,
+            mant_dim=mant_dim,
+            max_exp=max_pos_exp,
+            min_exp=min_pos_exp,
+            window_size=window_size,
+            lut_build=lut_build
+        )
+
+    def set_params(self, exp_dim, mant_dim, max_exp, min_exp, window_size, lut_build):
         self.lut_build = lut_build
-
-        self.mant_dim = 8
-
-    def reset_lut(self, exp_dim, max_pos_exp, window_size):
         self.exp_dim = exp_dim
-        self.max_pos_exp = max_pos_exp
-        self.max_neg_exp = max_pos_exp
+        self.mant_dim = mant_dim
         self.window_size = window_size
-        self.build_lut()
 
-    def build_lut(self):
-        self.build_pos_lut()
-        self.build_neg_lut()
-
-    def build_pos_lut(self):
-        # Mantissa dimension of virtual LUT
-        mant_dim = 8
-
-        # shift min_exp by max_exp
-        self.pos_min_exp = self.max_pos_exp - (self.exp_dim - 1)
-
-        # generate exponent values of LUT
-        exp_values = torch.arange(self.exp_dim).reshape(self.exp_dim, 1)
-        exp_table = exp_values.expand(self.exp_dim, mant_dim)
-        exp_table = exp_table + self.pos_min_exp
-
-        # generate mantissa values of LUT
-        mant_values = torch.arange(mant_dim)
-        mant_table = ((mant_values.expand(self.exp_dim, mant_dim) / 8) + 1)
-
-        # combine exponent and mantissa values
-        exp_table = exp_table.to(torch.int32)
-        mant_table = mant_table.to(torch.float32)
-        lookup_table = torch.ldexp(mant_table, exp_table)
-
-        # apply exp to create LUT
-        self.pos_lut = torch.nn.functional.silu(lookup_table).to(torch.bfloat16).to(self.device)
-
-    def build_neg_lut(self):
-        # Mantissa dimension of virtual LUT
-        mant_dim = 8
-
-        # shift min_exp by max_exp
-        self.neg_min_exp = self.max_neg_exp - (self.exp_dim - 1)
-
-        # generate exponent values of LUT
-        exp_values = torch.arange(self.exp_dim).reshape(self.exp_dim, 1)
-        exp_table = exp_values.expand(self.exp_dim, mant_dim)
-        exp_table = exp_table + self.neg_min_exp
-
-        # generate mantissa values of LUT
-        mant_values = torch.arange(mant_dim)
-        mant_table = ((mant_values.expand(self.exp_dim, mant_dim) / 8) + 1) * -1
-
-        # combine exponent and mantissa values
-        exp_table = exp_table.to(torch.int32)
-        mant_table = mant_table.to(torch.float32)
-        lookup_table = torch.ldexp(mant_table, exp_table)
-
-        # apply exp to create LUT
-        self.neg_lut = torch.nn.functional.silu(lookup_table).to(torch.bfloat16).to(self.device)
+        if lut_build == 'max':
+            self.max_pos_exp = max_exp
+            self.max_neg_exp = max_exp
+            self.min_pos_exp = max_exp - (exp_dim - 1)
+            self.min_neg_exp = max_exp - (exp_dim - 1)
+        elif lut_build == 'min':
+            self.min_pos_exp = min_exp
+            self.min_neg_exp = min_exp
+            self.max_pos_exp = min_exp + (exp_dim - 1)
+            self.max_neg_exp = min_exp + (exp_dim - 1)
+        else:
+            raise ValueError("lut_build must be 'max' or 'min'")
 
     def window_silu_approx(self, exp, mant, positive, negative):
         input_shape = exp.shape
@@ -115,13 +70,13 @@ class VLPSilu(CustomSilu):
             pos_max_exp_window = torch.max(exp, dim = -1, keepdim=True)[0]
             pos_max_exp_window[pos_max_exp_window > self.max_pos_exp] = self.max_pos_exp
             pos_min_exp_window = pos_max_exp_window - (self.mant_dim - 1)
-            pos_min_exp_window[pos_min_exp_window < self.pos_min_exp] = self.pos_min_exp
+            pos_min_exp_window[pos_min_exp_window < self.min_pos_exp] = self.min_pos_exp
 
             # calculate neg min and max windows
             neg_max_exp_window = torch.max(exp, dim = -1, keepdim=True)[0]
             neg_max_exp_window[neg_max_exp_window > self.max_neg_exp] = self.max_neg_exp
             neg_min_exp_window = neg_max_exp_window - (self.mant_dim - 1)
-            neg_min_exp_window[neg_min_exp_window < self.neg_min_exp] = self.neg_min_exp
+            neg_min_exp_window[neg_min_exp_window < self.min_neg_exp] = self.min_neg_exp
 
             # compare to pos min and max values
             exp[positive] = torch.clamp(exp, max=pos_max_exp_window, min=pos_min_exp_window)[positive]
@@ -134,14 +89,14 @@ class VLPSilu(CustomSilu):
             mant[negative] = torch.where(exp >= neg_min_exp_window, mant, 0)[negative]
         else:
             pos_min_exp_window = torch.min(exp, dim=-1, keepdim=True)[0]
-            pos_min_exp_window[pos_min_exp_window < self.pos_min_exp] = self.min_pos_exp
+            pos_min_exp_window[pos_min_exp_window < self.min_pos_exp] = self.min_pos_exp
             pos_max_exp_window = pos_min_exp_window + (self.mant_dim - 1)
-            pos_max_exp_window[pos_max_exp_window > self.max_pos_exp] = self.pos_max_exp
+            pos_max_exp_window[pos_max_exp_window > self.max_pos_exp] = self.max_pos_exp
 
             neg_min_exp_window = torch.min(exp, dim=-1, keepdim=True)[0]
-            neg_min_exp_window[neg_min_exp_window < self.neg_min_exp] = self.min_neg_exp
+            neg_min_exp_window[neg_min_exp_window < self.min_neg_exp] = self.min_neg_exp
             neg_max_exp_window = neg_min_exp_window + (self.mant_dim - 1)
-            neg_max_exp_window[neg_max_exp_window > self.max_neg_exp] = self.neg_max_exp
+            neg_max_exp_window[neg_max_exp_window > self.max_neg_exp] = self.max_neg_exp
 
             exp[positive] = torch.clamp(exp, max=pos_max_exp_window, min=pos_min_exp_window)[positive]
             mant[positive] = torch.where(exp >= pos_min_exp_window, mant, 0)[positive]
@@ -183,9 +138,7 @@ class VLPSilu(CustomSilu):
 
         exp = exp.to(torch.int8)
 
-        mant.mul_(16)
-        mant.round_()
-        mant.abs_()
+        mant.mul_(16).round_().abs_()
         mant = mant.to(torch.int8)
 
         # Increment exponent where mantissa has overflow (i.e., mantissa is 16 / needs)
@@ -212,7 +165,6 @@ class VLPSilu(CustomSilu):
         exp = torch.pow(2, exp)
 
         silu = mant * exp
-
         del exp, mant
 
         silu = torch.nn.functional.silu(silu)

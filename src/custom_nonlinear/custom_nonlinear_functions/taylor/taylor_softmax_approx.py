@@ -10,35 +10,31 @@ import os
 class TaylorSoftmax(CustomSoftmax):
     def __init__(self, degree_center, degrees, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         super(TaylorSoftmax, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
+        self.set_params(degree_center=degree_center, degrees=degrees)
+
+    def set_params(self, degree_center, degrees):
         self.degree_center = torch.tensor(degree_center)
-        self.degrees = degrees
-        self.device = device
-
-        self.build_taylor()
-
-    def reset_taylor(self, degree_center, degrees):
-        self.degree_center = degree_center
         self.degrees = degrees
         self.build_taylor()
 
     def build_taylor(self):
         prev_exp = torch.tensor(1).to(torch.float16)
         x_neg = torch.tensor(0).to(torch.float64)
-        exp = 0
+        exp = torch.tensor(0).to(torch.float64)
         while True:
             for i in range(self.degrees):
                 i = torch.tensor(i, dtype=torch.int64)
                 intermediate = x_neg - self.degree_center
-                intermediate = intermediate ** i
-                fac = torch.tensor(math.factorial(i), dtype=torch.float64)
-                intermediate = intermediate / fac
-                exp += intermediate
-            exp *= torch.exp(self.degree_center)
+                intermediate.pow_(i)
+                inv_fac = torch.exp(-torch.lgamma(torch.tensor(i + 1)))
+                intermediate.mul_(inv_fac)
+                exp.add_(intermediate)
+            exp.mul_(torch.exp(self.degree_center))
             if exp <= 0.001 or prev_exp < exp or torch.isinf(exp):
                 break
             else:
                 prev_exp = exp.clone()
-                x_neg -= 0.25
+                x_neg.sub_(0.25)
         self.x_neg = x_neg.to(torch.bfloat16)
 
     def taylor_exp(self, x):

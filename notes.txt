@@ -1,0 +1,8 @@
+currently do three things
+- adjust to use deepspeed
+    - change nonlinear objects to be initialized then adjusted (no need to reshape, just adjust parameters).
+- restructure to be cleaner (code structure)
+- set ways to query
+    - multiple querying
+    - singular querying
+        - for each, allow for overal and layerwise querying.

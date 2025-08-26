@@ -4,7 +4,6 @@ dataset:
   split: validation
 model: 
   name: microsoft/swinv2-small-patch4-window8-256
-  modality: vision
 nonlinear:
   attention: softmax
   ffn: gelu

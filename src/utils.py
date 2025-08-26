@@ -42,4 +42,4 @@ def validate_config(model_dict, nonlinear_dict, parameter_dict):
     assert attn_op is not None, "Attention operation is not defined."
     assert ffn_op is not None, "Feed-Forward network operation is not defined."
 
-    return model_modality
+    return model_name

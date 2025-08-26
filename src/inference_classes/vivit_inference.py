@@ -7,9 +7,9 @@ from transformers import AutoProcessor, AutoModelForVideoClassification
 from decord import VideoReader, cpu
 from PIL import Image
 
-from inference_classes.inference_class import InferenceModel
+from src.inference_classes.inference_class import InferenceModel
 
-class VideoModel(InferenceModel):
+class VivitModel(InferenceModel):
     def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
         super().__init__(model_dict, nonlinear_dict, parameter_dict, device)
 

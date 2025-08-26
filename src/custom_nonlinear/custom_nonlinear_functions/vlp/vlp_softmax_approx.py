@@ -5,57 +5,31 @@ from custom_nonlinear.custom_approx import CustomSoftmax
 # Edit exp_dim to adjust the LUT size
 # Edit max exp to adjust the maximum exponent of the LUT
 class VLPSoftmax(CustomSoftmax):
-    def __init__(self, exp_dim, max_exp, min_exp, window_size, lut_build, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
+    def __init__(self, exp_dim, max_exp, min_exp, mant_dim, window_size, lut_build, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         super(VLPSoftmax, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
-        # Exponent dimension of virtual LUT and maximum exponent for setting LUT range
-        self.exp_dim = exp_dim
-        self.max_exp = max_exp
-        self.min_exp = min_exp
-        self.window_size = window_size
+        self.set_params(
+            exp_dim=exp_dim,
+            mant_dim=mant_dim,
+            max_exp=max_exp,
+            min_exp=min_exp,
+            window_size=window_size,
+            lut_build=lut_build
+        )
+
+    def set_params(self, exp_dim, mant_dim, max_exp, min_exp, window_size, lut_build):
         self.lut_build = lut_build
-        self.build_lut()
-
-        # Mantissa approximation
-        self.mant_dim = 8
-
-    def reset_lut(self, exp_dim, max_exp, min_exp, window_size, lut_build):
         self.exp_dim = exp_dim
-        self.max_exp = max_exp
-        self.min_exp = min_exp
+        self.mant_dim = mant_dim
         self.window_size = window_size
-        self.lut_build = lut_build
-        self.build_lut()
 
-    def print_tensor_info(self, name, tensor):
-        peak_memory = torch.cuda.max_memory_allocated() / (2**20)
-        print(f"{name}: shape={tuple(tensor.shape)}, dtype={tensor.dtype}, size={tensor.numel()}, MB={peak_memory} MB, GB={peak_memory / (2**10)} GB")
-
-
-    def build_lut(self):
-        # Mantissa dimension of virtual LUT
-        mant_dim = 8
-        # set exp range by selected exp (max_exp or min_exp)
-        if self.lut_build == "max":
-            self.min_exp = self.max_exp - (self.exp_dim - 1)
+        if lut_build == 'max':
+            self.min_exp = max_exp - (exp_dim - 1)
+            self.max_exp = max_exp
+        elif lut_build == 'min':
+            self.min_exp = min_exp
+            self.max_exp = min_exp + (exp_dim - 1)
         else:
-            self.max_exp = self.min_exp + (self.exp_dim - 1)
-
-        # generate exponent values of LUT
-        exp_values = torch.arange(self.exp_dim).reshape(self.exp_dim, 1)
-        exp_table = exp_values.expand(self.exp_dim, mant_dim)
-        exp_table = exp_table + self.min_exp
-
-        # generate mantissa values of LUT
-        mant_values = torch.arange(mant_dim)
-        mant_table = ((mant_values.expand(self.exp_dim, mant_dim) / 8) + 1) * -1
-
-        # combine exponent and mantissa values
-        exp_table = exp_table.to(torch.int32)
-        mant_table = mant_table.to(torch.float32)
-        lookup_table = torch.ldexp(mant_table, exp_table)
-
-        # apply exp to create LUT
-        self.lut = torch.exp(lookup_table).to(torch.bfloat16)
+            raise ValueError("lut_build must be 'max' or 'min'")
 
     def window_softmax_approx(self, exp, mant):
         input_shape = exp.shape
@@ -135,9 +109,7 @@ class VLPSoftmax(CustomSoftmax):
         exp = exp.to(torch.int8)
         
         # Increment exponent where mantissa has overflow (i.e., mantissa is 16 / needs)
-        mant.mul_(16)
-        mant.round_()
-        mant.abs_()
+        mant.mul_(16).round_().abs_()
         mant = mant.to(torch.int8)
 
         exp = torch.where(attn_mask, exp - 1, exp)
@@ -160,9 +132,7 @@ class VLPSoftmax(CustomSoftmax):
         exp = torch.pow(2, exp)
 
         mant = mant.to(torch.bfloat16)
-        mant.div_(8)
-        mant.add_(1)
-        mant.mul_(-1)
+        mant.div_(8).add_(1).mul_(-1)
 
         #exponentials = torch.ldexp(mant, exp)
         attn_weights = mant * exp

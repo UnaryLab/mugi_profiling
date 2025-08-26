@@ -9,23 +9,18 @@ import os
 class PWLSilu(CustomSilu):
     def __init__(self, segments, segment_0, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
         super(PWLSilu, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
-        self.segments = torch.tensor(segments)
-        self.segment_0 = torch.tensor(-segment_0)
-        self.segment_f = torch.tensor(segment_0)
-        self.device = device
 
-        self.build_lut()
+        self.set_params(
+            segments=segments,
+            segment_0=segment_0
+        )
 
-    def reset_lut(self, segments, segment_0):
+    def set_params(self, segments, segment_0):
         self.segments = torch.tensor(segments - 1)
         self.segment_0 = torch.tensor(-segment_0)
         self.segment_f = torch.tensor(segment_0)
-
-        self.build_lut()
-
-    def build_lut(self):
         self.step = torch.abs(self.segment_f - self.segment_0) / (self.segments)
-        self.step = self.step.to(torch.float32)
+        self.step = self.step.to(torch.bfloat16)
     
     def nonlinear(self, x):
         self.step = self.step.to(self.device)
@@ -50,9 +45,7 @@ class PWLSilu(CustomSilu):
         del x_1
         b = torch.nn.functional.silu(x_0)
 
-        m.sub_(b)
-        m.div_(self.step)
-        b.sub_(m * x_0)
+        m.sub_(b).div_(self.step).sub_(m * x_0)
         del x_0
 
         silu_output = m * x + b

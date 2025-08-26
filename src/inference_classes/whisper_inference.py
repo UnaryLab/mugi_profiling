@@ -4,12 +4,16 @@ import numpy as np
 import gc
 import math
 import shutil
+import types
+
 from huggingface_hub import snapshot_download
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
 
-from inference_classes.inference_class import InferenceModel
+from src.inference_classes.inference_class import InferenceModel
+from src.custom_nonlinear.custom_eager import WhisperEager
+from src.custom_nonlinear.custom_forward import whisper_forward
 
-class AudioModel(InferenceModel):
+class WhisperModel(InferenceModel):
     def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
         super().__init__(model_dict, nonlinear_dict, parameter_dict, device)
 
@@ -45,6 +49,19 @@ class AudioModel(InferenceModel):
             audio_array = np.pad(audio_array, (0, padding), mode='constant', constant_values=0)
         
         return audio_array
+
+    def patch_layers(self, attention_class, ffn_class, attention_parameters: dict = {}, ffn_parameters: dict = {}, attention_keys: list = [], ffn_keys: list = [], path: str = None):
+        for i, layer in enumerate(self.model.model.encoder.layers):
+                layer_device = next(layer.parameters()).device
+                if i == 0:
+                    self.device = layer_device
+                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=attention_keys,  profile=self.profile)
+                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=ffn_keys,  profile=self.profile)
+                eager_attn_fn = WhisperEager(nonlinear_object=attention_object)
+                forward = whisper_forward(eager_attn_fn)
+
+                layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
+                layer.activation_fn = ffn_object
 
     def process_dataset(self):
         subset = list(self.dataset.take(self.n_samples))
