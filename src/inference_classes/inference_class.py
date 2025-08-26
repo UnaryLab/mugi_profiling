@@ -10,8 +10,6 @@ import deepspeed
 from abc import ABC, abstractmethod
 
 from src.custom_nonlinear.custom_approx import CustomSoftmax, CustomSilu, CustomGelu, CustomFastGelu
-from src.custom_nonlinear.custom_eager import LlamaEager, VivitEager, WhisperEager
-from src.custom_nonlinear.custom_forward import llama_forward, swin_forward, vivit_forward, whisper_forward
 from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_gelu_approx import PWLGelu
 from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_mobilenet_approx import PWLMobilenet
 from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_silu_approx import PWLSilu
