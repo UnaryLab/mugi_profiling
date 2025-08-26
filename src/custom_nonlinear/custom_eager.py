@@ -4,7 +4,7 @@ from typing import Optional
 from transformers.models.llama.modeling_llama import repeat_kv
 
 
-def VITEager(nonlinear_object):
+def SwinEager(nonlinear_object):
     def eager_attention_forward(
         module: nn.Module,
         query: torch.Tensor,
