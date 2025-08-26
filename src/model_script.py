@@ -51,6 +51,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
     inference_model.df.to_csv(inference_model.csv_file, index=False)
 
 def main():
+    print('here')
     parser = argparse.ArgumentParser(description="Run profiling on transformer model with custom nonlinear functions.")
     parser.add_argument('--model_config', type=str, default=None, 
                         help='Path to model config YAML file (default: None)')
