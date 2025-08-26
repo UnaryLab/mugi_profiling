@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash
 
 #SBATCH --account=bebv-delta-gpu
 #SBATCH --time=8:00:00
