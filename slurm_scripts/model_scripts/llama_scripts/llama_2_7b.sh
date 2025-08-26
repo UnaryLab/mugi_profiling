@@ -36,12 +36,6 @@ echo ""
 echo "Running experiment with configuration: $model_config"
 echo "----------------------------------------"
 
-# Check if config file exists
-if [ ! -f "$model_config" ]; then
-    echo "Warning: Configuration file '$model_config' not found. Skipping..."
-    continue
-fi
-
 # Run the transformer script with the current config
 python model_script.py --model_config "$model_config" \
                             --nonlinear_config "$nonlinear_config" \
