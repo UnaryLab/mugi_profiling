@@ -62,10 +62,13 @@ def main():
                         help='Hugging Face token for authentication (default: None, assumes hf is already logged in)')
     args = parser.parse_args()
 
+    print("Loading configuration files...")
 
     model_config = yaml.safe_load(open(args.model_config))
     nonlinear_config = yaml.safe_load(open(args.nonlinear_config))
     parameter_config = yaml.safe_load(open(args.parameter_config))
+
+    print("Successfully loaded configuration files.")
 
     evaluate_model(model_config, nonlinear_config, parameter_config, args.nonlinear_config)
 
