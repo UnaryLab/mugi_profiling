@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#SBATCH --account=bebv-delta-gpu
 #SBATCH --time=1:00:00
 #SBATCH --cpus-per-task=16
 #SBATCH --gres=gpu:2
