@@ -16,6 +16,7 @@
 
 # Initialize conda properly for bash script
 #source $(conda info --base)/etc/profile.d/conda.sh
+eval "$(conda shell.bash hook)"
 
 conda activate mugi_profiling
 
