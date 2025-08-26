@@ -56,12 +56,12 @@ class LlamaModel(InferenceModel):
         if self.max_length > 4096:
             self.max_length = 4096
 
-    def patch_layers(self, ffn_class, ffn_object, attention_parameters: dict = {}, ffn_parameters: dict = {}, attention_keys: list = [], ffn_keys: list = [], path: str = None):
+    def patch_layers(self, attention_class: torch.nn.Module, ffn_class: torch.nn.Module, attention_parameters: dict, ffn_parameters: dict, attention_keys: list, ffn_keys: list, path: str):
         for i, layer in enumerate(self.model.model.layers):
                 layer_device = next(layer.parameters()).device
 
                 self.append_nonlinear_list(
-                    ffn_object=ffn_object,
+                    attention_class=attention_class,
                     ffn_class=ffn_class,
                     attention_parameters=attention_parameters,
                     ffn_parameters=ffn_parameters,
