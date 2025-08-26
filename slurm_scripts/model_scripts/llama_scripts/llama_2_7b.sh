@@ -28,6 +28,8 @@ nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_ffn.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
+echo "here"
+
 huggingface-cli login --token "$hf_token"
 
 # Loop through each configuration
