@@ -11,11 +11,8 @@
 #SBATCH --output=output/llama_2/llama_2_7b_output.txt
 
 #module load python
-echo "before"
-module load anaconda
-echo "after"
-
-module load cuda
+#module load anaconda
+#module load cuda
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
