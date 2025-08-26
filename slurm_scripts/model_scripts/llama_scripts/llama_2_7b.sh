@@ -10,7 +10,7 @@
 #SBATCH --error=error/llama_2/llama_2_7b_error.txt
 #SBATCH --output=output/llama_2/llama_2_7b_output.txt
 
-module load python
+#module load python
 module load anaconda
 module load cuda
 
