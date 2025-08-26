@@ -9,7 +9,7 @@
 #SBATCH --job-name=llama_2_7b_profiling
 #SBATCH --error=error/llama_2/llama_2_7b_error.txt
 #SBATCH --output=output/llama_2/llama_2_7b_output.txt
-
+echo "here"
 #module load python
 module load anaconda
 module load cuda
@@ -28,7 +28,7 @@ nonlinear_config="config/nonlinear_config/large_model_configs/vlp_min_ffn.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
-echo "here"
+
 
 huggingface-cli login --token "$hf_token"
 
