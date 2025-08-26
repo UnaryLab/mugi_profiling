@@ -76,7 +76,7 @@ class InferenceModel(ABC):
             print(layer)
             attention_object = attention_class(**attention_parameters,
                                                layer=layer,
-                                               devlayerce=device,
+                                               device=device,
                                                profile_path=path,
                                                profile_dims=self.profiling_dims,
                                                keys=attention_keys,
