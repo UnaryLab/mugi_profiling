@@ -73,7 +73,6 @@ class InferenceModel(ABC):
     def append_nonlinear_list(self, attention_class, ffn_class, attention_parameters, ffn_parameters, layer, device, path, attention_keys, ffn_keys):
 
         if len(self.attention_objects) <= layer:
-            print(layer)
             attention_object = attention_class(**attention_parameters,
                                                layer=layer,
                                                device=device,
