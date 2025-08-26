@@ -6,8 +6,8 @@
 #SBATCH --job-name=llama_2_7b_profiling
 #SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
-#SBATCH --constraint=tesla_v100-pcie-32gb
-#SBATCH --constraint=nvidia_h100_pcie
+#SBATCH --constraints=tesla_v100-pcie-32gb
+#SBATCH --constraints=nvidia_h100_pcie
 
 module load anaconda
 module load cuda
