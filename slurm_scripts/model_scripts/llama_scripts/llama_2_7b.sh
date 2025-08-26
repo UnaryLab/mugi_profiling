@@ -1,18 +1,15 @@
 #!/bin/bash
 
 #SBATCH --account=bebv-delta-gpu
-#SBATCH --time=8:00:00
-#SBATCH --cpus-per-task=8
-#SBATCH --partition=gpuH200x8
-#SBATCH --gres=gpu:1
-#SBATCH --mem=16g
+#SBATCH --time=1:00:00
+#SBATCH --cpus-per-task=16
+#SBATCH --gres=gpu:2
 #SBATCH --job-name=llama_2_7b_profiling
-#SBATCH --error=error/llama_2/llama_2_7b_error.txt
-#SBATCH --output=output/llama_2/llama_2_7b_output.txt
+#SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
+#SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
 
-#module load python
-#module load anaconda
-#module load cuda
+module load anaconda
+module load cuda
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
@@ -27,7 +24,6 @@ model_config="config/model_config/llama/llama_2_7b.yaml"
 nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_torch.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
-
 
 huggingface-cli login --token "$hf_token"
 
