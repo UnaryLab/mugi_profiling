@@ -51,17 +51,25 @@ class WhisperModel(InferenceModel):
         return audio_array
 
     def patch_layers(self, attention_class, ffn_class, attention_parameters: dict = {}, ffn_parameters: dict = {}, attention_keys: list = [], ffn_keys: list = [], path: str = None):
-        for i, layer in enumerate(self.model.model.encoder.layers):
-                layer_device = next(layer.parameters()).device
-                if i == 0:
-                    self.device = layer_device
-                attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=attention_keys,  profile=self.profile)
-                ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=ffn_keys,  profile=self.profile)
-                eager_attn_fn = WhisperEager(nonlinear_object=attention_object)
-                forward = whisper_forward(eager_attn_fn)
 
-                layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
-                layer.activation_fn = ffn_object
+        for i, layer in enumerate(self.model.model.encoder.layers + self.model.model.decoder.layers):
+            layer_device = next(layer.parameters()).device
+            
+            self.append_nonlinear_list(attention_class=attention_class,
+                                       ffn_class=ffn_class,
+                                       attention_parameters=attention_parameters,
+                                       ffn_parameters=ffn_parameters,
+                                       layer=i,
+                                       device=layer_device,
+                                       path=path,
+                                       attention_keys=attention_keys,
+                                       ffn_keys=ffn_keys)
+
+            eager_attn_fn = WhisperEager(nonlinear_object=self.attention_objects[i])
+            forward = whisper_forward(eager_attn_fn)
+
+            layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
+            layer.activation_fn = self.ffn_objects[i]
 
     def process_dataset(self):
         subset = list(self.dataset.take(self.n_samples))

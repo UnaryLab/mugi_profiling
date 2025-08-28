@@ -60,17 +60,15 @@ class LlamaModel(InferenceModel):
         for i, layer in enumerate(self.model.model.layers):
                 layer_device = next(layer.parameters()).device
 
-                self.append_nonlinear_list(
-                    attention_class=attention_class,
-                    ffn_class=ffn_class,
-                    attention_parameters=attention_parameters,
-                    ffn_parameters=ffn_parameters,
-                    layer=i,
-                    device=layer_device,
-                    path=path,
-                    attention_keys=attention_keys,
-                    ffn_keys=ffn_keys
-                )
+                self.append_nonlinear_list(attention_class=attention_class,
+                                           ffn_class=ffn_class,
+                                           attention_parameters=attention_parameters,
+                                           ffn_parameters=ffn_parameters,
+                                           layer=i,
+                                           device=layer_device,
+                                           path=path,
+                                           attention_keys=attention_keys,
+                                           ffn_keys=ffn_keys)
 
                 eager_attn_fn = LlamaEager(nonlinear_object=self.attention_objects[i])
                 forward = llama_forward(eager_attn_fn)
