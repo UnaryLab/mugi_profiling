@@ -72,8 +72,8 @@ class WhisperModel(InferenceModel):
             layer.activation_fn = self.ffn_objects[i]
 
     def process_dataset(self):
-        print("Subset")
         subset = []
+        print("Subset")
         self.dataset
         print(f"Dataset length: {len(self.dataset)}")
         for i, sample in enumerate(self.dataset):
