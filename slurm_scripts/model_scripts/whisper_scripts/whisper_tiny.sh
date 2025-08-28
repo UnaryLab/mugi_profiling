@@ -8,8 +8,8 @@
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
 #SBATCH --constraint=gpu32|gpu80
 
-module load anaconda
-module load cuda
+# module load anaconda
+# module load cuda
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
