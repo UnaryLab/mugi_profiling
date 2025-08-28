@@ -98,11 +98,11 @@ class InferenceModel(ABC):
             ffn_object = self.ffn_objects[layer]
             ffn_object.set_params(**ffn_parameters)
 
-    def load_streaming_dataset(self):
+    def load_partial_dataset(self):
         if self.dataset_config:
-            self.dataset = load_dataset(self.hf_path, self.dataset_config, split=self.dataset_split, streaming=True, trust_remote_code=True)
+            self.dataset = load_dataset(self.hf_path, self.dataset_config, split=self.dataset_split, streaming=False, trust_remote_code=True)
         else:
-            self.dataset = load_dataset(self.hf_path, split=self.dataset_split, streaming=True, trust_remote_code=True)
+            self.dataset = load_dataset(self.hf_path, split=self.dataset_split, streaming=False, trust_remote_code=True)
 
     def process_batch(self, batch):
         return batch
