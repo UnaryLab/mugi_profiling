@@ -76,6 +76,8 @@ class WhisperModel(InferenceModel):
         print("Subset")
         self.dataset
         print(f"Dataset: {self.dataset}")
+        for sample in self.dataset:
+            print(f"Sample: {sample}")
         for i, sample in enumerate(self.dataset):
             print(f"Processing example {i}")
             subset.append(sample)
