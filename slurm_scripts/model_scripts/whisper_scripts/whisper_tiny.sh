@@ -47,8 +47,6 @@ if [ $exit_code -eq 0 ]; then
     echo "✓ Successfully completed experiment with $model_config"
 else
     echo "✗ Error occurred while running experiment with $model_config (exit code: $exit_code)"
-    echo "Check whisper_detailed_log.txt and whisper_error.txt for details"
-    echo "Continuing with next configuration..."
 fi
 
 echo "----------------------------------------"
