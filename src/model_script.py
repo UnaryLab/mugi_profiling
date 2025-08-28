@@ -64,6 +64,8 @@ def main():
 
     print("Loading configuration files...")
 
+    print(f'\n{args.model_config}\n')
+
     model_config = yaml.safe_load(open(args.model_config))
     nonlinear_config = yaml.safe_load(open(args.nonlinear_config))
     parameter_config = yaml.safe_load(open(args.parameter_config))
