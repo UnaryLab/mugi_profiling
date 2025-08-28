@@ -76,6 +76,7 @@ class WhisperModel(InferenceModel):
         self.inputs = []
 
         for example in subset:
+            print(f"Processing example: {example['audio']['path']}")
             audio_array = self.process_audio(example['audio'])
 
             inputs = self.processor(audio_array,
