@@ -46,7 +46,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
     print('Initializing deepspeed...')
     inference_model.init_deepspeed()
     print('Loading dataset...')
-    inference_model.load_partial_dataset()
+    inference_model.load_streaming_dataset()
     print('Processing dataset...')
     inference_model.process_dataset()
     print('Batching dataset...')
