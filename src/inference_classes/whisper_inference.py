@@ -1,17 +1,17 @@
-import torch
+import gc
+from itertools import islice
 import librosa
 import numpy as np
-import gc
-import math
 import shutil
+import torch
 import types
 
 from huggingface_hub import snapshot_download
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
 
-from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import WhisperEager
 from src.custom_nonlinear.custom_forward import whisper_forward
+from src.inference_classes.inference_class import InferenceModel
 
 class WhisperModel(InferenceModel):
     def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
@@ -76,13 +76,7 @@ class WhisperModel(InferenceModel):
         print("Subset")
         self.dataset
         print(f"Dataset: {self.dataset}")
-        for sample in self.dataset:
-            print(f"Sample: {sample}")
-        for i, sample in enumerate(self.dataset):
-            print(f"Processing example {i}")
-            subset.append(sample)
-            if i + 1 == self.n_samples:
-                break
+        subset = list(islice(self.dataset, self.n_samples))
         print(f"Length of subset: {len(subset)}")
         self.inputs = []
         print("Processing examples...")
@@ -128,7 +122,7 @@ class WhisperModel(InferenceModel):
             self.inputs.append(processed_example)
 
     def compute_metric(self):
-        return math.exp(self.total_loss / self.num_batches)
+        return torch.exp(self.total_loss / self.num_batches)
     
     def process_batch(self, batch):
         input_features = [i['input_features'] for i in batch]
