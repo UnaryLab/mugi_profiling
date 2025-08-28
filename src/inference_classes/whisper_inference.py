@@ -72,9 +72,11 @@ class WhisperModel(InferenceModel):
             layer.activation_fn = self.ffn_objects[i]
 
     def process_dataset(self):
+        print("Subset")
         subset = list(self.dataset.take(self.n_samples))
+        print(f"Length of subset: {len(subset)}")
         self.inputs = []
-
+        print("Processing examples...")
         for example in subset:
             print(f"Processing example: {example['audio']['path']}")
             audio_array = self.process_audio(example['audio'])
