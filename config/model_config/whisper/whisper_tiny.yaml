@@ -1,7 +1,7 @@
 dataset:
   name: librispeech
   hf_path: openslr/librispeech_asr
-  split: test.clean[:100]
+  split: test.clean.100
 model: 
   name: openai/whisper-tiny
 nonlinear:
