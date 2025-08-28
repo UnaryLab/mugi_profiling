@@ -40,12 +40,19 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
         os.makedirs(os.path.dirname(inference_model.csv_file), exist_ok=True)
         inference_model.df = None
 
+    print(f'Running inference for model: {inference_model.model_name}')
+    print('Loading model...')
     inference_model.load_model()
+    print('Initializing deepspeed...')
     inference_model.init_deepspeed()
+    print('Loading dataset...')
     inference_model.load_streaming_dataset()
+    print('Processing dataset...')
     inference_model.process_dataset()
+    print('Batching dataset...')
     inference_model.batch_dataset()
     inference_model.set_profiling_dims()
+    print('Patching layers...')
     inference_model.loop_configuration()
 
     inference_model.df.to_csv(inference_model.csv_file, index=False)
