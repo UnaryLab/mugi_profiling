@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --time=1:00:00
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:2
 #SBATCH --job-name=llama_2_7b_profiling
 #SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
@@ -35,6 +35,7 @@ echo "----------------------------------------"
 # Run the transformer script with the current config
 export PYTHONPATH=~/mugi_profiling:$PYTHONPATH
 
+which pip
 
 python src/model_script.py --model_config "$model_config" \
                             --nonlinear_config "$nonlinear_config" \
