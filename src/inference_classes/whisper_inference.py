@@ -73,7 +73,7 @@ class WhisperModel(InferenceModel):
 
     def process_dataset(self):
         print("Subset")
-        subset = list(self.dataset.take(self.n_samples))
+        subset = [sample for i, sample in enumerate(self.dataset) if i < self.n_samples]
         print(f"Length of subset: {len(subset)}")
         self.inputs = []
         print("Processing examples...")
