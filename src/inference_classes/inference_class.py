@@ -100,10 +100,9 @@ class InferenceModel(ABC):
 
     def load_streaming_dataset(self):
         if self.dataset_config:
-            self.dataset = load_dataset(self.hf_path, self.dataset_config, split=self.dataset_split, trust_remote_code=True)
+            self.dataset = load_dataset(self.hf_path, self.dataset_config, split=self.dataset_split, streaming=True, trust_remote_code=True)
         else:
-            self.dataset = load_dataset(self.hf_path, split=self.dataset_split, trust_remote_code=True)
-        exit()
+            self.dataset = load_dataset(self.hf_path, split=self.dataset_split, streaming=True, trust_remote_code=True)
 
     def process_batch(self, batch):
         return batch
