@@ -1,15 +1,15 @@
 #!/bin/bash
 
 #SBATCH --time=1:00:00
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=16
 #SBATCH --gres=gpu:2
 #SBATCH --job-name=llama_2_7b_profiling
 #SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
-#SBATCH --constraint=gpu32|gpu80
+#SBATCH --constraint=gpu32
 
-# module load anaconda
-# module load cuda
+module load anaconda
+module load cuda
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
