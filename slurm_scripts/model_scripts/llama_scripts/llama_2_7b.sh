@@ -8,8 +8,8 @@
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
 #SBATCH --constraint=gpu32|gpu80
 
-module load anaconda
-module load cuda
+# module load anaconda
+# module load cuda
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
@@ -49,8 +49,6 @@ if [ $exit_code -eq 0 ]; then
     echo "✓ Successfully completed experiment with $model_config"
 else
     echo "✗ Error occurred while running experiment with $model_config (exit code: $exit_code)"
-    echo "Check whisper_detailed_log.txt and whisper_error.txt for details"
-    echo "Continuing with next configuration..."
 fi
 
 echo "----------------------------------------"
