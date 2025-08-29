@@ -95,8 +95,7 @@ class WhisperModel(InferenceModel):
     def process_dataset(self):
         
         subset = list(self.dataset.take(self.n_samples))
-        print(subset)
-        exit()
+    
         for example in subset:
             print(f"Processing example: {example['audio']['path']}")
             audio_array = self.process_audio(example['audio'])
@@ -135,7 +134,7 @@ class WhisperModel(InferenceModel):
                 "labels": text_inputs["input_ids"],
                 "text": text
             }
-
+            print(processed_example)
             self.inputs.append(processed_example)
 
     def compute_metric(self):
