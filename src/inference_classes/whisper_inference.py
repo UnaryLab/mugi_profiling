@@ -155,7 +155,7 @@ class WhisperModel(InferenceModel):
 
         return batch
 
-    def compute_loss(self, batch):
+    def run_inference(self, batch):
         input_features = batch["input_features"].to(self.device)
         labels = batch["labels"].to(self.device)
         labels[labels == self.model.config.pad_token_id] = -100
