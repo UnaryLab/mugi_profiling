@@ -95,6 +95,8 @@ class WhisperModel(InferenceModel):
     def process_dataset(self):
         
         subset = list(self.dataset.take(self.n_samples))
+        print(subset)
+        exit()
         for example in subset:
             print(f"Processing example: {example['audio']['path']}")
             audio_array = self.process_audio(example['audio'])
