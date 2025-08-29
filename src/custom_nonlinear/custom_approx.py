@@ -20,6 +20,9 @@ class CustomNonlinear(torch.nn.Module):
             tensor = tensor.to(torch.bfloat16)
         return tensor
 
+    def set_params(self, **kwargs):
+        return
+
     def nonlinear_forward(self, *args, **kwargs):
         return
 
