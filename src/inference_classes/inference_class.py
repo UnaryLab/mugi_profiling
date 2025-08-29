@@ -170,7 +170,7 @@ class InferenceModel(ABC):
             del batch, batched_loss
             torch.cuda.empty_cache()
 
-        self.metric = self.compute_metric(total_loss, num_batches)
+        self.metric = self.compute_metric(total_loss, num_batches).item()
 
     def set_profiling_dims(self):
         self.profile_dims = -1
