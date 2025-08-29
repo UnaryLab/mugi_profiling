@@ -334,7 +334,6 @@ class InferenceModel(ABC):
 
         new_row = {
             'model': self.model_name,
-            'modality': self.model_modality,
             'value': self.metric,
             'function_name': function_name,
             'patch_attention': patch_attention,
