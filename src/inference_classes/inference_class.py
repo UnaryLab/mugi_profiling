@@ -77,7 +77,7 @@ class InferenceModel(ABC):
                                                layer=layer,
                                                device=device,
                                                profile_path=path,
-                                               profile_dims=self.profiling_dims,
+                                               profile_dims=profiling_dims,
                                                keys=attention_keys,
                                                profile=self.profile)
             self.attention_objects.append(attention_object)
@@ -90,7 +90,7 @@ class InferenceModel(ABC):
                                    layer=layer,
                                    device=device,
                                    profile_path=path,
-                                   profile_dims=self.profiling_dims,
+                                   profile_dims=profiling_dims,
                                    keys=ffn_keys,
                                    profile=self.profile)
             self.ffn_objects.append(ffn_object)
