@@ -1,15 +1,5 @@
-# Ignore profiling data
-# Ignore result outputs
-results/
-
-# Ignore null output or temp dir
-null/
-
 *.pyc
 *.pyo
 *.pyd
 
- profile/*
- */profile
  profile/
- ./profile/
