@@ -161,19 +161,19 @@ class InferenceModel(ABC):
         return math.exp(self.total_loss / self.num_batches)
 
     def run_batched_inference(self):
-        self.total_loss = 0.0
-        self.num_batches = 0
+        self.total_loss = torch.tensor(0, dtype=torch.float64)
+        self.num_batches = torch.tensor(0, dtype=torch.float64)
         for batch in self.inputs:
             batched_loss = self.run_inference(
                 batch=batch
             )
 
-            self.total_loss += batched_loss.item()
-            self.num_batches += 1
+            total_loss += batched_loss.item()
+            num_batches += 1
             del batch, batched_loss
             torch.cuda.empty_cache()
 
-        self.metric = self.compute_metric()
+        self.metric = self.compute_metric(total_loss, num_batches)
 
     def set_profiling_dims(self):
         self.profile_dims = -1

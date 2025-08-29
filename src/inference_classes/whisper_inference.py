@@ -136,8 +136,8 @@ class WhisperModel(InferenceModel):
             }
             self.inputs.append(processed_example)
 
-    def compute_metric(self):
-        return torch.exp(self.total_loss / self.num_batches)
+    def compute_metric(total_loss, num_batches):
+        return torch.exp(total_loss / num_batches)
     
     def process_batch(self, batch):
         input_features = [i['input_features'] for i in batch]
