@@ -421,12 +421,6 @@ class InferenceModel(ABC):
                 torch.cuda.empty_cache()
                 gc.collect()
 
-        # Save the collected results to CSV
-        if self.df is not None:
-            csv_file = f'csv/{self.model_name}/metric.csv'
-            os.makedirs(os.path.dirname(csv_file), exist_ok=True)
-            self.df.to_csv(csv_file, index=False)
-
     def cleanup(self):
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
