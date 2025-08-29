@@ -154,15 +154,12 @@ class InferenceModel(ABC):
         result = [r for r in result if not all(v is None for v in r.values())]
         return result
 
-    def compute_loss(self):
-        return self.total_loss / self.num_batches
-    
-    def compute_perplexity(self):
-        return math.exp(self.total_loss / self.num_batches)
+    def compute_metric(self, total_loss, num_batches):
+        return
 
     def run_batched_inference(self):
-        self.total_loss = torch.tensor(0, dtype=torch.float64)
-        self.num_batches = torch.tensor(0, dtype=torch.float64)
+        total_loss = torch.tensor(0, dtype=torch.float64)
+        num_batches = torch.tensor(0, dtype=torch.float64)
         for batch in self.inputs:
             batched_loss = self.run_inference(
                 batch=batch
