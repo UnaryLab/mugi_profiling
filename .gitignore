@@ -11,3 +11,5 @@ null/
 
  profile/*
  */profile
+ profile/
+ ./profile/
