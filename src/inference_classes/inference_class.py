@@ -6,7 +6,7 @@ import os
 import math
 import pandas as pd
 from tqdm import tqdm
-#import deepspeed
+import deepspeed
 from abc import ABC, abstractmethod
 
 from src.custom_nonlinear.custom_approx import CustomSoftmax, CustomSilu, CustomGelu, CustomFastGelu
@@ -70,7 +70,7 @@ class InferenceModel(ABC):
             tensor_parallel={"tp_size": n_gpus}
         )
 
-    def append_nonlinear_list(self, attention_class, ffn_class, attention_parameters, ffn_parameters, layer, device, path, attention_keys, ffn_keys):
+    def append_nonlinear_list(self, attention_class, ffn_class, attention_parameters, ffn_parameters, layer, device, path, profiling_dims, attention_keys, ffn_keys):
 
         if len(self.attention_objects) <= layer:
             attention_object = attention_class(**attention_parameters,
