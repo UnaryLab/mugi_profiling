@@ -340,8 +340,11 @@ class InferenceModel(ABC):
         )
 
     def loop_configuration(self):
+        for key, value in self.nonlinear_function_parameters.items():
+            if not isinstance(value, list):
+                self.nonlinear_function_parameters[key] = [value]
+
         print(self.nonlinear_function_parameters)
-        exit()
 
         
 
