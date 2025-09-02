@@ -9,7 +9,6 @@
 
 # module load anaconda
 # module load cuda
-# module load openmpi
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh

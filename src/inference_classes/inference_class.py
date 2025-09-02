@@ -8,6 +8,7 @@ import pandas as pd
 from tqdm import tqdm
 import deepspeed
 from abc import ABC, abstractmethod
+import torch.distributed as dist
 
 from src.custom_nonlinear.custom_approx import CustomSoftmax, CustomSilu, CustomGelu, CustomFastGelu
 from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_gelu_approx import PWLGelu
@@ -59,16 +60,31 @@ class InferenceModel(ABC):
         self.ffn_objects = []
 
     def init_deepspeed(self):
-        n_gpus = torch.cuda.device_count()
-        if n_gpus == 0:
+
+        rank = int(os.environ.get("SLURM_PROCID", 0))
+        world_size = int(os.environ.get("SLURM_NTASKS", 1))
+        local_rank = int(os.environ.get("SLURM_LOCALID", 0))
+
+        torch.cuda.set_device(local_rank)
+
+        # Initialize torch.distributed process group
+        dist.init_process_group(
+            backend="nccl",
+            init_method="env://",
+            rank=rank,
+            world_size=world_size
+        )
+
+        tp_size = torch.cuda.device_count()
+        if tp_size == 0:
             raise ValueError("No GPUs available for DeepSpeed inference.")
 
         self.ds_model = deepspeed.init_inference(
             self.model,
             dtype=torch.float16,
             replace_with_kernel_inject=False,
-            tensor_parallel={"tp_size": n_gpus},
-            dist_backend='nccl'
+            tensor_parallel={"tp_size": tp_size},
+            dist_init_required=True
         )
 
     def append_nonlinear_list(self, attention_class, ffn_class, attention_parameters, ffn_parameters, layer, device, path, profiling_dims, attention_keys, ffn_keys):
