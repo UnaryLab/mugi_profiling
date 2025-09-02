@@ -3,7 +3,7 @@
 #SBATCH --time=0:05:00
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
-#SBATCH --job-name=llama_2_7b_profiling
+#SBATCH --job-name=whisper_tiny
 #SBATCH --error=output/run/whisper/whisper_tiny/error.txt
 #SBATCH --output=output/run/whisper/whisper_tiny/output.txt
 
@@ -12,7 +12,7 @@
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
-#eval "$(conda shell.bash hook)"
+eval "$(conda shell.bash hook)"
 
 conda activate mugi_profiling
 
