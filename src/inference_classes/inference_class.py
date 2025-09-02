@@ -414,6 +414,8 @@ class InferenceModel(ABC):
         attention_parameters = attention_parameters if attention_parameters else {}
         ffn_parameters = ffn_parameters if ffn_parameters else {}
 
+        self.set_profiling_dims()
+
         self.patch_layers(
             attention_class=attention_class,
             ffn_class=ffn_class,
