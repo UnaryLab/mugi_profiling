@@ -34,7 +34,6 @@ class InferenceModel(ABC):
         self.model_parameters = model_dict.get('model')
         self.inference_parameters = model_dict.get('parameters')
         self.nonlinear_parameters = model_dict.get('nonlinear')
-        self.nonlinear_functions = nonlinear_dict.get('functions')
         self.nonlinear_function_parameters = nonlinear_dict.get('params')
 
         # Dict Items
@@ -42,6 +41,7 @@ class InferenceModel(ABC):
         self.hf_path = self.dataset_parameters.get('hf_path')
         self.dataset_split = self.dataset_parameters.get('split')
         self.dataset_config = self.dataset_parameters.get('config')
+        self.nonlinear_function = nonlinear_dict.get('function')
 
         self.model_name = self.model_parameters.get('name')
 
@@ -181,15 +181,6 @@ class InferenceModel(ABC):
 
     def set_profiling_dims(self):
         self.profile_dims = -1
-
-    def memory_profiled_forward(self, forward_fn, mem_stats_dict, name):
-        def wrapper(*args, **kwargs):
-            torch.cuda.reset_peak_memory_stats()
-            result = forward_fn(*args, **kwargs)
-            peak = torch.cuda.max_memory_allocated() / (2**20)  # MB
-            mem_stats_dict[name] = peak
-            return result
-        return wrapper
 
     @abstractmethod
     def patch_layers(self):
@@ -365,6 +356,12 @@ class InferenceModel(ABC):
             self.df = new_row
         else:
             self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
+
+    #def run_configuration(self, function_name, attention_parameters={}, ffn_parameters={}):
+        
+    def patch_model(self):
+        print(self.nonlinear_function)
+        exit()
 
     def loop_configuration(self):
         for function_name, function_operations in tqdm(self.nonlinear_functions.items(), desc='Patching configurations'):

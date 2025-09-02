@@ -43,6 +43,8 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
     print(f'Running inference for model: {inference_model.model_name}')
     print('Loading model...')
     inference_model.load_model()
+    print('Patching model...')
+    inference_model.patch_model()
     print('Initializing deepspeed...')
     inference_model.init_deepspeed()
     print('Loading dataset...')
