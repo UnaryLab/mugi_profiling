@@ -360,9 +360,9 @@ class InferenceModel(ABC):
 
     #def run_configuration(self, function_name, attention_parameters={}, ffn_parameters={}):
         
-    def patch_model(self, approx_function):
+    def patch_model(self):
 
-        print(approx_function)
+        print(self.approx_function)
         exit()
 
         attention_default_classes = [CustomSoftmax]
