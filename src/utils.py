@@ -21,9 +21,9 @@ def validate_config(model_dict, nonlinear_dict, parameter_dict):
     nonlinear_parameters = model_dict.get('nonlinear')
     assert isinstance(nonlinear_parameters, dict), "Nonlinear operations are not defined or do not contain operations."
 
-    nonlinear_functions = nonlinear_dict.get('functions')
+    nonlinear_function = nonlinear_dict.get('function')
     nonlinear_function_parameters = nonlinear_dict.get('params')
-    assert isinstance(nonlinear_functions, dict), "Nonlinear functions are not defined or do not contain functions."
+    assert isinstance(nonlinear_function, str), "Nonlinear functions are not defined or do not contain functions."
     assert isinstance(nonlinear_function_parameters, dict), "Nonlinear function parameters are not defined or do not contain parameters."
 
     dataset_name = dataset_parameters.get('name')
