@@ -1,1 +1,2 @@
-function: torch
+nonlinear_function: torch
+approx_function: torch

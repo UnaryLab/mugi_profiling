@@ -41,7 +41,8 @@ class InferenceModel(ABC):
         self.hf_path = self.dataset_parameters.get('hf_path')
         self.dataset_split = self.dataset_parameters.get('split')
         self.dataset_config = self.dataset_parameters.get('config')
-        self.nonlinear_function = nonlinear_dict.get('function')
+
+        self.nonlinear_function = nonlinear_dict.get('nonlinear_function')
         self.approx_function = nonlinear_dict.get('approx_function')
 
         self.model_name = self.model_parameters.get('name')
@@ -362,11 +363,15 @@ class InferenceModel(ABC):
         
     def patch_model(self):
 
-        print(self.approx_function)
-        exit()
-
         attention_default_classes = [CustomSoftmax]
         ffn_default_classes = [CustomSilu, CustomGelu, CustomFastGelu]
+
+        patch_attention = False
+        patch_ffn = False
+        if self.nonlinear_function in ['softmax', 'both']:
+            patch_attention = True
+        if self.nonlinear_function in ['ffn', 'both']:
+            patch_ffn = True
 
         attention_class = CustomSoftmax
         if self.ffn_op == 'silu':
@@ -376,22 +381,22 @@ class InferenceModel(ABC):
         elif self.ffn_op == 'fast_gelu':
             ffn_class = CustomFastGelu
 
-        if approx_function == 'vlp':
-            if patch_attention: attention_class = VLPSoftmax
+        if self.approx_function == 'vlp':
+            if self.patch_attention: attention_class = VLPSoftmax
 
-            if self.ffn_op == 'silu' and patch_ffn: ffn_class = VLPSilu
+            if self.ffn_op == 'silu' and self.patch_ffn: ffn_class = VLPSilu
             elif (self.ffn_op == 'gelu' or self.ffn_op == 'fast_gelu') and patch_ffn: ffn_class = VLPGelu
 
-        elif approx_function == 'pwl':
+        elif self.approx_function == 'pwl':
             if patch_attention: attention_class = PWLSoftmax
 
             if self.ffn_op == 'silu' and patch_ffn: ffn_class = PWLSilu
             elif (self.ffn_op == 'gelu' or self.ffn_op == 'fast_gelu') and patch_ffn: ffn_class = PWLGelu
 
-        elif approx_function == 'pwl_mobilenet':
+        elif self.approx_function == 'pwl_mobilenet':
             if self.ffn_op == 'silu' and patch_ffn: ffn_class = PWLMobilenet
 
-        elif approx_function == 'taylor':
+        elif self.approx_function == 'taylor':
             if patch_attention: attention_class = TaylorSoftmax
 
         if attention_class in attention_default_classes:
@@ -399,8 +404,8 @@ class InferenceModel(ABC):
         if ffn_class in ffn_default_classes:
             ffn_parameters = {}
 
-        attn_path = f'{approx_function}_{self.attn_op}' if patch_attention else f'torch_{self.attn_op}'
-        ffn_path = f'{approx_function}_{self.ffn_op}' if patch_ffn else f'torch_{self.ffn_op}'
+        attn_path = f'{self.approx_function}_{self.attn_op}' if patch_attention else f'torch_{self.attn_op}'
+        ffn_path = f'{self.approx_function}_{self.ffn_op}' if patch_ffn else f'torch_{self.ffn_op}'
         path = f'profile/{self.model_name}/{attn_path}_{ffn_path}/'
 
         if self.profile:
@@ -414,10 +419,10 @@ class InferenceModel(ABC):
             ffn_class=ffn_class,
             attention_parameters=attention_parameters,
             ffn_parameters=ffn_parameters,
-            attention_keys=attention_keys,
-            ffn_keys=ffn_keys,
             path=path
         )
+
+        exit()
         
 
     def loop_configuration(self):

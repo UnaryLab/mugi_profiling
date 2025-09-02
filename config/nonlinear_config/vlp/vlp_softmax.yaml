@@ -1,0 +1,3 @@
+function: softmax
+parameters:
+approx_function: vlp
