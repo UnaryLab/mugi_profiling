@@ -23,8 +23,6 @@ def validate_config(model_dict, nonlinear_dict, parameter_dict):
 
     nonlinear_function = nonlinear_dict.get('function')
     nonlinear_function_parameters = nonlinear_dict.get('params')
-    assert isinstance(nonlinear_function, str), "Nonlinear functions are not defined or do not contain functions."
-    assert isinstance(nonlinear_function_parameters, dict), "Nonlinear function parameters are not defined or do not contain parameters."
 
     dataset_name = dataset_parameters.get('name')
     hf_path = dataset_parameters.get('hf_path')
