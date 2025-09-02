@@ -42,6 +42,7 @@ class InferenceModel(ABC):
         self.dataset_split = self.dataset_parameters.get('split')
         self.dataset_config = self.dataset_parameters.get('config')
         self.nonlinear_function = nonlinear_dict.get('function')
+        self.approx_function = nonlinear_dict.get('approx_function')
 
         self.model_name = self.model_parameters.get('name')
 
@@ -359,10 +360,65 @@ class InferenceModel(ABC):
 
     #def run_configuration(self, function_name, attention_parameters={}, ffn_parameters={}):
         
-    def patch_model(self):
-        print(self.nonlinear_function)
-        print(self.nonlinear_function_parameters)
+    def patch_model(self, approx_function):
+
+        print(approx_function)
         exit()
+
+        attention_default_classes = [CustomSoftmax]
+        ffn_default_classes = [CustomSilu, CustomGelu, CustomFastGelu]
+
+        attention_class = CustomSoftmax
+        if self.ffn_op == 'silu':
+            ffn_class = CustomSilu
+        elif self.ffn_op == 'gelu':
+            ffn_class = CustomGelu
+        elif self.ffn_op == 'fast_gelu':
+            ffn_class = CustomFastGelu
+
+        if approx_function == 'vlp':
+            if patch_attention: attention_class = VLPSoftmax
+
+            if self.ffn_op == 'silu' and patch_ffn: ffn_class = VLPSilu
+            elif (self.ffn_op == 'gelu' or self.ffn_op == 'fast_gelu') and patch_ffn: ffn_class = VLPGelu
+
+        elif approx_function == 'pwl':
+            if patch_attention: attention_class = PWLSoftmax
+
+            if self.ffn_op == 'silu' and patch_ffn: ffn_class = PWLSilu
+            elif (self.ffn_op == 'gelu' or self.ffn_op == 'fast_gelu') and patch_ffn: ffn_class = PWLGelu
+
+        elif approx_function == 'pwl_mobilenet':
+            if self.ffn_op == 'silu' and patch_ffn: ffn_class = PWLMobilenet
+
+        elif approx_function == 'taylor':
+            if patch_attention: attention_class = TaylorSoftmax
+
+        if attention_class in attention_default_classes:
+            attention_parameters = {}
+        if ffn_class in ffn_default_classes:
+            ffn_parameters = {}
+
+        attn_path = f'{approx_function}_{self.attn_op}' if patch_attention else f'torch_{self.attn_op}'
+        ffn_path = f'{approx_function}_{self.ffn_op}' if patch_ffn else f'torch_{self.ffn_op}'
+        path = f'profile/{self.model_name}/{attn_path}_{ffn_path}/'
+
+        if self.profile:
+            os.makedirs(path, exist_ok=True)
+
+        attention_parameters = attention_parameters if attention_parameters else {}
+        ffn_parameters = ffn_parameters if ffn_parameters else {}
+
+        self.patch_layers(
+            attention_class=attention_class,
+            ffn_class=ffn_class,
+            attention_parameters=attention_parameters,
+            ffn_parameters=ffn_parameters,
+            attention_keys=attention_keys,
+            ffn_keys=ffn_keys,
+            path=path
+        )
+        
 
     def loop_configuration(self):
         for function_name, function_operations in tqdm(self.nonlinear_functions.items(), desc='Patching configurations'):
