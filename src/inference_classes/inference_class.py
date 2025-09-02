@@ -361,6 +361,7 @@ class InferenceModel(ABC):
         
     def patch_model(self):
         print(self.nonlinear_function)
+        print(self.nonlienar_function_parameters)
         exit()
 
     def loop_configuration(self):
