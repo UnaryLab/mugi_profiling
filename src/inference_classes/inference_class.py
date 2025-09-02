@@ -180,7 +180,7 @@ class InferenceModel(ABC):
     def patch_layers(self):
         pass
 
-    def patch_model(self, function_name, attention_parameters={}, ffn_parameters={}, patch_attention=True, patch_ffn=True):
+    def patch_model_dep(self, function_name, attention_parameters={}, ffn_parameters={}, patch_attention=True, patch_ffn=True):
 
         if function_name == 'torch':
             self.profile = True
@@ -254,37 +254,37 @@ class InferenceModel(ABC):
             path=path
         )
 
-        self.run_batched_inference()
+        # self.run_batched_inference()
 
-        torch.cuda.empty_cache()
-        gc.collect()
+        # torch.cuda.empty_cache()
+        # gc.collect()
 
-        new_row = {
-            'model': self.model_name,
-            'value': self.metric,
-            'function_name': function_name,
-            'patch_attention': patch_attention,
-            'patch_ffn': patch_ffn,
-            'attn_fn': attention_class.__name__,
-            'ffn_fn': ffn_class.__name__
-        }
+        # new_row = {
+        #     'model': self.model_name,
+        #     'value': self.metric,
+        #     'function_name': function_name,
+        #     'patch_attention': patch_attention,
+        #     'patch_ffn': patch_ffn,
+        #     'attn_fn': attention_class.__name__,
+        #     'ffn_fn': ffn_class.__name__
+        # }
 
-        # Add attention parameters with prefixed column names to avoid conflicts
-        if attention_parameters:
-            for key, value in attention_parameters.items():
-                new_row[f'attn_{key}'] = value
+        # # Add attention parameters with prefixed column names to avoid conflicts
+        # if attention_parameters:
+        #     for key, value in attention_parameters.items():
+        #         new_row[f'attn_{key}'] = value
         
-        # Add FFN parameters with prefixed column names to avoid conflicts
-        if ffn_parameters:
-            for key, value in ffn_parameters.items():
-                new_row[f'ffn_{key}'] = value
+        # # Add FFN parameters with prefixed column names to avoid conflicts
+        # if ffn_parameters:
+        #     for key, value in ffn_parameters.items():
+        #         new_row[f'ffn_{key}'] = value
 
-        new_row = pd.DataFrame([new_row])
+        # new_row = pd.DataFrame([new_row])
 
-        if self.df is None:
-            self.df = new_row
-        else:
-            self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
+        # if self.df is None:
+        #     self.df = new_row
+        # else:
+        #     self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
 
     #def run_configuration(self, function_name, attention_parameters={}, ffn_parameters={}):
         

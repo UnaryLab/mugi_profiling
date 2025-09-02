@@ -83,48 +83,6 @@ class WhisperModel(InferenceModel):
             layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
             layer.activation_fn = self.ffn_objects[i]
 
-    def patch_layers(self, attention_class, ffn_class, attention_parameters: dict = {}, ffn_parameters: dict = {}, attention_keys: list = [], ffn_keys: list = [], path: str = None):
-
-        for i, layer in enumerate(self.model.model.encoder.layers):
-            layer_device = next(layer.parameters()).device
-            
-            self.append_nonlinear_list(attention_class=attention_class,
-                                       ffn_class=ffn_class,
-                                       attention_parameters=attention_parameters,
-                                       ffn_parameters=ffn_parameters,
-                                       layer=i,
-                                       device=layer_device,
-                                       path=path,
-                                       profiling_dims=self.source_profiling_dims,
-                                       attention_keys=attention_keys,
-                                       ffn_keys=ffn_keys)
-
-            eager_attn_fn = WhisperEager(nonlinear_object=self.attention_objects[i])
-            forward = whisper_forward(eager_attn_fn)
-
-            layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
-            layer.activation_fn = self.ffn_objects[i]
-
-        for i, layer in enumerate(self.model.model.decoder.layers):
-            layer_device = next(layer.parameters()).device
-            
-            self.append_nonlinear_list(attention_class=attention_class,
-                                       ffn_class=ffn_class,
-                                       attention_parameters=attention_parameters,
-                                       ffn_parameters=ffn_parameters,
-                                       layer=i,
-                                       device=layer_device,
-                                       path=path,
-                                       profiling_dims=self.target_profiling_dims,
-                                       attention_keys=attention_keys,
-                                       ffn_keys=ffn_keys)
-
-            eager_attn_fn = WhisperEager(nonlinear_object=self.attention_objects[i])
-            forward = whisper_forward(eager_attn_fn)
-
-            layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
-            layer.activation_fn = self.ffn_objects[i]
-
     def process_dataset(self):
         
         self.inputs = []
