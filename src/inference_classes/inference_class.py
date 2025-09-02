@@ -67,7 +67,8 @@ class InferenceModel(ABC):
             self.model,
             dtype=torch.float16,
             replace_with_kernel_inject=False,
-            tensor_parallel={"tp_size": n_gpus}
+            tensor_parallel={"tp_size": n_gpus},
+            dist_backend='nccl'
         )
 
     def append_nonlinear_list(self, attention_class, ffn_class, attention_parameters, ffn_parameters, layer, device, path, profiling_dims, attention_keys, ffn_keys):
