@@ -8,7 +8,7 @@
 #SBATCH --output=output/run/whisper/whisper_tiny/output.txt
 
 # module load anaconda
-# module load cuda
+module load cuda
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
