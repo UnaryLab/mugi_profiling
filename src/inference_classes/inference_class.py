@@ -306,9 +306,9 @@ class InferenceModel(ABC):
             ffn_class = CustomFastGelu
 
         if self.approx_function == 'vlp':
-            if self.patch_attention: attention_class = VLPSoftmax
+            if patch_attention: attention_class = VLPSoftmax
 
-            if self.ffn_op == 'silu' and self.patch_ffn: ffn_class = VLPSilu
+            if self.ffn_op == 'silu' and patch_ffn: ffn_class = VLPSilu
             elif (self.ffn_op == 'gelu' or self.ffn_op == 'fast_gelu') and patch_ffn: ffn_class = VLPGelu
 
         elif self.approx_function == 'pwl':
