@@ -8,7 +8,7 @@ class VLPSoftmax(CustomSoftmax):
     def __init__(self, layer, device, profile_path, profile_dims, profile=False):
         super(VLPSoftmax, self).__init__(layer, device, profile_path, profile_dims, profile)
 
-    def set_params(self, exp_dim, mant_dim, max_exp, min_exp, window_size, lut_build, keys):
+    def set_params(self, exp_dim, mant_dim, window_size, lut_build, max_exp=None, min_exp=None, keys=None):
         self.keys = keys
         self.lut_build = lut_build
         self.exp_dim = exp_dim
