@@ -8,15 +8,19 @@
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
 #SBATCH --partition=highgpu
 
+echo 'hi1'
 module load anaconda
+echo 'hi2'
 module load cuda
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
 #eval "$(conda shell.bash hook)"
 
+echo 'hi3'
 conda activate mugi_profiling
 
+echo 'hi4'
 cd ~/mugi_profiling
 
 # Configuration files to process
