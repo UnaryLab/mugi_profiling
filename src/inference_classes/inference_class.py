@@ -290,9 +290,6 @@ class InferenceModel(ABC):
         
     def patch_model(self):
 
-        attention_default_classes = [CustomSoftmax]
-        ffn_default_classes = [CustomSilu, CustomGelu, CustomFastGelu]
-
         patch_attention = False
         patch_ffn = False
         if self.nonlinear_function in ['softmax', 'both']:
@@ -341,9 +338,6 @@ class InferenceModel(ABC):
             ffn_class=ffn_class,
             path=path
         )
-
-        exit()
-        
 
     def loop_configuration(self):
         pass
