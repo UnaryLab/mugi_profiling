@@ -9,6 +9,7 @@
 
 # module load anaconda
 # module load cuda
+# module load openmpi
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
@@ -34,9 +35,13 @@ echo "----------------------------------------"
 # Run the transformer script with the current config
 export PYTHONPATH=~/mugi_profiling:$PYTHONPATH
 
-python src/model_script.py --model_config "$model_config" \
+deepspeed --num_nodes=1 --num_gpus=2 python src/model_script.py --model_config "$model_config" \
                             --nonlinear_config "$nonlinear_config" \
                             --parameter_config "$parameter_config"
+
+# python src/model_script.py --model_config "$model_config" \
+#                             --nonlinear_config "$nonlinear_config" \
+#                             --parameter_config "$parameter_config"
 
 # Capture the exit code
 exit_code=$?
