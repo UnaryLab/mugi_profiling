@@ -8,7 +8,6 @@ import pandas as pd
 from tqdm import tqdm
 import deepspeed
 from abc import ABC, abstractmethod
-import torch.distributed as dist
 
 from src.custom_nonlinear.custom_approx import CustomSoftmax, CustomSilu, CustomGelu, CustomFastGelu
 from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_gelu_approx import PWLGelu
@@ -67,14 +66,6 @@ class InferenceModel(ABC):
 
         torch.cuda.set_device(local_rank)
 
-        # Initialize torch.distributed process group
-        dist.init_process_group(
-            backend="nccl",
-            init_method="env://",
-            rank=rank,
-            world_size=world_size
-        )
-
         tp_size = torch.cuda.device_count()
         if tp_size == 0:
             raise ValueError("No GPUs available for DeepSpeed inference.")
@@ -83,8 +74,7 @@ class InferenceModel(ABC):
             self.model,
             dtype=torch.float16,
             replace_with_kernel_inject=False,
-            tensor_parallel={"tp_size": tp_size},
-            dist_init_required=True
+            tensor_parallel={"tp_size": tp_size}
         )
 
     def append_nonlinear_list(self, attention_class, ffn_class, attention_parameters, ffn_parameters, layer, device, path, profiling_dims, attention_keys, ffn_keys):

@@ -34,13 +34,14 @@ echo "----------------------------------------"
 # Run the transformer script with the current config
 export PYTHONPATH=~/mugi_profiling:$PYTHONPATH
 
-# deepspeed --num_nodes=1 --num_gpus=2 src/model_script.py --model_config "$model_config" \
+deepspeed --num_gpus=4 src/model_script.py \
+          --model_config "$model_config" \
+          --nonlinear_config "$nonlinear_config" \
+          --parameter_config "$parameter_config"
+
+# python src/model_script.py --model_config "$model_config" \
 #                             --nonlinear_config "$nonlinear_config" \
 #                             --parameter_config "$parameter_config"
-
-python src/model_script.py --model_config "$model_config" \
-                            --nonlinear_config "$nonlinear_config" \
-                            --parameter_config "$parameter_config"
 
 # Capture the exit code
 exit_code=$?
