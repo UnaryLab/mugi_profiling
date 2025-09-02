@@ -34,7 +34,7 @@ class InferenceModel(ABC):
         self.model_parameters = model_dict.get('model')
         self.inference_parameters = model_dict.get('parameters')
         self.nonlinear_parameters = model_dict.get('nonlinear')
-        self.nonlinear_function_parameters = nonlinear_dict.get('params')
+        self.nonlinear_function_parameters = nonlinear_dict.get('parameters')
 
         # Dict Items
         self.dataset_name = self.dataset_parameters.get('name')
