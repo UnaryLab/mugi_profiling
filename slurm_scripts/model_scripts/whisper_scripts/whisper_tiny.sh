@@ -1,12 +1,11 @@
 #!/bin/bash
 
 #SBATCH --time=0:05:00
-#SBATCH --cpus-per-task=16
-#SBATCH --gres=gpu:2
+#SBATCH --cpus-per-task=8
+#SBATCH --gres=gpu:1
 #SBATCH --job-name=llama_2_7b_profiling
-#SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
-#SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
-#SBATCH --partition=highgpu
+#SBATCH --error=output/run/whisper/whisper_tiny/error.txt
+#SBATCH --output=output/run/whisper/whisper_tiny/output.txt
 
 # module load anaconda
 # module load cuda
@@ -15,7 +14,7 @@
 # source $(conda info --base)/etc/profile.d/conda.sh
 #eval "$(conda shell.bash hook)"
 
-# conda activate mugi_profiling
+conda activate mugi_profiling
 
 cd ~/mugi_profiling
 
