@@ -340,7 +340,8 @@ class InferenceModel(ABC):
         )
 
     def loop_configuration(self):
-        pass
+        print(self.nonlinear_function_parameters)
+        exit()
 
         
 
