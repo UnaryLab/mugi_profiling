@@ -8,6 +8,7 @@
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
 #SBATCH --partition=highgpu
 
+conda init
 echo 'hi1'
 module load anaconda
 echo 'hi2'
