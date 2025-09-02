@@ -73,8 +73,6 @@ class CustomNonlinear(torch.nn.Module):
             value_count = value_count[1:-1]
             del values, value_edges, value_indices
             exp_path = f'{profile_path}/exp_dist/layer_{self.layer}/'
-            if self.blocks is not None:
-                exp_path = os.path.join(exp_path, f'block_{self.blocks}/')
             if self.keys is not None or self.keys != []:
                 for key in self.keys:
                     exp_path = os.path.join(exp_path, f'{key}/')
@@ -82,8 +80,6 @@ class CustomNonlinear(torch.nn.Module):
             exp_file = os.path.join(exp_path, f'seq_len_{write_dim}.pt')
 
             value_path = f'{profile_path}/value_dist/layer_{self.layer}/'
-            if self.blocks is not None:
-                value_path = os.path.join(value_path, f'block_{self.blocks}/')
             if self.keys is not None or self.keys != []:
                 for key in self.keys:
                     value_path = os.path.join(value_path, f'{key}/')
@@ -111,9 +107,9 @@ class CustomNonlinear(torch.nn.Module):
                 break
 
 class CustomSoftmax(CustomNonlinear):
-    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
+    def __init__(self, layer, device, profile_path, profile_dims, keys=None, profile=False):
         profile_path += 'softmax/'
-        super().__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
+        super().__init__(layer, device, profile_path, profile_dims, keys, profile)
 
     def nonlinear_forward(self, attn_weights, dim=-1, dtype=torch.float32):
         self.profile(attn_weights,
@@ -138,9 +134,9 @@ class CustomSoftmax(CustomNonlinear):
         return torch.nn.functional.softmax(attn_weights, dim=dim, dtype=dtype)
 
 class CustomSilu(CustomNonlinear):
-    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
+    def __init__(self, layer, device, profile_path, profile_dims, keys=None, profile=False):
         profile_path += 'silu/'
-        super().__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
+        super().__init__(layer, device, profile_path, profile_dims, keys, profile)
     
     def nonlinear_forward(self, x):
         self.profile(x,
@@ -162,9 +158,9 @@ class CustomSilu(CustomNonlinear):
         return torch.nn.functional.silu(x)
 
 class CustomGelu(CustomNonlinear):
-    def __init__(self, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
+    def __init__(self, layer, device, profile_path, profile_dims, keys=None, profile=False):
         profile_path += 'gelu/'
-        super().__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
+        super().__init__(layer, device, profile_path, profile_dims, keys, profile)
 
     def nonlinear_forward(self, x):
         self.profile(x,

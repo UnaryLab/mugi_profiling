@@ -79,33 +79,25 @@ class InferenceModel(ABC):
             tensor_parallel={"tp_size": tp_size}
         )
 
-    def append_nonlinear_list(self, attention_class, ffn_class, attention_parameters, ffn_parameters, layer, device, path, profiling_dims, attention_keys, ffn_keys):
+    def append_nonlinear_list(self, attention_class, ffn_class, layer, device, path, profiling_dims):
 
-        if len(self.attention_objects) <= layer:
-            attention_object = attention_class(**attention_parameters,
-                                               layer=layer,
-                                               device=device,
-                                               profile_path=path,
-                                               profile_dims=profiling_dims,
-                                               keys=attention_keys,
-                                               profile=self.profile)
-            self.attention_objects.append(attention_object)
-        else:
-            attention_object = self.attention_objects[layer]
-            attention_object.set_params(**attention_parameters)
+        attention_object = attention_class(layer=layer,
+                                            device=device,
+                                            profile_path=path,
+                                            profile_dims=profiling_dims,
+                                            profile=self.profile)
+        self.attention_objects.append(attention_object)
 
-        if len(self.ffn_objects) <= layer:
-            ffn_object = ffn_class(**ffn_parameters,
-                                   layer=layer,
-                                   device=device,
-                                   profile_path=path,
-                                   profile_dims=profiling_dims,
-                                   keys=ffn_keys,
-                                   profile=self.profile)
-            self.ffn_objects.append(ffn_object)
-        else:
-            ffn_object = self.ffn_objects[layer]
-            ffn_object.set_params(**ffn_parameters)
+        ffn_object = ffn_class(layer=layer,
+                                device=device,
+                                profile_path=path,
+                                profile_dims=profiling_dims,
+                                profile=self.profile)
+        self.ffn_objects.append(ffn_object)
+
+    def set_nonlinear_params(self, attention_parameters, ffn_parameters, layer, attention_keys, ffn_keys):
+        self.attention_objects[layer].set_params(**attention_parameters, keys=attention_keys)
+        self.ffn_objects[layer].set_params(**ffn_parameters, keys=ffn_keys)
 
     def load_streaming_dataset(self):
         if self.dataset_config:
@@ -262,71 +254,6 @@ class InferenceModel(ABC):
             path=path
         )
 
-        # if 'llama' in self.model_name:
-        #     for i, layer in enumerate(self.model.model.layers):
-        #         layer_device = next(layer.parameters()).device
-        #         if i == 0:
-        #             self.device = layer_device
-
-        #         attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profiling_dims, keys=attention_keys, profile=self.profile)
-        #         ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profiling_dims, keys=ffn_keys, profile=self.profile)
-        #         eager_attn_fn = LlamaEager(nonlinear_object=attention_object)
-        #         forward = llama_forward(eager_attn_fn)
-                
-        #         layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
-        #         layer.mlp.act_fn = ffn_object
-
-        # elif 'whisper' in self.model_name:
-        #     for i, layer in enumerate(self.model.model.encoder.layers):
-        #         layer_device = next(layer.parameters()).device
-        #         if i == 0:
-        #             self.device = layer_device
-        #         attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=attention_keys,  profile=self.profile)
-        #         ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.source_profiling_dims, keys=ffn_keys,  profile=self.profile)
-        #         eager_attn_fn = WhisperEager(nonlinear_object=attention_object)
-        #         forward = whisper_forward(eager_attn_fn)
-
-        #         layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
-        #         layer.activation_fn = ffn_object
-
-        #     for i, layer in enumerate(self.model.model.decoder.layers):
-        #         layer_device = next(layer.parameters()).device
-        #         if i == 0:
-        #             self.device = layer_device
-        #         attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.target_profiling_dims, keys=attention_keys, profile=self.profile)
-        #         ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.target_profiling_dims, keys=ffn_keys, profile=self.profile)
-        #         eager_attn_fn = WhisperEager(nonlinear_object=attention_object)
-        #         forward = whisper_forward(eager_attn_fn)
-
-        #         layer.self_attn.forward = types.MethodType(forward, layer.self_attn)
-        #         layer.activation_fn = ffn_object
-
-        # elif 'swinv2' in self.model_name:
-        #     for i, block in enumerate(self.model.swinv2.encoder.layers):
-        #         for j, layer in enumerate(block.blocks):
-        #             layer_device = next(layer.parameters()).device
-        #             if i == 0:
-        #                 self.device = layer_device
-        #             attention_object = attention_class(**attention_parameters, layer=j, blocks=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys, profile=self.profile)
-        #             ffn_object = ffn_class(**ffn_parameters, layer=j, blocks=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys, profile=self.profile)
-        #             forward = swin_forward(attention_object)
-                    
-        #             layer.attention.self.forward = types.MethodType(forward, layer.attention.self)
-        #             layer.intermediate.intermediate_act_fn = ffn_object
-        
-        # elif 'vivit' in self.model_name:
-        #     for i, layer in enumerate(self.model.vivit.encoder.layer):
-        #         layer_device = next(layer.parameters()).device
-        #         if i == 0:
-        #             self.device = layer_device
-        #         attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys, profile=self.profile)
-        #         ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys, profile=self.profile)
-        #         eager_attn_fn = VivitEager(nonlinear_object=attention_object)
-        #         forward = vivit_forward(eager_attn_fn)
-
-        #         layer.attention.attention.forward = types.MethodType(forward, layer.attention.attention)
-        #         layer.intermediate.intermediate_act_fn = ffn_object
-        
         self.run_batched_inference()
 
         torch.cuda.empty_cache()
@@ -399,10 +326,6 @@ class InferenceModel(ABC):
         elif self.approx_function == 'taylor':
             if patch_attention: attention_class = TaylorSoftmax
 
-        if attention_class in attention_default_classes:
-            attention_parameters = {}
-        if ffn_class in ffn_default_classes:
-            ffn_parameters = {}
 
         attn_path = f'{self.approx_function}_{self.attn_op}' if patch_attention else f'torch_{self.attn_op}'
         ffn_path = f'{self.approx_function}_{self.ffn_op}' if patch_ffn else f'torch_{self.ffn_op}'
@@ -411,16 +334,11 @@ class InferenceModel(ABC):
         if self.profile:
             os.makedirs(path, exist_ok=True)
 
-        attention_parameters = attention_parameters if attention_parameters else {}
-        ffn_parameters = ffn_parameters if ffn_parameters else {}
-
         self.set_profiling_dims()
 
         self.patch_layers(
             attention_class=attention_class,
             ffn_class=ffn_class,
-            attention_parameters=attention_parameters,
-            ffn_parameters=ffn_parameters,
             path=path
         )
 
@@ -428,66 +346,9 @@ class InferenceModel(ABC):
         
 
     def loop_configuration(self):
-        for function_name, function_operations in tqdm(self.nonlinear_functions.items(), desc='Patching configurations'):
-            if 'ffn' in function_operations:
-                if self.ffn_op not in function_operations['ffn']:
-                    function_operations.pop('ffn', None)
-                else:
-                    function_operations['ffn'] = [self.ffn_op]
+        pass
 
-            if not function_operations:
-                continue
-
-            nonlinear_combinations = self.nonlinear_combinations(function_operations) if function_name != 'torch' else [function_operations]
-
-            for nonlinear_combination in tqdm(nonlinear_combinations, desc=f'Processing {function_name} combinations'):
-                nonlinear_combination = self.flatten_dict(nonlinear_combination)
-
-                function_parameters = self.nonlinear_function_parameters.get(function_name)
-                attention_parameters = function_parameters.get('attention') if function_parameters else None
-                ffn_parameters = function_parameters.get('ffn') if function_parameters else None
-
-                attn_op = nonlinear_combination.get('attention')
-                ffn_op = nonlinear_combination.get('ffn')
-
-                patch_attention = False
-                patch_ffn = False
-
-                attention_parameters = None if not attn_op else self.dict_value_to_list(attention_parameters) if attention_parameters else None
-                ffn_parameters = None if not ffn_op else self.dict_value_to_list(ffn_parameters) if ffn_parameters else None
-
-                attention_parameters = None if not attention_parameters else self.parameter_combinations(attention_parameters)
-                ffn_parameters = None if not ffn_parameters else self.parameter_combinations(ffn_parameters)
-
-                if not attn_op and not ffn_op:
-                    continue
-                elif (attn_op and not ffn_op) or (attn_op and ffn_op and not ffn_parameters):
-                    patch_attention = True
-                    if attention_parameters:
-                        for attention_combination in attention_parameters:
-                            self.patch_model(function_name, attention_parameters=attention_combination, patch_attention=patch_attention, patch_ffn=patch_ffn)
-                    else:
-                        self.patch_model(function_name, patch_attention=patch_attention, patch_ffn=patch_ffn)
-
-                elif (not attn_op and ffn_op) or (attn_op and ffn_op and not attention_parameters):
-                    patch_ffn = True
-                    if ffn_parameters:
-                        for ffn_combination in ffn_parameters:
-                            self.patch_model(function_name, ffn_parameters=ffn_combination, patch_attention=patch_attention, patch_ffn=patch_ffn)
-                    else:
-                        self.patch_model(function_name, patch_attention=patch_attention, patch_ffn=patch_ffn)
-
-                else:
-                    pass
-                    # patch_attention = True
-                    # patch_ffn = True
-                    # for attention_combination in tqdm(attention_parameters, desc='Attention combinations'):
-                    #     for ffn_combination in tqdm(ffn_parameters, desc='FFN combinations'):
-                    #         self.patch_model(function_name, attention_parameters=attention_combination, ffn_parameters=ffn_combination, patch_attention=patch_attention, patch_ffn=patch_ffn)
-                
-                # Cleanup between nonlinear combinations
-                torch.cuda.empty_cache()
-                gc.collect()
+        
 
     def cleanup(self):
         if torch.cuda.is_available():

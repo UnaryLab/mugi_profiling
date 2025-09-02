@@ -48,6 +48,19 @@ class VivitModel(InferenceModel):
     def compute_metric(self):
         return self.total_loss / self.num_batches
 
+            # elif 'vivit' in self.model_name:
+        #     for i, layer in enumerate(self.model.vivit.encoder.layer):
+        #         layer_device = next(layer.parameters()).device
+        #         if i == 0:
+        #             self.device = layer_device
+        #         attention_object = attention_class(**attention_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys, profile=self.profile)
+        #         ffn_object = ffn_class(**ffn_parameters, layer=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys, profile=self.profile)
+        #         eager_attn_fn = VivitEager(nonlinear_object=attention_object)
+        #         forward = vivit_forward(eager_attn_fn)
+
+        #         layer.attention.attention.forward = types.MethodType(forward, layer.attention.attention)
+        #         layer.intermediate.intermediate_act_fn = ffn_object
+
     def compute_loss(self, batch):
         pixel_values = torch.stack([ex["pixel_values"].squeeze(0) for ex in batch]).to(self.device).to(torch.float16)
         labels = torch.stack([ex["labels"] for ex in batch]).squeeze(-1).to(self.device)

@@ -55,6 +55,19 @@ class SwinModel(InferenceModel):
                 block.attention.self.forward = types.MethodType(forward, block.attention.self)
                 block.intermediate.intermediate_act_fn = ffn_object
 
+            # elif 'swinv2' in self.model_name:
+        #     for i, block in enumerate(self.model.swinv2.encoder.layers):
+        #         for j, layer in enumerate(block.blocks):
+        #             layer_device = next(layer.parameters()).device
+        #             if i == 0:
+        #                 self.device = layer_device
+        #             attention_object = attention_class(**attention_parameters, layer=j, blocks=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys, profile=self.profile)
+        #             ffn_object = ffn_class(**ffn_parameters, layer=j, blocks=i, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys, profile=self.profile)
+        #             forward = swin_forward(attention_object)
+                    
+        #             layer.attention.self.forward = types.MethodType(forward, layer.attention.self)
+        #             layer.intermediate.intermediate_act_fn = ffn_object
+
     def compute_metric(self):
         return self.compute_loss()
     
