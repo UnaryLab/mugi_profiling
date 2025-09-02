@@ -59,6 +59,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
 
 def main():
     parser = argparse.ArgumentParser(description="Run profiling on transformer model with custom nonlinear functions.")
+    
     parser.add_argument('--model_config', type=str, default=None, 
                         help='Path to model config YAML file (default: None)')
     parser.add_argument('--nonlinear_config', type=str, default=None,
@@ -67,7 +68,8 @@ def main():
                         help='Path to inference parameters YAML file (default: None)')
     parser.add_argument('--hf_token', type=str, default=None,
                         help='Hugging Face token for authentication (default: None, assumes hf is already logged in)')
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
+
 
     print("Loading configuration files...")
 
