@@ -151,7 +151,7 @@ class WhisperModel(InferenceModel):
         labels = batch["labels"].to(self.device)
         labels[labels == self.model.config.pad_token_id] = -100
         with torch.no_grad():
-            outputs = self.model(input_features=input_features, labels=labels, use_cache=False)
+            outputs = self.ds_model(input_features=input_features, labels=labels, use_cache=False)
 
         del input_features, labels
         loss = outputs.loss
@@ -166,6 +166,7 @@ class WhisperModel(InferenceModel):
                                       (self.max_target_length - 1)]
         
     def cleanup(self):
+        del self.ds_model
         del self.model
         del self.processor
         del self.inputs
