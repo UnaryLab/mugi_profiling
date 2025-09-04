@@ -8,6 +8,8 @@ from src.custom_nonlinear.custom_forward import llama_forward
 
 import torch
 import types
+import os
+import deepspeed
 
 class LlamaModel(InferenceModel):
     def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
@@ -45,7 +47,6 @@ class LlamaModel(InferenceModel):
         return self.compute_perplexity()
     
     def init_deepspeed(self):
-
         rank = int(os.environ.get("SLURM_PROCID", 0))
         world_size = int(os.environ.get("SLURM_NTASKS", 1))
         local_rank = int(os.environ.get("SLURM_LOCALID", 0))
@@ -74,6 +75,25 @@ class LlamaModel(InferenceModel):
 
         if self.max_length > 4096:
             self.max_length = 4096
+
+        # init deepspeed
+        # rank = int(os.environ.get("SLURM_PROCID", 0))
+        # world_size = int(os.environ.get("SLURM_NTASKS", 1))
+        local_rank = int(os.environ.get("SLURM_LOCALID", 0))
+
+        torch.cuda.set_device(local_rank)
+
+        mp_size = torch.cuda.device_count()
+        if mp_size == 0:
+            raise ValueError("No GPUs available for DeepSpeed inference.")
+
+        self.ds_model = deepspeed.init_inference(
+            self.model,
+            tensor_parallel={"tp_size": 2},
+            dtype=torch.float16,
+            replace_method='nothing',
+            replace_with_kernel_inject=False,
+        )
 
     def patch_layers(self, attention_class: torch.nn.Module, ffn_class: torch.nn.Module, attention_parameters: dict, ffn_parameters: dict, attention_keys: list, ffn_keys: list, path: str):
         for i, layer in enumerate(self.model.model.layers):
