@@ -46,25 +46,6 @@ class LlamaModel(InferenceModel):
     def compute_metric(self):
         return self.compute_perplexity()
     
-    def init_deepspeed(self):
-        rank = int(os.environ.get("SLURM_PROCID", 0))
-        world_size = int(os.environ.get("SLURM_NTASKS", 1))
-        local_rank = int(os.environ.get("SLURM_LOCALID", 0))
-
-        torch.cuda.set_device(local_rank)
-
-        mp_size = torch.cuda.device_count()
-        if mp_size == 0:
-            raise ValueError("No GPUs available for DeepSpeed inference.")
-
-        self.ds_model = deepspeed.init_inference(
-            self.model,
-            tensor_parallel={"tp_size": 2},
-            dtype=torch.float16,
-            replace_method='nothing',
-            replace_with_kernel_inject=False,
-        )
-    
     def load_model(self):
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
         if self.tokenizer.pad_token is None:
@@ -95,19 +76,16 @@ class LlamaModel(InferenceModel):
             replace_with_kernel_inject=False,
         )
 
-    def patch_layers(self, attention_class: torch.nn.Module, ffn_class: torch.nn.Module, attention_parameters: dict, ffn_parameters: dict, attention_keys: list, ffn_keys: list, path: str):
+    def patch_layers(self, attention_class, ffn_class, path):
         for i, layer in enumerate(self.model.model.layers):
                 layer_device = next(layer.parameters()).device
 
                 self.append_nonlinear_list(attention_class=attention_class,
                                            ffn_class=ffn_class,
-                                           attention_parameters=attention_parameters,
-                                           ffn_parameters=ffn_parameters,
                                            layer=i,
                                            device=layer_device,
                                            path=path,
-                                           attention_keys=attention_keys,
-                                           ffn_keys=ffn_keys)
+                                           profiling_dims=self.profile_dims)
 
                 eager_attn_fn = LlamaEager(nonlinear_object=self.attention_objects[i])
                 forward = llama_forward(eager_attn_fn)
