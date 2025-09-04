@@ -8,7 +8,7 @@ class VLPSoftmax(CustomSoftmax):
     def __init__(self, layer, device, profile_path, profile_dims, profile=False):
         super(VLPSoftmax, self).__init__(layer, device, profile_path, profile_dims, profile)
 
-    def set_params(self, exp_dim, mant_dim, window_size, lut_build, max_exp=None, min_exp=None, keys=None):
+    def set_params(self, max_min_exp, exp_dim, mant_dim, window_size, lut_build, keys):
         self.keys = keys
         self.lut_build = lut_build
         self.exp_dim = exp_dim
@@ -16,11 +16,11 @@ class VLPSoftmax(CustomSoftmax):
         self.window_size = window_size
 
         if lut_build == 'max':
-            self.min_exp = max_exp - (exp_dim - 1)
-            self.max_exp = max_exp
+            self.min_exp = max_min_exp - (exp_dim - 1)
+            self.max_exp = max_min_exp
         elif lut_build == 'min':
-            self.min_exp = min_exp
-            self.max_exp = min_exp + (exp_dim - 1)
+            self.min_exp = max_min_exp
+            self.max_exp = max_min_exp + (exp_dim - 1)
         else:
             raise ValueError("lut_build must be 'max' or 'min'")
 
