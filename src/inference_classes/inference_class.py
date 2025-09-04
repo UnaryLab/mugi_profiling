@@ -6,7 +6,6 @@ import os
 import math
 import pandas as pd
 from tqdm import tqdm
-import deepspeed
 from abc import ABC, abstractmethod
 
 from src.custom_nonlinear.custom_approx import CustomSoftmax, CustomSilu, CustomGelu, CustomFastGelu

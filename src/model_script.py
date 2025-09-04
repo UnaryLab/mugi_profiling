@@ -45,7 +45,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
     print('Loading model...')
     inference_model.load_model()
     print('Patching model...')
-    inference_model.init_deepspeed()
+    inference_model.patch_model()
     print('Loading dataset...')
     inference_model.load_streaming_dataset()
     print('Processing dataset...')
