@@ -1,21 +1,23 @@
 #!/bin/bash
 
-#SBATCH --time=1:00:00
-#SBATCH --cpus-per-task=16
-#SBATCH --gres=gpu:2
+#SBATCH --time=01:00:00
+#SBATCH --cpus-per-task=8
+#SBATCH --gres=gpu:1
+#SBATCH --job-name=whisper_tiny
+#SBATCH --constraint=gpu32
 #SBATCH --job-name=llama_2_7b_profiling
 #SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
-#SBATCH --constraint=gpu32
 
-module load anaconda
-module load cuda
+# module load anaconda
+# module load cuda
+# module load openblas
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
-eval "$(conda shell.bash hook)"
+# eval "$(conda shell.bash hook)"
 
-conda activate mugi_profiling
+# conda activate mugi_profiling
 
 cd ~/mugi_profiling
 
@@ -35,9 +37,14 @@ echo "----------------------------------------"
 # Run the transformer script with the current config
 export PYTHONPATH=~/mugi_profiling:$PYTHONPATH
 
-python src/model_script.py --model_config "$model_config" \
-                            --nonlinear_config "$nonlinear_config" \
-                            --parameter_config "$parameter_config"
+deepspeed --num_gpus=2 src/model_script.py \
+          --model_config "$model_config" \
+          --nonlinear_config "$nonlinear_config" \
+          --parameter_config "$parameter_config"
+
+# python src/model_script.py --model_config "$model_config" \
+#                             --nonlinear_config "$nonlinear_config" \
+#                             --parameter_config "$parameter_config"
 
 # Capture the exit code
 exit_code=$?
