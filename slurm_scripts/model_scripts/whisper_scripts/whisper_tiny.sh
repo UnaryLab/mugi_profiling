@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=0:05:00
+#SBATCH --time=1:00:00
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
 #SBATCH --job-name=whisper_tiny
@@ -8,7 +8,8 @@
 #SBATCH --output=output/run/whisper/whisper_tiny/output.txt
 
 # module load anaconda
-# module load cuda
+module load cuda
+module load openblas
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
