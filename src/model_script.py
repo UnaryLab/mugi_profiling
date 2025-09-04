@@ -12,7 +12,7 @@ from src.inference_classes.swin_inference import SwinModel
 
 token = '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'
 
-def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_path):
+def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_path, ds_config_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # Validate configurations
     model_name = validate_config(model_dict, nonlinear_dict, parameter_dict)
@@ -24,13 +24,13 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
 
     # Initialize model class
     if 'llama' in model_name_lower:
-        inference_model = LlamaModel(model_dict, nonlinear_dict, parameter_dict, device)
+        inference_model = LlamaModel(model_dict, nonlinear_dict, parameter_dict, ds_config_path, device)
     elif 'whisper' in model_name_lower:
-        inference_model = WhisperModel(model_dict, nonlinear_dict, parameter_dict, device)
+        inference_model = WhisperModel(model_dict, nonlinear_dict, parameter_dict, ds_config_path, device)
     elif 'swin' in model_name_lower:
-        inference_model = SwinModel(model_dict, nonlinear_dict, parameter_dict, device)
+        inference_model = SwinModel(model_dict, nonlinear_dict, parameter_dict, ds_config_path, device)
     elif 'vivit' in model_name_lower:
-        inference_model = VivitModel(model_dict, nonlinear_dict, parameter_dict, device)
+        inference_model = VivitModel(model_dict, nonlinear_dict, parameter_dict, ds_config_path, device)
     else:
         raise ValueError(f"Unsupported model: {model_name}")
     
@@ -84,10 +84,7 @@ def main():
 
     print("Successfully loaded configuration files.")
 
-    # Inject deepspeed config path into parameter configuration (non-destructive)
-    parameter_config['deepspeed_config_path'] = args.deepspeed_config
-
-    evaluate_model(model_config, nonlinear_config, parameter_config, args.nonlinear_config)
+    evaluate_model(model_config, nonlinear_config, parameter_config, args.nonlinear_config, args.deepspeed_config)
 
 
 if __name__ == '__main__':

@@ -20,7 +20,7 @@ from custom_nonlinear.custom_nonlinear_functions.vlp.vlp_silu_approx import VLPS
 from src.custom_nonlinear.custom_nonlinear_functions.vlp.vlp_softmax_approx import VLPSoftmax
 
 class InferenceModel(ABC):
-    def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
+    def __init__(self, model_dict, nonlinear_dict, parameter_dict, ds_config_path, device):
         # Set device
         self.device = device
         
@@ -44,6 +44,8 @@ class InferenceModel(ABC):
 
         self.nonlinear_function = nonlinear_dict.get('nonlinear_function')
         self.approx_function = nonlinear_dict.get('approx_function')
+
+        self.ds_config_path = ds_config_path
 
         self.model_name = self.model_parameters.get('name')
 
@@ -71,28 +73,15 @@ class InferenceModel(ABC):
         local_rank = int(os.environ.get("LOCAL_RANK", os.environ.get("SLURM_LOCALID", 0)))
         torch.cuda.set_device(local_rank)
 
-        ds_config_path = self.parameter_dict.get('deepspeed_config_path')
-        if ds_config_path and os.path.exists(ds_config_path):
-            import json
-            with open(ds_config_path, 'r') as f:
-                ds_cfg = json.load(f)
+        import json
+        with open(self.ds_config_path, 'r') as f:
+            ds_cfg = json.load(f)
 
-            # Use DeepSpeed initialize API to enable ZeRO param partitioning.
-            engine, _, _, _ = deepspeed.initialize(model=self.model,
-                                                   model_parameters=[],
-                                                   config=ds_cfg)
-            self.ds_model = engine
-            # Keep self.model pointing at underlying module for forward calls in subclasses
-            if hasattr(engine, 'module'):
-                self.model = engine.module
-        else:
-            # Simple single-device placement (bf16 preferred if requested)
-            use_bf16 = self.parameter_dict.get('use_bf16', True)
-            if use_bf16 and torch.cuda.is_bf16_supported():
-                self.model = self.model.to(torch.bfloat16).cuda()
-            else:
-                self.model = self.model.half().cuda()
-            self.ds_model = self.model
+        # Use DeepSpeed initialize API to enable ZeRO param partitioning.
+        engine, _, _, _ = deepspeed.initialize(model=self.model,
+                                                model_parameters=[],
+                                                config=ds_cfg)
+        self.ds_model = engine
 
     def append_nonlinear_list(self, attention_class, ffn_class, layer, device, path, profiling_dims):
 
