@@ -8,15 +8,15 @@
 #SBATCH --error=output/run/whisper/whisper_tiny/error.txt
 #SBATCH --output=output/run/whisper/whisper_tiny/output.txt
 
-module load anaconda
-module load cuda
-module load openblas
+# module load anaconda
+# module load cuda
+# module load openblas
 
 # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
 # eval "$(conda shell.bash hook)"
 
-conda activate mugi_profiling
+# conda activate mugi_profiling
 
 cd ~/mugi_profiling
 
