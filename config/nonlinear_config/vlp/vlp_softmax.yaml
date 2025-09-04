@@ -1,4 +1,4 @@
-function: softmax
+nonlinear_function: softmax
 approx_function: vlp
 parameters:
   exp_dim: [8, 9, 10, 11, 12]

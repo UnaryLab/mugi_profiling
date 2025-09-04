@@ -10,8 +10,8 @@ class PWLSilu(CustomSilu):
     def __init__(self, layer, device, profile_path, profile_dims, profile=False):
         super(PWLSilu, self).__init__(layer, device, profile_path, profile_dims, profile)
 
-    def set_params(self, segments, segment_0, keys=None):
-        self.keys = keys
+    def set_params(self, segments, segment_0, config_path):
+        self.config_path = config_path
         self.segments = torch.tensor(segments - 1)
         self.segment_0 = torch.tensor(-segment_0)
         self.segment_f = torch.tensor(segment_0)

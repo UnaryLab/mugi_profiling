@@ -9,8 +9,8 @@ class VLPGelu(CustomGelu):
     def __init__(self, layer, device, profile_path, profile_dims, profile=False):
         super(VLPGelu, self).__init__(layer, device, profile_path, profile_dims, profile)
 
-    def set_params(self, max_min_exp, exp_dim, mant_dim, window_size, lut_build,  keys):
-        self.keys = keys
+    def set_params(self, max_min_exp, exp_dim, mant_dim, window_size, lut_build,  config_path):
+        self.config_path = config_path
         self.lut_build = lut_build
         self.exp_dim = exp_dim
         self.mant_dim = mant_dim

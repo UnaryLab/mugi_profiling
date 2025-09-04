@@ -71,16 +71,14 @@ class CustomNonlinear(torch.nn.Module):
             value_count = value_count[1:-1]
             del values, value_edges, value_indices
             exp_path = f'{profile_path}/exp_dist/layer_{self.layer}/'
-            if self.keys is not None or self.keys != []:
-                for key in self.keys:
-                    exp_path = os.path.join(exp_path, f'{key}/')
+            if self.config_path != '':
+                exp_path = os.path.join(exp_path, f'config_{self.config_path}/')
             exp_path = os.path.join(self.profile_path, exp_path)
             exp_file = os.path.join(exp_path, f'seq_len_{write_dim}.pt')
 
             value_path = f'{profile_path}/value_dist/layer_{self.layer}/'
-            if self.keys is not None or self.keys != []:
-                for key in self.keys:
-                    value_path = os.path.join(value_path, f'{key}/')
+            if self.config_path != '':
+                value_path = os.path.join(value_path, f'config_{self.config_path}/')
             value_path = os.path.join(self.profile_path, value_path)
             value_file = os.path.join(value_path, f'seq_len_{write_dim}.pt')
             if os.path.exists(exp_file):

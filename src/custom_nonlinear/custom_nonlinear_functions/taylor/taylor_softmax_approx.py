@@ -11,8 +11,8 @@ class TaylorSoftmax(CustomSoftmax):
     def __init__(self, layer, device, profile_path, profile_dims, profile=False):
         super(TaylorSoftmax, self).__init__(layer, device, profile_path, profile_dims, profile)
 
-    def set_params(self, degree_center, degrees, keys=None):
-        self.keys = keys
+    def set_params(self, degree_center, degrees, config_path):
+        self.config_path = config_path
         self.degree_center = torch.tensor(degree_center)
         self.degrees = degrees
         self.build_taylor()

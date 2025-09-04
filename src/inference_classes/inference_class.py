@@ -144,113 +144,53 @@ class InferenceModel(ABC):
     def patch_layers(self):
         pass
 
-    def patch_model_dep(self, function_name, attention_parameters={}, ffn_parameters={}, patch_attention=True, patch_ffn=True):
+    def run_configuration(self, attn_params, ffn_params):
 
-        if function_name == 'torch':
-            self.profile = True
-        else:
-            self.profile = False
+        attn_config_path = ''
+        ffn_config_path = ''
+        if attn_params:
+            for key, value in attn_params.items():
+                attn_config_path += f'{key}_{value}/'
+        if ffn_params:
+            for key, value in ffn_params.items():
+                ffn_config_path += f'{key}_{value}/'
 
-        attention_keys = []
-        if attention_parameters:
-            for key, item in attention_parameters.items():
-                attention_keys.append(key + '_' + str(item))
+        for attn_layer, ffn_layer in zip(self.attention_objects, self.ffn_objects):
+            attn_layer.set_params(**attn_params, config_path=attn_config_path)
+            ffn_layer.set_params(**ffn_params, config_path=ffn_config_path)
 
-        ffn_keys = []
-        if ffn_parameters:
-            for key, item in ffn_parameters.items():
-                ffn_keys.append(key + '_' + str(item))
+        exit()
 
-        torch.cuda.empty_cache()
-        gc.collect()
-
-        attention_default_classes = [CustomSoftmax]
-        ffn_default_classes = [CustomSilu, CustomGelu, CustomFastGelu]
-
-        attention_class = CustomSoftmax
-        if self.ffn_op == 'silu':
-            ffn_class = CustomSilu
-        elif self.ffn_op == 'gelu':
-            ffn_class = CustomGelu
-        elif self.ffn_op == 'fast_gelu':
-            ffn_class = CustomFastGelu
-
-        if function_name == 'vlp':
-            if patch_attention: attention_class = VLPSoftmax
-
-            if self.ffn_op == 'silu' and patch_ffn: ffn_class = VLPSilu
-            elif (self.ffn_op == 'gelu' or self.ffn_op == 'fast_gelu') and patch_ffn: ffn_class = VLPGelu
-
-        elif function_name == 'pwl':
-            if patch_attention: attention_class = PWLSoftmax
-
-            if self.ffn_op == 'silu' and patch_ffn: ffn_class = PWLSilu
-            elif (self.ffn_op == 'gelu' or self.ffn_op == 'fast_gelu') and patch_ffn: ffn_class = PWLGelu
-
-        elif function_name == 'pwl_mobilenet':
-            if self.ffn_op == 'silu' and patch_ffn: ffn_class = PWLMobilenet
-
-        elif function_name == 'taylor':
-            if patch_attention: attention_class = TaylorSoftmax
-
-        if attention_class in attention_default_classes:
-            attention_parameters = {}
-        if ffn_class in ffn_default_classes:
-            ffn_parameters = {}
-
-        attn_path = f'{function_name}_{self.attn_op}' if patch_attention else f'torch_{self.attn_op}'
-        ffn_path = f'{function_name}_{self.ffn_op}' if patch_ffn else f'torch_{self.ffn_op}'
-        path = f'profile/{self.model_name}/{attn_path}_{ffn_path}/'
-
-        if self.profile:
-            os.makedirs(path, exist_ok=True)
-
-        attention_parameters = attention_parameters if attention_parameters else {}
-        ffn_parameters = ffn_parameters if ffn_parameters else {}
-
-        self.patch_layers(
-            attention_class=attention_class,
-            ffn_class=ffn_class,
-            attention_parameters=attention_parameters,
-            ffn_parameters=ffn_parameters,
-            attention_keys=attention_keys,
-            ffn_keys=ffn_keys,
-            path=path
-        )
-
-        # self.run_batched_inference()
+        self.run_batched_inference()
 
         # torch.cuda.empty_cache()
         # gc.collect()
 
-        # new_row = {
-        #     'model': self.model_name,
-        #     'value': self.metric,
-        #     'function_name': function_name,
-        #     'patch_attention': patch_attention,
-        #     'patch_ffn': patch_ffn,
-        #     'attn_fn': attention_class.__name__,
-        #     'ffn_fn': ffn_class.__name__
-        # }
+        new_row = {
+            'model': self.model_name,
+            'value': self.metric,
+            'function_name': self.approx_function,
+            'attn_fn': self.attention_objects[0].__name__,
+            'ffn_fn': self.ffn_objects[0].__name__
+        }
 
-        # # Add attention parameters with prefixed column names to avoid conflicts
-        # if attention_parameters:
-        #     for key, value in attention_parameters.items():
-        #         new_row[f'attn_{key}'] = value
+        # Add attention parameters with prefixed column names to avoid conflicts
+        if attn_params:
+            for key, value in attn_params.items():
+                new_row[f'attn_{key}'] = value
         
-        # # Add FFN parameters with prefixed column names to avoid conflicts
-        # if ffn_parameters:
-        #     for key, value in ffn_parameters.items():
-        #         new_row[f'ffn_{key}'] = value
+        # Add FFN parameters with prefixed column names to avoid conflicts
+        if ffn_params:
+            for key, value in ffn_params.items():
+                new_row[f'ffn_{key}'] = value
 
-        # new_row = pd.DataFrame([new_row])
+        new_row = pd.DataFrame([new_row])
 
-        # if self.df is None:
-        #     self.df = new_row
-        # else:
-        #     self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
+        if self.df is None:
+            self.df = new_row
+        else:
+            self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
 
-    #def run_configuration(self, function_name, attention_parameters={}, ffn_parameters={}):
         
     def patch_model(self):
 
@@ -313,11 +253,12 @@ class InferenceModel(ABC):
         combinations = [dict(zip(keys, combo)) for combo in combinations]
         
         for combination in combinations:
-            print(combination)
-            exit()
-
+            if self.nonlinear_function in ['softmax', 'both']:
+                attn_params = combination
+            if self.nonlinear_function in ['ffn', 'both']:
+                ffn_params = combination
+            self.run_configuration(attn_params=attn_params, ffn_params=ffn_params)
         
-
     def cleanup(self):
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
