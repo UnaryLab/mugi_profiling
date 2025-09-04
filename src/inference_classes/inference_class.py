@@ -255,8 +255,12 @@ class InferenceModel(ABC):
         for combination in combinations:
             if self.nonlinear_function in ['softmax', 'both']:
                 attn_params = combination
+            else:
+                attn_params = {}
             if self.nonlinear_function in ['ffn', 'both']:
                 ffn_params = combination
+            else:
+                ffn_params = {}
             self.run_configuration(attn_params=attn_params, ffn_params=ffn_params)
         
     def cleanup(self):
