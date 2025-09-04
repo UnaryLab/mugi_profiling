@@ -8,11 +8,11 @@ import os
 # Edit degrees to adjust number of polynomial degrees
 
 class TaylorSoftmax(CustomSoftmax):
-    def __init__(self, degree_center, degrees, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
-        super(TaylorSoftmax, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
-        self.set_params(degree_center=degree_center, degrees=degrees)
+    def __init__(self, layer, device, profile_path, profile_dims, profile=False):
+        super(TaylorSoftmax, self).__init__(layer, device, profile_path, profile_dims, profile)
 
-    def set_params(self, degree_center, degrees):
+    def set_params(self, degree_center, degrees, keys=None):
+        self.keys = keys
         self.degree_center = torch.tensor(degree_center)
         self.degrees = degrees
         self.build_taylor()

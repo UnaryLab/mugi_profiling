@@ -6,37 +6,26 @@ import os
 # Edit exp_dim to adjust the LUT size
 # Edit max exp to adjust the maximum exponent of the LUT
 class VLPGelu(CustomGelu):
-    def __init__(self, exp_dim, mant_dim, max_pos_exp, min_pos_exp, window_size, lut_build, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
-        super(VLPGelu, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
-        self.set_params(
-            exp_dim=exp_dim,
-            mant_dim=mant_dim,
-            max_exp=max_pos_exp,
-            min_exp=min_pos_exp,
-            window_size=window_size,
-            lut_build=lut_build
-        )
+    def __init__(self, layer, device, profile_path, profile_dims, profile=False):
+        super(VLPGelu, self).__init__(layer, device, profile_path, profile_dims, profile)
 
-    def set_params(self, exp_dim, mant_dim, max_exp, min_exp, window_size, lut_build):
+    def set_params(self, exp_dim, mant_dim, window_size, lut_build, max_exp=None, min_exp=None, keys=None):
+        self.keys = keys
         self.lut_build = lut_build
         self.exp_dim = exp_dim
         self.mant_dim = mant_dim
         self.window_size = window_size
 
         if lut_build == 'max':
-            self.max_pos_exp = max_exp
-            self.max_neg_exp = max_exp
-            self.min_pos_exp = max_exp - (exp_dim - 1)
-            self.min_neg_exp = max_exp - (exp_dim - 1)
+            self.max_exp = max_exp
+            self.min_exp = max_exp - (exp_dim - 1)
         elif lut_build == 'min':
-            self.min_pos_exp = min_exp
-            self.min_neg_exp = min_exp
-            self.max_pos_exp = min_exp + (exp_dim - 1)
-            self.max_neg_exp = min_exp + (exp_dim - 1)
+            self.min_exp = min_exp
+            self.max_exp = min_exp + (exp_dim - 1)
         else:
             raise ValueError("lut_build must be 'max' or 'min'")
 
-    def window_silu_approx(self, exp, mant, positive, negative):
+    def window_gelu_approx(self, exp, mant, positive, negative):
         input_shape = exp.shape
 
         exp = exp.reshape(-1, input_shape[-1])
@@ -69,15 +58,15 @@ class VLPGelu(CustomGelu):
         if self.lut_build == 'max':
             # calculate pos min and max windows
             pos_max_exp_window = torch.max(exp, dim = -1, keepdim=True)[0]
-            pos_max_exp_window[pos_max_exp_window > self.max_pos_exp] = self.max_pos_exp
+            pos_max_exp_window[pos_max_exp_window > self.max_exp] = self.max_exp
             pos_min_exp_window = pos_max_exp_window - (self.mant_dim - 1)
-            pos_min_exp_window[pos_min_exp_window < self.min_pos_exp] = self.min_pos_exp
+            pos_min_exp_window[pos_min_exp_window < self.min_exp] = self.min_exp
 
             # calculate neg min and max windows
             neg_max_exp_window = torch.max(exp, dim = -1, keepdim=True)[0]
-            neg_max_exp_window[neg_max_exp_window > self.max_neg_exp] = self.max_neg_exp
+            neg_max_exp_window[neg_max_exp_window > self.max_exp] = self.max_exp
             neg_min_exp_window = neg_max_exp_window - (self.mant_dim - 1)
-            neg_min_exp_window[neg_min_exp_window < self.min_neg_exp] = self.min_neg_exp
+            neg_min_exp_window[neg_min_exp_window < self.min_exp] = self.min_exp
 
             # compare to pos min and max values
             exp[positive] = torch.clamp(exp, max=pos_max_exp_window, min=pos_min_exp_window)[positive]
@@ -90,14 +79,14 @@ class VLPGelu(CustomGelu):
             mant[negative] = torch.where(exp >= neg_min_exp_window, mant, 0)[negative]
         else:
             pos_min_exp_window = torch.min(exp, dim=-1, keepdim=True)[0]
-            pos_min_exp_window[pos_min_exp_window < self.min_pos_exp] = self.min_pos_exp
+            pos_min_exp_window[pos_min_exp_window < self.min_exp] = self.min_exp
             pos_max_exp_window = pos_min_exp_window + (self.mant_dim - 1)
-            pos_max_exp_window[pos_max_exp_window > self.max_pos_exp] = self.max_pos_exp
+            pos_max_exp_window[pos_max_exp_window > self.max_exp] = self.max_exp
 
             neg_min_exp_window = torch.min(exp, dim=-1, keepdim=True)[0]
-            neg_min_exp_window[neg_min_exp_window < self.min_neg_exp] = self.min_neg_exp
+            neg_min_exp_window[neg_min_exp_window < self.min_exp] = self.min_exp
             neg_max_exp_window = neg_min_exp_window + (self.mant_dim - 1)
-            neg_max_exp_window[neg_max_exp_window > self.max_neg_exp] = self.max_neg_exp
+            neg_max_exp_window[neg_max_exp_window > self.max_exp] = self.max_exp
 
             exp[positive] = torch.clamp(exp, max=pos_max_exp_window, min=pos_min_exp_window)[positive]
             mant[positive] = torch.where(exp >= pos_min_exp_window, mant, 0)[positive]
@@ -146,10 +135,10 @@ class VLPGelu(CustomGelu):
         exp = torch.where(mant == 16, exp + 1, exp)
         exp = torch.where(~zero_mask, exp - 1, exp)
 
-        pos_exp_greater = positive & (exp > self.max_pos_exp)
-        pos_exp_less = positive & (exp < self.pos_min_exp)
-        neg_exp_greater = negative & (exp > self.max_neg_exp)
-        neg_exp_less = negative & (exp < self.neg_min_exp)
+        pos_exp_greater = positive & (exp > self.max_exp)
+        pos_exp_less = positive & (exp < self.min_exp)
+        neg_exp_greater = negative & (exp > self.max_exp)
+        neg_exp_less = negative & (exp < self.min_exp)
 
         # Convert mantissa to unsigned 3 bit integer
         mant &= 0x7
@@ -166,7 +155,6 @@ class VLPGelu(CustomGelu):
         exp = torch.pow(2, exp)
 
         gelu = mant * exp
-
         del exp, mant
 
         gelu = torch.nn.functional.gelu(gelu)

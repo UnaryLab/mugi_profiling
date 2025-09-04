@@ -7,15 +7,11 @@ import os
 # Edit segment_0 to set range (softmax range is set from segment_0 to 0 ex. -20 = [-20, 0])
 
 class PWLSoftmax(CustomSoftmax):
-    def __init__(self, segments, segment_0, layer, device, profile_path, profile_dims, blocks=None, keys=None, profile=False):
-        super(PWLSoftmax, self).__init__(layer, device, profile_path, profile_dims, blocks, keys, profile)
-        
-        self.set_params(
-            segments=segments,
-            segment_0=segment_0
-        )
+    def __init__(self, layer, device, profile_path, profile_dims, profile=False):
+        super(PWLSoftmax, self).__init__(layer, device, profile_path, profile_dims, profile)
 
-    def set_params(self, segments, segment_0):
+    def set_params(self, segments, segment_0, keys=None):
+        self.keys = keys
         self.segments = torch.tensor(segments)
         self.segment_0 = torch.tensor(-segment_0)
         self.segment_f = torch.tensor(0.0)
