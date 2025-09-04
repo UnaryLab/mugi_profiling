@@ -1,8 +1,1 @@
-The token has not been saved to the git credentials helper. Pass `add_to_git_credential=True` in this function directly or `--add-to-git-credential` if using via `huggingface-cli` if you want to set the git credential as well.
-Token is valid (permission: read).
-The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/stored_tokens
-Your token has been saved to /home/da109073/.cache/huggingface/token
-Login successful.
-The current active token is: `newton_cluster`
-LLVM ERROR: Symbol not found: __svml_cosf8_ha
-/var/spool/slurmd/job407888/slurm_script: line 39: 2321972 Aborted                 (core dumped) python src/model_script.py --model_config "$model_config" --nonlinear_config "$nonlinear_config" --parameter_config "$parameter_config"
+slurmstepd: error: *** JOB 410237 ON evc13 CANCELLED AT 2025-09-04T14:24:32 ***
