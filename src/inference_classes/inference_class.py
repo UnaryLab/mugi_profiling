@@ -309,10 +309,12 @@ class InferenceModel(ABC):
                 self.nonlinear_function_parameters[key] = [value]
 
         (keys, values) = zip(*self.nonlinear_function_parameters.items())
-        combination = list(product(*values))
-        combinations = [dict(zip(keys, combo)) for combo in combination]
-        print(combinations)
-        exit()
+        combinations = list(product(*values))
+        combinations = [dict(zip(keys, combo)) for combo in combinations]
+        
+        for combination in combinations:
+            print(combination)
+            exit()
 
         
 
