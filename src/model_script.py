@@ -22,6 +22,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
 
     inference_model = None
     print(model_name_lower)
+    exit()
     # Initialize model class
     if 'llama' in model_name_lower:
         inference_model = LlamaModel(model_dict, nonlinear_dict, parameter_dict, device)
