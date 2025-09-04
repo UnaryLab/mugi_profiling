@@ -148,8 +148,8 @@ class InferenceModel(ABC):
             'model': self.model_name,
             'value': self.metric,
             'function_name': self.approx_function,
-            'attn_fn': self.attention_objects[0].__name__,
-            'ffn_fn': self.ffn_objects[0].__name__
+            'attn_fn': self.attn_function,
+            'ffn_fn': self.ffn_function
         }
 
         # Add attention parameters with prefixed column names to avoid conflicts
@@ -214,6 +214,9 @@ class InferenceModel(ABC):
             os.makedirs(path, exist_ok=True)
 
         self.set_profiling_dims()
+
+        self.attn_function = attention_class.__name__ if patch_attention else 'torch'
+        self.ffn_function = ffn_class.__name__ if patch_ffn else 'torch'
 
         self.patch_layers(
             attention_class=attention_class,
