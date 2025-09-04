@@ -74,7 +74,7 @@ class InferenceModel(ABC):
 
         self.ds_model = deepspeed.init_inference(
             self.model,
-            mp_size=mp_size,
+            tensor_parallel={"tp_size": 2},
             dtype=torch.float16,
             replace_method='nothing',
             replace_with_kernel_inject=False,
