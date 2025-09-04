@@ -44,6 +44,25 @@ class LlamaModel(InferenceModel):
     def compute_metric(self):
         return self.compute_perplexity()
     
+    def init_deepspeed(self):
+
+        rank = int(os.environ.get("SLURM_PROCID", 0))
+        world_size = int(os.environ.get("SLURM_NTASKS", 1))
+        local_rank = int(os.environ.get("SLURM_LOCALID", 0))
+
+        torch.cuda.set_device(local_rank)
+
+        mp_size = torch.cuda.device_count()
+        if mp_size == 0:
+            raise ValueError("No GPUs available for DeepSpeed inference.")
+
+        self.ds_model = deepspeed.init_inference(
+            self.model,
+            tensor_parallel={"tp_size": 2},
+            dtype=torch.float16,
+            replace_method='nothing',
+            replace_with_kernel_inject=False,
+        )
     
     def load_model(self):
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
