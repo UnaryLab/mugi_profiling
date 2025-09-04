@@ -1,0 +1,15 @@
+
+Running experiment with configuration: config/model_config/whisper/whisper_tiny.yaml
+----------------------------------------
+[2025-09-02 12:14:43,060] [INFO] [real_accelerator.py:260:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-09-02 12:14:59,394] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+Loading configuration files...
+Successfully loaded configuration files.
+Running inference for model: openai/whisper-tiny
+Loading model...
+Initializing deepspeed...
+[2025-09-02 12:15:09,965] [INFO] [logging.py:107:log_dist] [Rank -1] DeepSpeed info: version=0.17.5, git-hash=unknown, git-branch=unknown
+[2025-09-02 12:15:10,017] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[2025-09-02 12:15:10,018] [INFO] [logging.py:107:log_dist] [Rank -1] quantize_bits = 8 mlp_extra_grouping = False, quantize_groups = 1
+✗ Error occurred while running experiment with config/model_config/whisper/whisper_tiny.yaml (exit code: 134)
+----------------------------------------
