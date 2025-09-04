@@ -10,8 +10,8 @@ import torch
 import types
 
 class LlamaModel(InferenceModel):
-    def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
-        super().__init__(model_dict, nonlinear_dict, parameter_dict, device)
+    def __init__(self, model_dict, nonlinear_dict, parameter_dict, ds_config_path, device):
+        super().__init__(model_dict, nonlinear_dict, parameter_dict, ds_config_path, device)
 
     def batch_dataset(self):
         batched_data = []

@@ -11,8 +11,8 @@ from src.custom_nonlinear.custom_eager import SwinEager
 from src.custom_nonlinear.custom_forward import swin_forward
 
 class SwinModel(InferenceModel):
-    def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
-        super().__init__(model_dict, nonlinear_dict, parameter_dict, device)
+    def __init__(self, model_dict, nonlinear_dict, parameter_dict, ds_config_path, device):
+        super().__init__(model_dict, nonlinear_dict, parameter_dict, ds_config_path, device)
 
     def load_model(self):
         self.processor = AutoImageProcessor.from_pretrained(self.model_name, use_fast=True)

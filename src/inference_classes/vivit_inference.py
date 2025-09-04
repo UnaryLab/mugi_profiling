@@ -10,8 +10,8 @@ from PIL import Image
 from src.inference_classes.inference_class import InferenceModel
 
 class VivitModel(InferenceModel):
-    def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
-        super().__init__(model_dict, nonlinear_dict, parameter_dict, device)
+    def __init__(self, model_dict, nonlinear_dict, parameter_dict, ds_config_path, device):
+        super().__init__(model_dict, nonlinear_dict, parameter_dict, ds_config_path, device)
 
     def load_model(self):
         self.processor = AutoProcessor.from_pretrained(self.model_name, use_fast=True)
