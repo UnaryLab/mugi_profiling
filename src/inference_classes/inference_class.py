@@ -16,7 +16,7 @@ from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_silu_approx import 
 from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_softmax_approx import PWLSoftmax
 from src.custom_nonlinear.custom_nonlinear_functions.taylor.taylor_softmax_approx import TaylorSoftmax
 from src.custom_nonlinear.custom_nonlinear_functions.vlp.vlp_gelu_approx import VLPGelu
-from custom_nonlinear.custom_nonlinear_functions.vlp.vlp_activation_approx import VLPSilu
+from custom_nonlinear.custom_nonlinear_functions.vlp.vlp_silu_approx import VLPSilu
 from src.custom_nonlinear.custom_nonlinear_functions.vlp.vlp_softmax_approx import VLPSoftmax
 
 class InferenceModel(ABC):
@@ -118,42 +118,6 @@ class InferenceModel(ABC):
             batch = self.process_batch(batch)
             batched_data.append(batch)
         self.inputs = batched_data
-    
-    def flatten_dict(self, d: dict) -> dict:
-        flat_dict = {}
-        for key, value in d.items():
-            if isinstance(value, list) and len(value) == 1:
-                flat_dict[key] = value[0]
-            elif isinstance(value, (str, int, float, bool)) or value is None:
-                flat_dict[key] = value
-            else:
-                raise ValueError(f'Value for key "{key}" is not a single-element list.')
-        return flat_dict
-
-    def dict_value_to_list(self, d: dict) -> dict:
-        if d is None:
-            return {}
-        list_dict = {}
-        for key, value in d.items():
-            if not isinstance(value, list):
-                list_dict[key] = [value]
-            else:
-                list_dict[key] = value
-        return list_dict
-
-    def parameter_combinations(self, d: dict) -> dict:
-        (keys, values) = zip(*d.items())
-        combination = list(product(*values))
-        result = [dict(zip(keys, combo)) for combo in combination]
-        return result
-
-    def nonlinear_combinations(self, d: dict)-> dict:
-        d = {k: v + [None] for k, v in d.items()}
-        (keys, values) = zip(*d.items())
-        combination = list(product(*values))
-        result = [dict(zip(keys, combo)) for combo in combination]
-        result = [r for r in result if not all(v is None for v in r.values())]
-        return result
 
     def compute_metric(self, total_loss, num_batches):
         return
@@ -344,7 +308,11 @@ class InferenceModel(ABC):
             if not isinstance(value, list):
                 self.nonlinear_function_parameters[key] = [value]
 
-        print(self.nonlinear_function_parameters)
+        (keys, values) = zip(*self.nonlinear_function_parameters.items())
+        combination = list(product(*values))
+        combinations = [dict(zip(keys, combo)) for combo in combination]
+        print(combinations)
+        exit()
 
         
 
