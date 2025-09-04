@@ -4,6 +4,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
 #SBATCH --job-name=whisper_tiny
+#SBATCH --constraint=gpu32
 #SBATCH --error=output/run/whisper/whisper_tiny/error.txt
 #SBATCH --output=output/run/whisper/whisper_tiny/output.txt
 
