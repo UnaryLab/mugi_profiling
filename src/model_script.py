@@ -71,6 +71,8 @@ def main():
                         help='Path to inference parameters YAML file (default: None)')
     parser.add_argument('--hf_token', type=str, default=None,
                         help='Hugging Face token for authentication (default: None, assumes hf is already logged in)')
+    parser.add_argument('--deepspeed_config', type=str, default='config/deepspeed/deepspeed.json',
+                        help='Path to DeepSpeed JSON config for ZeRO/inference (default: config/deepspeed/deepspeed.json)')
     args, unknown = parser.parse_known_args()
 
 
@@ -81,6 +83,9 @@ def main():
     parameter_config = yaml.safe_load(open(args.parameter_config))
 
     print("Successfully loaded configuration files.")
+
+    # Inject deepspeed config path into parameter configuration (non-destructive)
+    parameter_config['deepspeed_config_path'] = args.deepspeed_config
 
     evaluate_model(model_config, nonlinear_config, parameter_config, args.nonlinear_config)
 

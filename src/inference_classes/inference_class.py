@@ -61,23 +61,38 @@ class InferenceModel(ABC):
         self.ffn_objects = []
 
     def init_deepspeed(self):
+        """Initialize DeepSpeed for inference using ZeRO (Stage 3) config if provided.
 
-        rank = int(os.environ.get("SLURM_PROCID", 0))
-        world_size = int(os.environ.get("SLURM_NTASKS", 1))
-        local_rank = int(os.environ.get("SLURM_LOCALID", 0))
+        Falls back to simple half/bf16 cuda placement if no config or single GPU.
+        """
+        if not torch.cuda.is_available():
+            return
 
+        local_rank = int(os.environ.get("LOCAL_RANK", os.environ.get("SLURM_LOCALID", 0)))
         torch.cuda.set_device(local_rank)
 
-        tp_size = torch.cuda.device_count()
-        if tp_size == 0:
-            raise ValueError("No GPUs available for DeepSpeed inference.")
+        ds_config_path = self.parameter_dict.get('deepspeed_config_path')
+        if ds_config_path and os.path.exists(ds_config_path):
+            import json
+            with open(ds_config_path, 'r') as f:
+                ds_cfg = json.load(f)
 
-        self.ds_model = deepspeed.init_inference(
-            self.model,
-            dtype=torch.float16,
-            replace_with_kernel_inject=False,
-            tensor_parallel={"tp_size": tp_size}
-        )
+            # Use DeepSpeed initialize API to enable ZeRO param partitioning.
+            engine, _, _, _ = deepspeed.initialize(model=self.model,
+                                                   model_parameters=[],
+                                                   config=ds_cfg)
+            self.ds_model = engine
+            # Keep self.model pointing at underlying module for forward calls in subclasses
+            if hasattr(engine, 'module'):
+                self.model = engine.module
+        else:
+            # Simple single-device placement (bf16 preferred if requested)
+            use_bf16 = self.parameter_dict.get('use_bf16', True)
+            if use_bf16 and torch.cuda.is_bf16_supported():
+                self.model = self.model.to(torch.bfloat16).cuda()
+            else:
+                self.model = self.model.half().cuda()
+            self.ds_model = self.model
 
     def append_nonlinear_list(self, attention_class, ffn_class, layer, device, path, profiling_dims):
 
