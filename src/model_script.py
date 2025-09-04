@@ -21,9 +21,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
     nonlinear_config_path = nonlinear_config_path.split('/')[-1].split('.')[0]
 
     inference_model = None
-    print(model_name_lower)
-    print('hello')
-    exit()
+
     # Initialize model class
     if 'llama' in model_name_lower:
         inference_model = LlamaModel(model_dict, nonlinear_dict, parameter_dict, device)
