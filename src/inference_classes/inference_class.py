@@ -20,7 +20,7 @@ from custom_nonlinear.custom_nonlinear_functions.vlp.vlp_silu_approx import VLPS
 from src.custom_nonlinear.custom_nonlinear_functions.vlp.vlp_softmax_approx import VLPSoftmax
 
 class InferenceModel(ABC):
-    def __init__(self, model_dict, nonlinear_dict, parameter_dict, ds_config_path, device):
+    def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
         # Set device
         self.device = device
         
@@ -45,8 +45,6 @@ class InferenceModel(ABC):
         self.nonlinear_function = nonlinear_dict.get('nonlinear_function')
         self.approx_function = nonlinear_dict.get('approx_function')
 
-        self.ds_config_path = ds_config_path
-
         self.model_name = self.model_parameters.get('name')
 
         self.attn_op = self.nonlinear_parameters.get('attention')
@@ -63,25 +61,23 @@ class InferenceModel(ABC):
         self.ffn_objects = []
 
     def init_deepspeed(self):
-        """Initialize DeepSpeed for inference using ZeRO (Stage 3) config if provided.
 
-        Falls back to simple half/bf16 cuda placement if no config or single GPU.
-        """
-        if not torch.cuda.is_available():
-            return
+        rank = int(os.environ.get("SLURM_PROCID", 0))
+        world_size = int(os.environ.get("SLURM_NTASKS", 1))
+        local_rank = int(os.environ.get("SLURM_LOCALID", 0))
 
-        local_rank = int(os.environ.get("LOCAL_RANK", os.environ.get("SLURM_LOCALID", 0)))
         torch.cuda.set_device(local_rank)
 
-        import json
-        with open(self.ds_config_path, 'r') as f:
-            ds_cfg = json.load(f)
+        mp_size = torch.cuda.device_count()
+        if mp_size == 0:
+            raise ValueError("No GPUs available for DeepSpeed inference.")
 
-        # Use DeepSpeed initialize API to enable ZeRO param partitioning.
-        engine, _, _, _ = deepspeed.initialize(model=self.model,
-                                                model_parameters=[],
-                                                config=ds_cfg)
-        self.ds_model = engine
+        self.ds_model = deepspeed.init_inference(
+            self.model,
+            mp_size=mp_size,
+            dtype=torch.float16,
+            replace_with_kernel_inject=False,
+        )
 
     def append_nonlinear_list(self, attention_class, ffn_class, layer, device, path, profiling_dims):
 
