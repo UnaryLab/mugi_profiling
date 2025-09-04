@@ -7,7 +7,7 @@
 #SBATCH --error=output/run/whisper/whisper_tiny/error.txt
 #SBATCH --output=output/run/whisper/whisper_tiny/output.txt
 
-# module load anaconda
+module load anaconda
 module load cuda
 module load openblas
 
