@@ -76,6 +76,7 @@ class InferenceModel(ABC):
             self.model,
             mp_size=mp_size,
             dtype=torch.float16,
+            replace_method='nothing',
             replace_with_kernel_inject=False,
         )
 
