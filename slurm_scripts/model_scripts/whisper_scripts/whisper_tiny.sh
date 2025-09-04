@@ -15,7 +15,7 @@ module load openblas
 # source $(conda info --base)/etc/profile.d/conda.sh
 # eval "$(conda shell.bash hook)"
 
-# conda activate mugi_profiling
+conda activate mugi_profiling
 
 cd ~/mugi_profiling
 
