@@ -6,6 +6,8 @@ import pandas as pd
 import sys
 import transformers
 
+sys.path.append(os.path.dirname(transformers.__file__))
+
 from src.utils import validate_config
 from src.inference_classes.whisper_inference import WhisperModel
 from src.inference_classes.llama_inference import LlamaModel
@@ -15,9 +17,6 @@ from src.inference_classes.swin_inference import SwinModel
 token = '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'
 
 def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_path):
-
-    sys.path.append(os.path.dirname(transformers.__file__))
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # Validate configurations
     model_name = validate_config(model_dict, nonlinear_dict, parameter_dict)
