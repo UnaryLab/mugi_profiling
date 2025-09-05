@@ -113,7 +113,7 @@ class LlamaModel(InferenceModel):
         input_ids = torch.stack([ex["input_ids"] for ex in batch]).to(self.device)
         attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).to(self.device).bool()
         with torch.inference_mode():
-            outputs = self.ds_model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids, use_cache=False)
+            outputs = self.ds_model(input_ids=input_ids)#, attention_mask=attention_mask, labels=input_ids, use_cache=False)
         del input_ids, attention_mask
         loss = outputs.loss
         return loss
