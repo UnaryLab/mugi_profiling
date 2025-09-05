@@ -110,4 +110,5 @@ class LlamaInference(InferenceModel):
         
     def tp_patch(self):
         self.model.model = LlamaModel(self.model.config)
+        print(self.model.device)
         exit()
