@@ -4,6 +4,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import LlamaEager
 from src.custom_nonlinear.custom_forward import llama_forward
+from src.custom_models.llama_tp import LlamaModel
 
 import torch
 import types
@@ -57,6 +58,9 @@ class LlamaModel(InferenceModel):
         self.tp_patch()
 
     def patch_layers(self, attention_class, ffn_class, path):
+
+        self.model.model = LlamaModel(self.model.config).to(self.device)
+
         for i, layer in enumerate(self.model.model.layers):
                 layer_device = next(layer.parameters()).device
 
