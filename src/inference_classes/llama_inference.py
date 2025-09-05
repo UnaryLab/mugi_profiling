@@ -109,5 +109,5 @@ class LlamaModel(InferenceModel):
                                 self.max_length - 1]
         
     def tp_patch(self):
-        print(self.model.embed_tokens)
+        self.model.model = LlamaModel(self.model.config)
         exit()
