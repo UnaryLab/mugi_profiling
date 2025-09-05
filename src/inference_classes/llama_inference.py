@@ -54,6 +54,8 @@ class LlamaModel(InferenceModel):
         if self.max_length > 4096:
             self.max_length = 4096
 
+        self.tp_patch()
+
     def patch_layers(self, attention_class, ffn_class, path):
         for i, layer in enumerate(self.model.model.layers):
                 layer_device = next(layer.parameters()).device
@@ -102,4 +104,6 @@ class LlamaModel(InferenceModel):
                                (self.max_length - 1) // 2,
                                 self.max_length - 1]
         
-    
+    def tp_patch(self):
+        print(self.model)
+        exit()
