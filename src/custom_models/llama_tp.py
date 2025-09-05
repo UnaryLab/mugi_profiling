@@ -21,7 +21,7 @@ class LlamaModel(LlamaPreTrainedModel):
 
         
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size, self.padding_idx)
-        print(self.embed_tokens.shape)
+        print(self.embed_tokens.weight.shape)
         self.layers = nn.ModuleList(
             [LlamaDecoderLayer(config, layer_idx) for layer_idx in range(config.num_hidden_layers)]
         )
