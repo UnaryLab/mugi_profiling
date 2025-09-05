@@ -90,8 +90,8 @@ class LlamaModel(InferenceModel):
     def run_inference(self, batch):
         n_gpus = torch.cuda.device_count()
 
-        input_ids = torch.stack([ex["input_ids"] for ex in batch]).to(self.device)
-        attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).to(self.device).bool()
+        input_ids = torch.stack([ex["input_ids"] for ex in batch]).flatten().to(self.device)
+        attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).flatten().to(self.device).bool()
         print(input_ids.shape, attention_mask.shape, n_gpus)
         exit()
         with torch.inference_mode():
