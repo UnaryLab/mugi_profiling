@@ -48,7 +48,7 @@ class LlamaModel(InferenceModel):
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map='auto', use_cache=False)
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', use_cache=False)
         self.max_length = self.model.config.max_position_embeddings
 
         if self.max_length > 4096:
@@ -88,14 +88,11 @@ class LlamaModel(InferenceModel):
                     self.inputs.append(tokenized_example)
 
     def run_inference(self, batch):
-        n_gpus = torch.cuda.device_count()
-
         input_ids = torch.stack([ex["input_ids"] for ex in batch]).flatten().to(self.device)
         attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).flatten().to(self.device).bool()
-        print(input_ids.shape, attention_mask.shape, n_gpus)
-        exit()
+
         with torch.inference_mode():
-            outputs = self.ds_model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids, use_cache=False)
+            outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids, use_cache=False)
         del input_ids, attention_mask
         loss = outputs.loss
         return loss
