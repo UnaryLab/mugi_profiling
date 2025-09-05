@@ -25,11 +25,8 @@ class LlamaModel(LlamaPreTrainedModel):
         # self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size, self.padding_idx)
         
         self.embed_token_slices = nn.ModuleList(
-            [nn.Embedding(config.vocab_size, config.hidden_size // n_gpus, self.padding_idx) for i in range(n_gpus)]
+            [nn.Embedding(config.vocab_size, config.hidden_size // n_gpus, self.padding_idx).to(f'cuda:{n_gpus}') for i in range(n_gpus)]
         )
-        print(n_gpus)
-        for embed_token in self.embed_token_slices:
-            print(embed_token.weight.shape)
 
         self.layers = nn.ModuleList(
             [LlamaDecoderLayer(config, layer_idx) for layer_idx in range(config.num_hidden_layers)]
