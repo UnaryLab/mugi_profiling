@@ -23,7 +23,6 @@ class LlamaModel(LlamaPreTrainedModel):
 
         # embed_tokes = [vocab_size, hidden_size]
         # self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size, self.padding_idx)
-        
         self.embed_token_slices = nn.ModuleList(
             [nn.Embedding(config.vocab_size, config.hidden_size // n_gpus, self.padding_idx).to(f'cuda:{i}') for i in range(n_gpus)]
         )
@@ -31,11 +30,15 @@ class LlamaModel(LlamaPreTrainedModel):
         self.layers = nn.ModuleList(
             [LlamaDecoderLayer(config, layer_idx) for layer_idx in range(config.num_hidden_layers)]
         )
-        self.norm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+
+        # norm = [4096]
+        # self.norm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+        self.norm_slices = nn.ModuleList(
+            [LlamaRMSNorm(config.hidden_size // n_gpus, eps=config.rms_norm_eps).to(f'cuda:{i}') for i in range(n_gpus)]
+        )
         self.rotary_emb = LlamaRotaryEmbedding(config=config)
-        print(self.norm.weight.shape)
-        print(self.rotary_emb.cos_cached.shape)
-        print(self.rotary_emb.sin_cached.shape)
+        for name, buf in self.rotary_emb.named_buffers():
+            print(name, buf.shape)
 
         self.gradient_checkpointing = False
 
