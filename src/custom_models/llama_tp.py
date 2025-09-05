@@ -7,6 +7,7 @@ from typing import Optional, Tuple, List
 from typing_extensions import Unpack, TypeVar
 from transformers.utils import auto_docstring
 from transformers.utils.generic import check_model_inputs, TransformersKwargs
+from transformers.utils.generic import c
 from transformers.cache_utils import Cache, DynamicCache
 from transformers.masking_utils import create_causal_mask
 
