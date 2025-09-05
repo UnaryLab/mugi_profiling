@@ -10,8 +10,10 @@ from transformers.utils.generic import can_return_tuple
 from transformers.cache_utils import Cache, DynamicCache
 from transformers.masking_utils import create_causal_mask
 from transformers.modeling_flash_attention_utils import FlashAttentionKwargs
+from transformers.modeling_layers import GradientCheckpointingLayer
+from transformers.models.llama.modeling_llama import LlamaAttention, LlamaMLP
 
-from transformers.models.llama.modeling_llama import LlamaDecoderLayer, LlamaRMSNorm, LlamaRotaryEmbedding
+from transformers.models.llama.modeling_llama import LlamaRMSNorm, LlamaRotaryEmbedding
 
 class LlamaModel(LlamaPreTrainedModel):
     def __init__(self, config: LlamaConfig):
@@ -36,10 +38,8 @@ class LlamaModel(LlamaPreTrainedModel):
         self.norm_slices = nn.ModuleList(
             [LlamaRMSNorm(config.hidden_size // n_gpus, eps=config.rms_norm_eps).to(f'cuda:{i}') for i in range(n_gpus)]
         )
-        self.rotary_emb = LlamaRotaryEmbedding(config=config)
-        for name, buf in self.rotary_emb.named_buffers():
-            print(name, buf.shape)
 
+        self.rotary_emb = LlamaRotaryEmbedding(config=config)
         self.gradient_checkpointing = False
 
         # Initialize weights and apply final processing
@@ -151,3 +151,147 @@ class LlamaModel(LlamaPreTrainedModel):
             hidden_states=all_hidden_states,
             attentions=all_self_attns,
         )
+
+class LlamaDecoderLayer(GradientCheckpointingLayer):
+    def __init__(self, config: LlamaConfig, layer_idx: int):
+        super().__init__()
+
+        self.n_gpus = torch.cuda.device_count()
+
+        self.hidden_size = config.hidden_size
+
+        self.self_attn = LlamaAttention(config=config, layer_idx=layer_idx)
+
+        self.mlp = LlamaMLP(config)
+
+        # input_norm = [hidden_size]
+        #self.input_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+        self.input_norm_slices = nn.ModuleList(
+            [LlamaRMSNorm(config.hidden_size // self.n_gpus, eps=config.rms_norm_eps).to(f'cuda:{i}') for i in range(self.n_gpus)]
+        )
+
+        # output_norm = [hidden_size]
+        # self.post_attention_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+        self.output_norm_slices = nn.ModuleList(
+            [LlamaRMSNorm(config.hidden_size // self.n_gpus, eps=config.rms_norm_eps).to(f'cuda:{i}') for i in range(self.n_gpus)]
+        )
+
+    def forward(
+        self,
+        hidden_states: torch.Tensor,
+        attention_mask: Optional[torch.Tensor] = None,
+        position_ids: Optional[torch.LongTensor] = None,
+        past_key_value: Optional[Cache] = None,
+        output_attentions: Optional[bool] = False,
+        use_cache: Optional[bool] = False,
+        cache_position: Optional[torch.LongTensor] = None,
+        position_embeddings: Optional[tuple[torch.Tensor, torch.Tensor]] = None,  # necessary, but kept here for BC
+        **kwargs: Unpack[FlashAttentionKwargs],
+    ) -> tuple[torch.FloatTensor, Optional[tuple[torch.FloatTensor, torch.FloatTensor]]]:
+        residual = hidden_states
+        hidden_states = self.input_layernorm(hidden_states)
+
+        # Self Attention
+        hidden_states, self_attn_weights = self.self_attn(
+            hidden_states=hidden_states,
+            attention_mask=attention_mask,
+            position_ids=position_ids,
+            past_key_value=past_key_value,
+            output_attentions=output_attentions,
+            use_cache=use_cache,
+            cache_position=cache_position,
+            position_embeddings=position_embeddings,
+            **kwargs,
+        )
+        hidden_states = residual + hidden_states
+
+        # Fully Connected
+        residual = hidden_states
+        hidden_states = self.post_attention_layernorm(hidden_states)
+        hidden_states = self.mlp(hidden_states)
+        hidden_states = residual + hidden_states
+
+        outputs = (hidden_states,)
+        if output_attentions:
+            outputs += (self_attn_weights,)
+
+        return outputs
+    
+class LlamaAttention(nn.Module):
+    """Multi-headed attention from 'Attention Is All You Need' paper"""
+
+    def __init__(self, config: LlamaConfig, layer_idx: int):
+        super().__init__()
+        self.config = config
+        self.layer_idx = layer_idx
+        self.head_dim = getattr(config, "head_dim", config.hidden_size // config.num_attention_heads)
+        self.num_key_value_groups = config.num_attention_heads // config.num_key_value_heads
+        self.scaling = self.head_dim**-0.5
+        self.attention_dropout = config.attention_dropout
+        self.is_causal = True
+
+        self.n_gpus = torch.cuda.device_count()
+
+        # q_proj = [hidden_size, num_attention_heads * head_dim]
+        # self.q_proj = nn.Linear(
+        #     config.hidden_size, config.num_attention_heads * self.head_dim, bias=config.attention_bias
+        # )
+        print(config.attention_bias)
+        exit()
+        q_proj_slices = nn.ModuleList(
+            [nn.Linear(
+                config.hidden_size, (config.num_attention_heads * self.head_dim) // self.n_gpus, bias=config.attention_bias
+            ).to(f'cuda:{i}') for i in range(self.n_gpus)]
+        )
+        self.k_proj = nn.Linear(
+            config.hidden_size, config.num_key_value_heads * self.head_dim, bias=config.attention_bias
+        )
+        self.v_proj = nn.Linear(
+            config.hidden_size, config.num_key_value_heads * self.head_dim, bias=config.attention_bias
+        )
+        self.o_proj = nn.Linear(
+            config.num_attention_heads * self.head_dim, config.hidden_size, bias=config.attention_bias
+        )
+
+    def forward(
+        self,
+        hidden_states: torch.Tensor,
+        position_embeddings: tuple[torch.Tensor, torch.Tensor],
+        attention_mask: Optional[torch.Tensor],
+        past_key_value: Optional[Cache] = None,
+        cache_position: Optional[torch.LongTensor] = None,
+        **kwargs: Unpack[FlashAttentionKwargs],
+    ) -> tuple[torch.Tensor, Optional[torch.Tensor], Optional[tuple[torch.Tensor]]]:
+        input_shape = hidden_states.shape[:-1]
+        hidden_shape = (*input_shape, -1, self.head_dim)
+
+        query_states = self.q_proj(hidden_states).view(hidden_shape).transpose(1, 2)
+        key_states = self.k_proj(hidden_states).view(hidden_shape).transpose(1, 2)
+        value_states = self.v_proj(hidden_states).view(hidden_shape).transpose(1, 2)
+
+        cos, sin = position_embeddings
+        query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin)
+
+        if past_key_value is not None:
+            # sin and cos are specific to RoPE models; cache_position needed for the static cache
+            cache_kwargs = {"sin": sin, "cos": cos, "cache_position": cache_position}
+            key_states, value_states = past_key_value.update(key_states, value_states, self.layer_idx, cache_kwargs)
+
+        attention_interface: Callable = eager_attention_forward
+        if self.config._attn_implementation != "eager":
+            attention_interface = ALL_ATTENTION_FUNCTIONS[self.config._attn_implementation]
+
+        attn_output, attn_weights = attention_interface(
+            self,
+            query_states,
+            key_states,
+            value_states,
+            attention_mask,
+            dropout=0.0 if not self.training else self.attention_dropout,
+            scaling=self.scaling,
+            **kwargs,
+        )
+
+        attn_output = attn_output.reshape(*input_shape, -1).contiguous()
+        attn_output = self.o_proj(attn_output)
+        return attn_output, attn_weights
