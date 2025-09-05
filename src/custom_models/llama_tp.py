@@ -33,6 +33,10 @@ class LlamaModel(LlamaPreTrainedModel):
         )
         self.norm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
         self.rotary_emb = LlamaRotaryEmbedding(config=config)
+        print(self.norm.weight.shape)
+        print(self.rotary_emb.cos_cached.shape)
+        print(self.rotary_emb.sin_cached.shape)
+
         self.gradient_checkpointing = False
 
         # Initialize weights and apply final processing
