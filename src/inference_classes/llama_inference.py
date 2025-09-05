@@ -1,6 +1,5 @@
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from huggingface_hub import snapshot_download
 
 from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import LlamaEager
@@ -8,8 +7,6 @@ from src.custom_nonlinear.custom_forward import llama_forward
 
 import torch
 import types
-import os
-import deepspeed
 
 class LlamaModel(InferenceModel):
     def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
@@ -57,25 +54,6 @@ class LlamaModel(InferenceModel):
         if self.max_length > 4096:
             self.max_length = 4096
 
-        # init deepspeed
-        # rank = int(os.environ.get("SLURM_PROCID", 0))
-        # world_size = int(os.environ.get("SLURM_NTASKS", 1))
-        local_rank = int(os.environ.get("SLURM_LOCALID", 0))
-
-        torch.cuda.set_device(local_rank)
-
-        mp_size = torch.cuda.device_count()
-        if mp_size == 0:
-            raise ValueError("No GPUs available for DeepSpeed inference.")
-
-        self.ds_model = deepspeed.init_inference(
-            self.model,
-            tensor_parallel={"tp_size": 2},
-            dtype=torch.float16,
-            replace_method='nothing',
-            replace_with_kernel_inject=False,
-        )
-
     def patch_layers(self, attention_class, ffn_class, path):
         for i, layer in enumerate(self.model.model.layers):
                 layer_device = next(layer.parameters()).device
@@ -110,10 +88,14 @@ class LlamaModel(InferenceModel):
                     self.inputs.append(tokenized_example)
 
     def run_inference(self, batch):
+        n_gpus = torch.cuda.device_count()
+
         input_ids = torch.stack([ex["input_ids"] for ex in batch]).to(self.device)
         attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).to(self.device).bool()
+        print(input_ids.shape, attention_mask.shape, n_gpus)
+        exit()
         with torch.inference_mode():
-            outputs = self.ds_model(input_ids=input_ids)#, attention_mask=attention_mask, labels=input_ids, use_cache=False)
+            outputs = self.ds_model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids, use_cache=False)
         del input_ids, attention_mask
         loss = outputs.loss
         return loss
