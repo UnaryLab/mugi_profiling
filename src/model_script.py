@@ -6,6 +6,7 @@ import pandas as pd
 import sys
 import transformers
 
+print(os.path.dirname(transformers.__file__))
 sys.path.append(os.path.dirname(transformers.__file__))
 
 from src.utils import validate_config
