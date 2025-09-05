@@ -9,7 +9,7 @@ from src.custom_models.llama_tp import LlamaModel
 import torch
 import types
 
-class LlamaModel(InferenceModel):
+class LlamaInference(InferenceModel):
     def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
         super().__init__(model_dict, nonlinear_dict, parameter_dict, device)
 

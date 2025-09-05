@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(transformers.__file__))
 
 from src.utils import validate_config
 from src.inference_classes.whisper_inference import WhisperModel
-from src.inference_classes.llama_inference import LlamaModel
+from src.inference_classes.llama_inference import LlamaInference
 from src.inference_classes.vivit_inference import VivitModel
 from src.inference_classes.swin_inference import SwinModel
 
@@ -29,7 +29,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
 
     # Initialize model class
     if 'llama' in model_name_lower:
-        inference_model = LlamaModel(model_dict, nonlinear_dict, parameter_dict, device)
+        inference_model = LlamaInference(model_dict, nonlinear_dict, parameter_dict, device)
     elif 'whisper' in model_name_lower:
         inference_model = WhisperModel(model_dict, nonlinear_dict, parameter_dict, device)
     elif 'swin' in model_name_lower:
