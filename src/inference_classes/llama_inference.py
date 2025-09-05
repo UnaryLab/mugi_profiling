@@ -85,7 +85,7 @@ class LlamaModel(InferenceModel):
                                            layer=i,
                                            device=layer_device,
                                            path=path,
-                                           profiling_dims=self.profile_dims)
+                                           profiling_dims=self.profiling_dims)
 
                 eager_attn_fn = LlamaEager(nonlinear_object=self.attention_objects[i])
                 forward = llama_forward(eager_attn_fn)
