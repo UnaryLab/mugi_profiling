@@ -25,7 +25,6 @@ def llama_forward(llama_eager):
         hidden_shape = (*input_shape, -1, self.head_dim)
 
         print(self.q_proj.weight.device)
-        exit()
 
         query_states = self.q_proj(hidden_states).view(hidden_shape).transpose(1, 2)
         key_states = self.k_proj(hidden_states).view(hidden_shape).transpose(1, 2)
