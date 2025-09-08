@@ -108,6 +108,8 @@ class LlamaInference(InferenceModel):
                                 self.max_length - 1]
         
     def tp_patch(self):
+
+        print(self.model.model)
         # patch embedding
         patch_embedding(self.model, self.world_size, self.rank)
 
