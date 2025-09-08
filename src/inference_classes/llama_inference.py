@@ -41,8 +41,8 @@ class LlamaInference(InferenceModel):
 
         self.inputs = batched_data
 
-    def compute_metric(self):
-        return self.compute_perplexity()
+    def compute_metric(self, total_loss, num_batches):
+        return self.compute_perplexity(total_loss, num_batches)
     
     def load_model(self):
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
