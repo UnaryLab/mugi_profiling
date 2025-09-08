@@ -21,6 +21,9 @@ def llama_forward(llama_eager):
         cache_position: Optional[torch.LongTensor] = None,
         **kwargs,
     ) -> tuple[torch.Tensor, torch.Tensor]:
+        
+        print('hi\nhi\nhi\nhi\n')
+
         input_shape = hidden_states.shape[:-1]
         hidden_shape = (*input_shape, -1, self.head_dim)
 
