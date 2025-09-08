@@ -4,7 +4,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import LlamaEager
 from src.custom_nonlinear.custom_forward import llama_forward
-from src.custom_models.llama_tp import LlamaModel
+#from src.custom_models.llama_tp import LlamaModel
 
 import torch
 import types
