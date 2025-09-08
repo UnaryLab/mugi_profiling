@@ -111,9 +111,18 @@ class LlamaInference(InferenceModel):
 
         print(self.model.model)
         # patch embedding
-        patch_embedding(self.model, self.world_size, self.rank)
+        self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
+                                                        world_size=self.world_size,
+                                                        rank=self.rank)
 
         # patch rmsnorm
-        patch_rmsnorm(self.model, self.world_size, self.rank)
+        self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
+                                              eps=self.model.config.rms_norm_eps,
+                                              world_size=self.world_size,
+                                              rank=self.rank)
         
-        exit()
+        for i, layer in enumerate(self.model.model.layers):
+            # Decoder
+            print(layer)
+
+            exit()

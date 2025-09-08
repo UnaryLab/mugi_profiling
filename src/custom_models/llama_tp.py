@@ -9,8 +9,7 @@ def init_dist():
     torch.cuda.set_device(dist.get_rank() % torch.cuda.device_count())
     return dist.get_world_size(), dist.get_rank()
     
-def patch_embedding(model, world_size, rank):
-    embed_tokens = model.model.embed_tokens
+def patch_embedding(embed_tokens, world_size, rank):
     vocab_size, embed_dim = embed_tokens.weight.shape
 
     hidden_per_gpu = embed_dim // world_size
@@ -23,15 +22,10 @@ def patch_embedding(model, world_size, rank):
         local_embed.weight.copy_(local_weight)
     local_embed = local_embed.cuda()
 
-    model.model.embed_tokens = local_embed
+    return local_embed
 
-def patch_rmsnorm(model, world_size, rank):
-    rmsnorm = model.model.norm
+def patch_rmsnorm(rmsnorm, eps, world_size, rank):
     hidden_size = rmsnorm.weight.shape[0]
-    eps = model.config.rms_norm_eps
-
-    print('here')
-    print(hidden_size, eps)
 
     hidden_per_gpu = hidden_size // world_size
     start = rank * hidden_per_gpu
@@ -43,4 +37,6 @@ def patch_rmsnorm(model, world_size, rank):
         local_rmsnorm.weight.copy_(local_weight)
     local_rmsnorm = local_rmsnorm.cuda()
 
-    model.model.norm = local_rmsnorm
+    return local_rmsnorm
+
+def patch_decoder():
