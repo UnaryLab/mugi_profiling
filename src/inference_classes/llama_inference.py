@@ -123,6 +123,6 @@ class LlamaInference(InferenceModel):
         
         for i, layer in enumerate(self.model.model.layers):
             # Decoder
-            print(layer)
+            print(layer.LlamaDecoderLayer)
 
             exit()
