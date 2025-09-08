@@ -28,12 +28,16 @@ def llama_forward(llama_eager):
         hidden_shape = (*input_shape, -1, self.head_dim)
 
         print('preprojection')
-
+        print('q')
         query_states = self.q_proj(hidden_states).view(hidden_shape).transpose(1, 2)
+        print('k')
         key_states = self.k_proj(hidden_states).view(hidden_shape).transpose(1, 2)
+        print('v')
         value_states = self.v_proj(hidden_states).view(hidden_shape).transpose(1, 2)
 
         print('prerotary')
+
+
 
         cos, sin = position_embeddings
         query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin)
