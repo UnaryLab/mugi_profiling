@@ -13,6 +13,7 @@ import types
 class LlamaInference(InferenceModel):
     def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
         super().__init__(model_dict, nonlinear_dict, parameter_dict, device)
+        init_dist()
 
     def batch_dataset(self):
         batched_data = []
@@ -107,8 +108,5 @@ class LlamaInference(InferenceModel):
                                 self.max_length - 1]
         
     def tp_patch(self):
-        # init torch distributed
-        init_dist()
-
         # patch embedding
         patch_embedding(self.model)
