@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from typing import Optional
 from transformers.models.llama.modeling_llama import repeat_kv
+import torch.distributed as dist
 
 
 def SwinEager(nonlinear_object):
@@ -85,6 +86,12 @@ def LlamaEager(nonlinear_object):
         attn_weights = nn.functional.dropout(attn_weights, p=dropout, training=module.training)
         attn_output = torch.matmul(attn_weights, value_states)
         attn_output = attn_output.transpose(1, 2).contiguous()
+
+        world_size = dist.get_world_size()
+
+        gathered = [torch.empty_like(attn_weights) for _ in range(world_size)]
+        dist.all_gather(gathered, attn_weights)
+        attn_weights = torch.cat(gathered, dim=-1)
 
         return attn_output, attn_weights
     return eager_attention_forward
