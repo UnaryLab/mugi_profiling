@@ -126,16 +126,14 @@ class LlamaInference(InferenceModel):
         # Decoder Layer
         for i, layer in enumerate(self.model.model.layers):
             # input_layer norm
-            # layer.input_layernorm = patch_rmsnorm(rmsnorm=layer.input_layernorm,
-            #                                       eps=self.model.config.rms_norm_eps,
-            #                                       world_size=self.world_size,
-            #                                       rank=self.rank)
+            layer.input_layernorm = patch_rmsnorm(rmsnorm=layer.input_layernorm,
+                                                  eps=self.model.config.rms_norm_eps,
+                                                  world_size=self.world_size)
 
             # # post_attention_layernorm
-            # layer.post_attention_layernorm = patch_rmsnorm(rmsnorm=layer.post_attention_layernorm,
-            #                                                eps=self.model.config.rms_norm_eps,
-            #                                                world_size=self.world_size,
-            #                                                rank=self.rank)
+            layer.post_attention_layernorm = patch_rmsnorm(rmsnorm=layer.post_attention_layernorm,
+                                                           eps=self.model.config.rms_norm_eps,
+                                                           world_size=self.world_size)
 
             # self_attn
             layer.self_attn.q_proj = patch_linear(linear=layer.self_attn.q_proj,
