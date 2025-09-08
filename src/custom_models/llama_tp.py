@@ -39,4 +39,4 @@ def patch_rmsnorm(rmsnorm, eps, world_size, rank):
 
     return local_rmsnorm
 
-def patch_decoder():
+#def patch_linear
