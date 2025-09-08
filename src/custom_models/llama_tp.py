@@ -28,7 +28,7 @@ def patch_embedding(model, world_size, rank):
 def patch_rmsnorm(model, world_size, rank):
     rmsnorm = model.model.norm
     hidden_size = rmsnorm.weight.shape[0]
-    eps = rmsnorm.eps
+    eps = model.config.rms_norm_eps
 
     hidden_per_gpu = hidden_size // world_size
     start = rank * hidden_per_gpu
