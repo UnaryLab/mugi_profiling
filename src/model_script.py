@@ -3,11 +3,11 @@ import yaml
 import torch
 import os
 import pandas as pd
-import sys
-import transformers
+# import sys
+# import transformers
 
-print(os.path.dirname(transformers.__file__))
-sys.path.append(os.path.dirname(transformers.__file__))
+# print(os.path.dirname(transformers.__file__))
+# sys.path.append(os.path.dirname(transformers.__file__))
 
 from src.utils import validate_config
 from src.inference_classes.whisper_inference import WhisperModel
