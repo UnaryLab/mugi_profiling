@@ -4,7 +4,8 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import LlamaEager
 from src.custom_nonlinear.custom_forward import llama_forward
-#from src.custom_models.llama_tp import LlamaModel
+
+from src.custom_models.llama_tp import init_dist, patch_embedding
 
 import torch
 import types
@@ -55,6 +56,8 @@ class LlamaInference(InferenceModel):
         if self.max_length > 4096:
             self.max_length = 4096
 
+        self.tp_patch()
+
     def patch_layers(self, attention_class, ffn_class, path):
         for i, layer in enumerate(self.model.model.layers):
                 layer_device = next(layer.parameters()).device
@@ -104,6 +107,8 @@ class LlamaInference(InferenceModel):
                                 self.max_length - 1]
         
     def tp_patch(self):
-        self.model.model = LlamaModel(self.model.config)
-        print(self.model.device)
-        exit()
+        # init torch distributed
+        init_dist()
+
+        # patch embedding
+        patch_embedding(self.model)
