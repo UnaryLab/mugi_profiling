@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.distributed as dist
 
-from src.custom_models.parallel_modules import ColumnParallelRMSNorm
+from src.custom_models.parallel_modules import ColumnParallelRMSNorm, ColumnParallelLinear
 
 def init_dist():
     dist.init_process_group(backend='nccl')
@@ -54,3 +54,5 @@ def patch_linear(linear, bias, world_size, rank):
 
     return local_linear
     
+def patch_output_linear(linear, bias, world_size, rank):
+    return ColumnParallelLinear(linear.in_features, linear.out_features, linear.weight, bias, world_size).cuda()

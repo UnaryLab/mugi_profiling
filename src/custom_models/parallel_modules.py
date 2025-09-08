@@ -19,3 +19,21 @@ class ColumnParallelRMSNorm(nn.Module):
         variance = local_sum_sq / (self.hidden_per_gpu * self.world_size)
         hidden_states = hidden_states * torch.rsqrt(variance + self.eps)
         return self.weight * hidden_states.to(input_dtype)
+    
+class ColumnParallelLinear(nn.Module):
+    def __init__(self, in_features, out_features, weights, bias, world_size):
+        super().__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.world_size = world_size
+        self.out_per_gpu = out_features // world_size
+
+        self.output = nn.Linear(in_features, out_features, bias=bias)
+        with torch.no_grad():
+            self.output.weight.copy_(weights)
+    
+    def forward(self, input):
+        gathered = [torch.empty_like(input) for _ in range(self.world_size)]
+        dist.all_gather(gathered, input)
+        full_input = torch.cat(gathered, dim=-1)
+        return self.output(full_input)
