@@ -68,6 +68,7 @@ def patch_linear(linear, bias, world_size, rank):
     with torch.no_grad():
         local_linear.weight.copy_(local_weight)
     local_linear = local_linear.cuda()
+    print(local_linear.weight.dtype)
 
     return local_linear
     
