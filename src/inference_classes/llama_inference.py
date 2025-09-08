@@ -113,3 +113,5 @@ class LlamaInference(InferenceModel):
 
         # patch rmsnorm
         patch_rmsnorm(self.model, self.world_size, self.rank)
+        
+        exit()
