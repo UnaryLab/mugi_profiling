@@ -109,11 +109,12 @@ class LlamaInference(InferenceModel):
         
     def tp_patch(self):
 
-        # print(self.model.model)
-        # # embedding
-        # self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
-        #                                                 world_size=self.world_size,
-        #                                                 rank=self.rank)
+        # embedding
+        self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
+                                                        vocab_size=self.model.config.vocab_size,
+                                                        hidden_size=self.model.config.hidden_size,
+                                                        padding_idx=self.tokenizer.pad_token_id,
+                                                        world_size=self.world_size)
 
         # # rmsnorm
         # self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,

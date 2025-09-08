@@ -2,27 +2,34 @@ import torch
 import torch.nn as nn
 import torch.distributed as dist
 
-from src.custom_models.parallel_modules import ColumnParallelRMSNorm, ColumnParallelLinear
+from src.custom_models.parallel_modules import ColumnParallelRMSNorm, ColumnParallelLinear, ColumnParallelEmbedding
 
 def init_dist():
     dist.init_process_group(backend='nccl')
     torch.cuda.set_device(dist.get_rank() % torch.cuda.device_count())
     return dist.get_world_size(), dist.get_rank()
     
-def patch_embedding(embed_tokens, world_size, rank):
-    vocab_size, embed_dim = embed_tokens.weight.shape
-
-    hidden_per_gpu = embed_dim // world_size
-    start = rank * hidden_per_gpu
-    end = (rank + 1) * hidden_per_gpu
-
-    local_weight = embed_tokens.weight[:, start:end].contiguous()
-    local_embed = nn.Embedding(vocab_size, hidden_per_gpu)
+def patch_embedding(embed_tokens, vocab_size, hidden_size, padding_idx, world_size):
+    local_embed = ColumnParallelEmbedding(vocab_size, hidden_size, padding_idx, world_size)
     with torch.no_grad():
-        local_embed.weight.copy_(local_weight)
+        local_embed.embed_tokens.weight.copy_(embed_tokens.weight)
     local_embed = local_embed.cuda()
-
     return local_embed
+
+# def patch_embedding(embed_tokens, world_size, rank):
+#     vocab_size, embed_dim = embed_tokens.weight.shape
+
+#     hidden_per_gpu = embed_dim // world_size
+#     start = rank * hidden_per_gpu
+#     end = (rank + 1) * hidden_per_gpu
+
+#     local_weight = embed_tokens.weight[:, start:end].contiguous()
+#     local_embed = nn.Embedding(vocab_size, hidden_per_gpu)
+#     with torch.no_grad():
+#         local_embed.weight.copy_(local_weight)
+#     local_embed = local_embed.cuda()
+
+#     return local_embed
 
 def patch_rmsnorm(rmsnorm, eps, world_size, rank):
     hidden_size = rmsnorm.weight.shape[0]

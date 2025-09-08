@@ -20,6 +20,16 @@ class ColumnParallelRMSNorm(nn.Module):
         hidden_states = hidden_states * torch.rsqrt(variance + self.eps)
         return self.weight * hidden_states.to(input_dtype)
     
+class ColumnParallelEmbedding(nn.Module):
+    def __init__(self, vocab_size, hidden_size, padding_idx, world_size):
+        super().__init__()
+        self.world_size = world_size
+        self.embed_tokens = nn.Embedding(vocab_size, hidden_size, padding_idx).cuda()
+
+    def forward(self, inputs):
+        print(inputs.device, self.embed_tokens.weight.device)
+        return self.embed_tokens(inputs)
+
 class ColumnParallelLinear(nn.Module):
     def __init__(self, in_features, out_features, weights, bias, world_size):
         super().__init__()
