@@ -5,7 +5,7 @@ from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import LlamaEager
 from src.custom_nonlinear.custom_forward import llama_forward
 
-from src.custom_models.llama_tp import init_dist, patch_embedding, patch_rmsnorm
+from src.custom_models.llama_tp import init_dist, patch_embedding, patch_rmsnorm, patch_linear
 
 import torch
 import types
@@ -109,36 +109,56 @@ class LlamaInference(InferenceModel):
         
     def tp_patch(self):
 
-        print(self.model.model)
-        # embedding
-        self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
-                                                        world_size=self.world_size,
-                                                        rank=self.rank)
+        # print(self.model.model)
+        # # embedding
+        # self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
+        #                                                 world_size=self.world_size,
+        #                                                 rank=self.rank)
 
-        # rmsnorm
-        self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
-                                              eps=self.model.config.rms_norm_eps,
-                                              world_size=self.world_size,
-                                              rank=self.rank)
+        # # rmsnorm
+        # self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
+        #                                       eps=self.model.config.rms_norm_eps,
+        #                                       world_size=self.world_size,
+        #                                       rank=self.rank)
         
-        # ignore rope
+        # # ignore rope
 
         # Decoder Layer
         for i, layer in enumerate(self.model.model.layers):
             # input_layer norm
-            layer.input_layernorm = patch_rmsnorm(rmsnorm=layer.input_layernorm,
-                                                  eps=self.model.config.rms_norm_eps,
-                                                  world_size=self.world_size,
-                                                  rank=self.rank)
+            # layer.input_layernorm = patch_rmsnorm(rmsnorm=layer.input_layernorm,
+            #                                       eps=self.model.config.rms_norm_eps,
+            #                                       world_size=self.world_size,
+            #                                       rank=self.rank)
 
-            # post_attention_layernorm
-            layer.post_attention_layernorm = patch_rmsnorm(rmsnorm=layer.post_attention_layernorm,
-                                                           eps=self.model.config.rms_norm_eps,
-                                                           world_size=self.world_size,
-                                                           rank=self.rank)
+            # # post_attention_layernorm
+            # layer.post_attention_layernorm = patch_rmsnorm(rmsnorm=layer.post_attention_layernorm,
+            #                                                eps=self.model.config.rms_norm_eps,
+            #                                                world_size=self.world_size,
+            #                                                rank=self.rank)
 
             # self_attn
-            print(layer.self_attn)
+            layer.self_attn.q_proj = patch_linear(linear=layer.self_attn.q_proj,
+                                                  world_size=self.world_size,
+                                                  rank=self.rank)
+            layer.self_attn.k_proj = patch_linear(linear=layer.self_attn.k_proj,
+                                                  world_size=self.world_size,
+                                                  rank=self.rank)
+            layer.self_attn.v_proj = patch_linear(linear=layer.self_attn.v_proj,
+                                                  world_size=self.world_size,
+                                                  rank=self.rank)
+            layer.self_attn.o_proj = patch_linear(linear=layer.self_attn.o_proj,
+                                                  world_size=self.world_size,
+                                                  rank=self.rank)
             # mlp
+            layer.mlp.gate_proj = patch_linear(linear=layer.mlp.gate_proj,
+                                               world_size=self.world_size,
+                                               rank=self.rank)
+            layer.mlp.up_proj = patch_linear(linear=layer.mlp.up_proj,
+                                             world_size=self.world_size,
+                                             rank=self.rank)
+            layer.mlp.down_proj = patch_linear(linear=layer.mlp.down_proj,
+                                               world_size=self.world_size,
+                                               rank=self.rank)
 
-            exit()
+            
