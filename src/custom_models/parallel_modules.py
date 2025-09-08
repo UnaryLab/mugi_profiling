@@ -11,6 +11,7 @@ class ColumnParallelRMSNorm(nn.Module):
         self.weight = nn.Parameter(torch.ones(self.hidden_per_gpu))
 
     def forward(self, hidden_states):
+        print('rms_norm')
         input_dtype = hidden_states.dtype
         hidden_states = hidden_states.to(torch.float32)
 
@@ -27,6 +28,7 @@ class ColumnParallelEmbedding(nn.Module):
         self.embed_tokens = nn.Embedding(vocab_size, hidden_size, padding_idx).cuda()
 
     def forward(self, inputs):
+        print('embedding')
         print(inputs.device, self.embed_tokens.weight.device)
         return self.embed_tokens(inputs)
 
