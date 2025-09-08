@@ -29,6 +29,8 @@ def llama_forward(llama_eager):
 
         print('preprojection')
         print('q')
+        print(hidden_states.device, hidden_states.shape)
+        print(self.q_proj.weight.device, self.q_proj.weight.shape)
         query_states = self.q_proj(hidden_states).view(hidden_shape).transpose(1, 2)
         print('k')
         key_states = self.k_proj(hidden_states).view(hidden_shape).transpose(1, 2)
