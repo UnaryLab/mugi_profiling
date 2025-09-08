@@ -101,6 +101,10 @@ class InferenceModel(ABC):
 
     def compute_metric(self, total_loss, num_batches):
         return
+    
+    def compute_perplexity(self, total_loss, num_batches):
+        ppl = torch.exp(total_loss / num_batches)
+        return ppl
 
     def run_batched_inference(self):
         total_loss = torch.tensor(0, dtype=torch.float64)

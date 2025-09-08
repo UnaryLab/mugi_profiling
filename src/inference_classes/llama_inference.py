@@ -103,7 +103,7 @@ class LlamaInference(InferenceModel):
                                (self.max_length - 1) // 2,
                                 self.max_length - 1]
         
-    # def tp_patch(self):
-    #     self.model.model = LlamaModel(self.model.config)
-    #     print(self.model.device)
-    #     exit()
+    def tp_patch(self):
+        self.model.model = LlamaModel(self.model.config)
+        print(self.model.device)
+        exit()
