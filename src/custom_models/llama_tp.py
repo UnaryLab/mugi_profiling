@@ -7,5 +7,5 @@ def init_dist():
     torch.cuda.set_device(dist.get_rank() % torch.cuda.device_count())
 
 def patch_embedding(model):
-    print(model.model)
+    print(model.model.embed_tokens)
     exit()
