@@ -5,7 +5,7 @@ from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import LlamaEager
 from src.custom_nonlinear.custom_forward import llama_forward
 
-from src.custom_models.llama_tp import init_dist, patch_embedding, patch_rmsnorm, patch_linear
+from src.custom_models.llama_tp import init_dist, patch_embedding, patch_rmsnorm, patch_linear, patch_output_linear
 
 import torch
 import types
@@ -150,7 +150,7 @@ class LlamaInference(InferenceModel):
                                                   bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
                                                   rank=self.rank)
-            layer.self_attn.o_proj = patch_linear(linear=layer.self_attn.o_proj,
+            layer.self_attn.o_proj = patch_output_linear(linear=layer.self_attn.o_proj,
                                                   bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
                                                   rank=self.rank)
