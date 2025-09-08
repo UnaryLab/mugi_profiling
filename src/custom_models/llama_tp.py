@@ -40,7 +40,7 @@ def patch_rmsnorm(rmsnorm, eps, world_size, rank):
     return local_rmsnorm
 
 def patch_linear(linear, bias, world_size, rank):
-    k, n = linear.weight.shape
+    n, k = linear.weight.shape
 
     n_per_gpu = n // world_size
     start = rank * n_per_gpu
