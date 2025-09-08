@@ -49,6 +49,7 @@ def patch_linear(linear, world_size, rank):
 
     local_weight = linear.weight[:, start:end].contiguous()
     local_linear = nn.Linear(k, n_per_gpu, bias=True)
+    print(k, n, n_per_gpu)
     print(local_weight.shape)
     print(local_linear.weight.shape)
     exit()
