@@ -22,17 +22,23 @@ def llama_forward(llama_eager):
         **kwargs,
     ) -> tuple[torch.Tensor, torch.Tensor]:
         
-        print('hi\nhi\nhi\nhi\n')
+        print('preforward')
 
         input_shape = hidden_states.shape[:-1]
         hidden_shape = (*input_shape, -1, self.head_dim)
+
+        print('preprojection')
 
         query_states = self.q_proj(hidden_states).view(hidden_shape).transpose(1, 2)
         key_states = self.k_proj(hidden_states).view(hidden_shape).transpose(1, 2)
         value_states = self.v_proj(hidden_states).view(hidden_shape).transpose(1, 2)
 
+        print('prerotary')
+
         cos, sin = position_embeddings
         query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin)
+
+        print('preattn')
 
         if past_key_value is not None:
             # sin and cos are specific to RoPE models; cache_position needed for the static cache
@@ -53,6 +59,8 @@ def llama_forward(llama_eager):
             scaling=self.scaling,
             **kwargs,
         )
+
+        print('preoutput')
 
         attn_output = attn_output.reshape(*input_shape, -1).contiguous()
         attn_output = self.o_proj(attn_output)
