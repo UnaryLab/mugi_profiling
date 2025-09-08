@@ -8,3 +8,4 @@ def init_dist():
 
 def patch_embedding(model):
     print(model.model)
+    exit()
