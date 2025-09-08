@@ -225,24 +225,27 @@ class InferenceModel(ABC):
         )
 
     def loop_configuration(self):
-        for key, value in self.nonlinear_function_parameters.items():
-            if not isinstance(value, list):
-                self.nonlinear_function_parameters[key] = [value]
+        if self.nonlinear_function_parameters:
+            for key, value in self.nonlinear_function_parameters.items():
+                if not isinstance(value, list):
+                    self.nonlinear_function_parameters[key] = [value]
 
-        (keys, values) = zip(*self.nonlinear_function_parameters.items())
-        combinations = list(product(*values))
-        combinations = [dict(zip(keys, combo)) for combo in combinations]
-        
-        for combination in combinations:
-            if self.nonlinear_function in ['softmax', 'both']:
-                attn_params = combination
-            else:
-                attn_params = {}
-            if self.nonlinear_function in ['ffn', 'both']:
-                ffn_params = combination
-            else:
-                ffn_params = {}
-            self.run_configuration(attn_params=attn_params, ffn_params=ffn_params)
+            (keys, values) = zip(*self.nonlinear_function_parameters.items())
+            combinations = list(product(*values))
+            combinations = [dict(zip(keys, combo)) for combo in combinations]
+            
+            for combination in combinations:
+                if self.nonlinear_function in ['softmax', 'both']:
+                    attn_params = combination
+                else:
+                    attn_params = {}
+                if self.nonlinear_function in ['ffn', 'both']:
+                    ffn_params = combination
+                else:
+                    ffn_params = {}
+                self.run_configuration(attn_params=attn_params, ffn_params=ffn_params)
+        else:
+            self.run_configuration(attn_params={}, ffn_params={})
         
     def cleanup(self):
         if torch.cuda.is_available():
