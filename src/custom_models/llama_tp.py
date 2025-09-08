@@ -49,6 +49,9 @@ def patch_linear(linear, world_size, rank):
 
     local_weight = linear.weight[:, start:end].contiguous()
     local_linear = nn.Linear(k, n_per_gpu, bias=True)
+    print(local_weight.shape)
+    print(local_linear.weight.shape)
+    exit()
     with torch.no_grad():
         local_linear.weight.copy_(local_weight)
         if bias is not None:
