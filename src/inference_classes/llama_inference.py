@@ -116,11 +116,10 @@ class LlamaInference(InferenceModel):
                                                         padding_idx=self.tokenizer.pad_token_id,
                                                         world_size=self.world_size)
 
-        # # rmsnorm
-        # self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
-        #                                       eps=self.model.config.rms_norm_eps,
-        #                                       world_size=self.world_size,
-        #                                       rank=self.rank)
+        # rmsnorm
+        self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
+                                              eps=self.model.config.rms_norm_eps,
+                                              world_size=self.world_size)
         
         # # ignore rope
 

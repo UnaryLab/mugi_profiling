@@ -16,6 +16,14 @@ def patch_embedding(embed_tokens, vocab_size, hidden_size, padding_idx, world_si
     local_embed = local_embed.cuda()
     return local_embed
 
+def patch_rmsnorm(rmsnorm, eps, world_size):
+    hidden_size = rmsnorm.weight.shape[0]
+    local_rmsnorm = ColumnParallelRMSNorm(world_size, hidden_size, eps)
+    with torch.no_grad():
+        local_rmsnorm.weight.copy_(rmsnorm.weight)
+    local_rmsnorm = local_rmsnorm.cuda()
+    return local_rmsnorm
+
 # def patch_embedding(embed_tokens, world_size, rank):
 #     vocab_size, embed_dim = embed_tokens.weight.shape
 
@@ -31,20 +39,20 @@ def patch_embedding(embed_tokens, vocab_size, hidden_size, padding_idx, world_si
 
 #     return local_embed
 
-def patch_rmsnorm(rmsnorm, eps, world_size, rank):
-    hidden_size = rmsnorm.weight.shape[0]
+# def patch_rmsnorm(rmsnorm, eps, world_size, rank):
+#     hidden_size = rmsnorm.weight.shape[0]
 
-    hidden_per_gpu = hidden_size // world_size
-    start = rank * hidden_per_gpu
-    end = (rank + 1) * hidden_per_gpu
+#     hidden_per_gpu = hidden_size // world_size
+#     start = rank * hidden_per_gpu
+#     end = (rank + 1) * hidden_per_gpu
 
-    local_weight = rmsnorm.weight[start:end].contiguous()
-    local_rmsnorm = ColumnParallelRMSNorm(world_size, hidden_size, eps)
-    with torch.no_grad():
-        local_rmsnorm.weight.copy_(local_weight)
-    local_rmsnorm = local_rmsnorm.cuda()
+#     local_weight = rmsnorm.weight[start:end].contiguous()
+#     local_rmsnorm = ColumnParallelRMSNorm(world_size, hidden_size, eps)
+#     with torch.no_grad():
+#         local_rmsnorm.weight.copy_(local_weight)
+#     local_rmsnorm = local_rmsnorm.cuda()
 
-    return local_rmsnorm
+#     return local_rmsnorm
 
 def patch_linear(linear, bias, world_size, rank):
     n, k = linear.weight.shape
