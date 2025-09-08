@@ -139,25 +139,32 @@ class LlamaInference(InferenceModel):
 
             # self_attn
             layer.self_attn.q_proj = patch_linear(linear=layer.self_attn.q_proj,
+                                                  bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
                                                   rank=self.rank)
             layer.self_attn.k_proj = patch_linear(linear=layer.self_attn.k_proj,
+                                                  bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
                                                   rank=self.rank)
             layer.self_attn.v_proj = patch_linear(linear=layer.self_attn.v_proj,
+                                                  bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
                                                   rank=self.rank)
             layer.self_attn.o_proj = patch_linear(linear=layer.self_attn.o_proj,
+                                                  bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
                                                   rank=self.rank)
             # mlp
             layer.mlp.gate_proj = patch_linear(linear=layer.mlp.gate_proj,
+                                               bias=self.model.config.mlp_bias,
                                                world_size=self.world_size,
                                                rank=self.rank)
             layer.mlp.up_proj = patch_linear(linear=layer.mlp.up_proj,
+                                             bias=self.model.config.mlp_bias,
                                              world_size=self.world_size,
                                              rank=self.rank)
             layer.mlp.down_proj = patch_linear(linear=layer.mlp.down_proj,
+                                               bias=self.model.config.mlp_bias,
                                                world_size=self.world_size,
                                                rank=self.rank)
 
