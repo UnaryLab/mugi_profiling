@@ -53,6 +53,7 @@ def llama_forward(llama_eager):
 
         attn_output = attn_output.reshape(*input_shape, -1).contiguous()
         attn_output = self.o_proj(attn_output)
+        print(attn_output.device, attn_weights.device)
         return attn_output, attn_weights
     return forward
 
