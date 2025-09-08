@@ -110,19 +110,35 @@ class LlamaInference(InferenceModel):
     def tp_patch(self):
 
         print(self.model.model)
-        # patch embedding
+        # embedding
         self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
                                                         world_size=self.world_size,
                                                         rank=self.rank)
 
-        # patch rmsnorm
+        # rmsnorm
         self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
                                               eps=self.model.config.rms_norm_eps,
                                               world_size=self.world_size,
                                               rank=self.rank)
         
+        # ignore rope
+
+        # Decoder Layer
         for i, layer in enumerate(self.model.model.layers):
-            # Decoder
-            print(layer.LlamaDecoderLayer)
+            # input_layer norm
+            layer.input_layernorm = patch_rmsnorm(rmsnorm=layer.input_layernorm,
+                                                  eps=self.model.config.rms_norm_eps,
+                                                  world_size=self.world_size,
+                                                  rank=self.rank)
+
+            # post_attention_layernorm
+            layer.post_attention_layernorm = patch_rmsnorm(rmsnorm=layer.post_attention_layernorm,
+                                                           eps=self.model.config.rms_norm_eps,
+                                                           world_size=self.world_size,
+                                                           rank=self.rank)
+
+            # self_attn
+            print(layer.self_attn)
+            # mlp
 
             exit()
