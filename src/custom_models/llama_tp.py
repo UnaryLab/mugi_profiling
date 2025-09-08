@@ -20,7 +20,7 @@ def patch_rmsnorm(rmsnorm, eps, world_size):
     hidden_size = rmsnorm.weight.shape[0]
     local_rmsnorm = ColumnParallelRMSNorm(world_size, hidden_size, eps)
     with torch.no_grad():
-        local_rmsnorm.weight.copy_(rmsnorm.weight)
+        local_rmsnorm.weight.data = rmsnorm.weight.data.clone()
     local_rmsnorm = local_rmsnorm.cuda()
     return local_rmsnorm
 

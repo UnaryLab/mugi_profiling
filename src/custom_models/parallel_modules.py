@@ -11,7 +11,6 @@ class ColumnParallelRMSNorm(nn.Module):
         self.weight = nn.Parameter(torch.ones(self.hidden_size))
 
     def forward(self, hidden_states):
-        print('rms_norm')
         input_dtype = hidden_states.dtype
         hidden_states = hidden_states.to(torch.float32)
 

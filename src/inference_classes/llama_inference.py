@@ -93,7 +93,7 @@ class LlamaInference(InferenceModel):
                     self.inputs.append(tokenized_example)
 
     def run_inference(self, batch):
-        input_ids = torch.stack([ex["input_ids"] for ex in batch]).to(f'cuda:{self.rank}').to(torch.float16)
+        input_ids = torch.stack([ex["input_ids"] for ex in batch]).to(f'cuda:{self.rank}')
         attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).to(f'cuda:{self.rank}').bool()
 
         with torch.inference_mode():
