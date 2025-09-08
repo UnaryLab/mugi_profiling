@@ -7,8 +7,8 @@ class ColumnParallelRMSNorm(nn.Module):
         super().__init__()
         self.world_size = world_size
         self.eps = eps
-        self.hidden_per_gpu = hidden_size // self.world_size
-        self.weight = nn.Parameter(torch.ones(self.hidden_per_gpu))
+        self.hidden_size = hidden_size
+        self.weight = nn.Parameter(torch.ones(self.hidden_size))
 
     def forward(self, hidden_states):
         print('rms_norm')
@@ -17,7 +17,7 @@ class ColumnParallelRMSNorm(nn.Module):
 
         local_sum_sq = hidden_states.pow(2).sum(-1, keepdim=True)
         dist.all_reduce(local_sum_sq, op=dist.ReduceOp.SUM, group=None)
-        variance = local_sum_sq / (self.hidden_per_gpu * self.world_size)
+        variance = local_sum_sq / (self.hidden_size * self.world_size)
         hidden_states = hidden_states * torch.rsqrt(variance + self.eps)
         return self.weight * hidden_states.to(input_dtype)
     
