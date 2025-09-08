@@ -93,8 +93,8 @@ class LlamaInference(InferenceModel):
                     self.inputs.append(tokenized_example)
 
     def run_inference(self, batch):
-        input_ids = torch.stack([ex["input_ids"] for ex in batch]).to(self.device)
-        attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).to(self.device).bool()
+        input_ids = torch.stack([ex["input_ids"] for ex in batch]).to(self.model.model.embed_tokens.weight.device)
+        attention_mask = torch.stack([ex["attention_mask"] for ex in batch]).to(self.model.model.embed_tokens.weight.device).bool()
 
         with torch.inference_mode():
             outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids, use_cache=False)
