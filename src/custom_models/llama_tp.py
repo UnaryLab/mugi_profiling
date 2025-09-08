@@ -64,11 +64,12 @@ def patch_linear(linear, bias, world_size, rank):
     local_weight = linear.weight[start:end, :].contiguous()
     local_linear = nn.Linear(k, n_per_gpu, bias=bias, dtype=linear.weight.dtype)
     print(local_weight.dtype)
-    exit()
+    
     with torch.no_grad():
         local_linear.weight.copy_(local_weight)
     local_linear = local_linear.cuda()
     print(local_linear.weight.dtype)
+    exit()
 
     return local_linear
     
