@@ -30,6 +30,7 @@ def patch_rmsnorm(model, world_size, rank):
     hidden_size = rmsnorm.weight.shape[0]
     eps = model.config.rms_norm_eps
 
+    print('here')
     print(hidden_size, eps)
 
     hidden_per_gpu = hidden_size // world_size
