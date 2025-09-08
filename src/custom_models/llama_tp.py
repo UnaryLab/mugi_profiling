@@ -51,7 +51,8 @@ def patch_linear(linear, world_size, rank):
     local_linear = nn.Linear(k, n_per_gpu, bias=True)
     with torch.no_grad():
         local_linear.weight.copy_(local_weight)
-        local_linear.bias.copy_(bias)
+        if bias is not None:
+            local_linear.bias.copy_(bias)
     local_linear = local_linear.cuda()
 
     return local_linear
