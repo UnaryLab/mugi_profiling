@@ -177,7 +177,7 @@ def __init__(self, config):
     self.model = LlamaModel(config)
     self.vocab_size = config.vocab_size
     if dist.get_rank() == 0:
-        self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+        self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False).cuda()
 
     # Initialize weights and apply final processing
     self.post_init()
