@@ -87,12 +87,6 @@ def LlamaEager(nonlinear_object):
         attn_output = torch.matmul(attn_weights, value_states)
         attn_output = attn_output.transpose(1, 2).contiguous()
 
-        # world_size = dist.get_world_size()
-
-        # gathered = [torch.empty_like(attn_weights) for _ in range(world_size)]
-        # dist.all_gather(gathered, attn_weights)
-        # attn_weights = torch.cat(gathered, dim=-1)
-
         return attn_output, attn_weights
     return eager_attention_forward
 
