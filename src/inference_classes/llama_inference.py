@@ -153,8 +153,7 @@ class LlamaInference(InferenceModel):
             layer.self_attn.o_proj = patch_output_linear(linear=layer.self_attn.o_proj,
                                                   bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
-                                                  rank=self.rank,
-                                                  dim=1)
+                                                  rank=self.rank)
             # mlp
             layer.mlp.gate_proj = patch_linear(linear=layer.mlp.gate_proj,
                                                bias=self.model.config.mlp_bias,
