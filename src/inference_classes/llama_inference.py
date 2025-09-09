@@ -114,8 +114,7 @@ class LlamaInference(InferenceModel):
             self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
                                                             vocab_size=self.model.config.vocab_size,
                                                             hidden_size=self.model.config.hidden_size,
-                                                            padding_idx=self.tokenizer.pad_token_id,
-                                                            world_size=self.world_size)
+                                                            padding_idx=self.tokenizer.pad_token_id)
 
             # rmsnorm
             self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
