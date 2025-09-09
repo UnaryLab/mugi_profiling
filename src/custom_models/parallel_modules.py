@@ -45,3 +45,27 @@ class ColumnParallelLinear(nn.Module):
         dist.all_gather(gathered, input)
         full_input = torch.cat(gathered, dim=-1)
         return self.output(full_input)
+    
+class OutputLayer(nn.Module):
+    def __init__(self, in_features, out_features, weights, bias, world_size, rank):
+        super().__init__()
+        if rank == 0:
+            self.in_features = in_features
+            self.out_features = out_features
+            self.world_size = world_size
+            self.rank = rank
+
+            self.output = nn.Linear(in_features, out_features, bias=bias).to(weights.dtype).cuda()
+            with torch.no_grad():
+                self.output.weight.copy_(weights)
+        else:
+            self.rank = rank
+    
+    def forward(self, input):
+        if self.rank == 0:
+            gathered = [torch.empty_like(input) for _ in range(self.world_size)]
+            dist.all_gather(gathered, input)
+            full_input = torch.cat(gathered, dim=-1)
+            output = self.output(full_input)
+            return output
+        return input
