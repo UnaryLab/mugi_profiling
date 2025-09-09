@@ -5,7 +5,7 @@ from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import LlamaEager
 from src.custom_nonlinear.custom_forward import llama_forward
 
-from src.custom_models.llama_tp import init_dist, patch_embedding, patch_rmsnorm, patch_linear, patch_output_linear, forward, __init__, LlamaDecoderLayer
+from src.custom_models.llama_tp import init_dist, patch_embedding, patch_rmsnorm, patch_linear, patch_output_linear, forward, __init__
 
 import torch
 import types
@@ -131,7 +131,6 @@ class LlamaInference(InferenceModel):
 
         # Decoder Layer
         for i, layer in enumerate(self.model.model.layers):
-            layer = LlamaDecoderLayer(self.model.config, layer_idx=i)
             # input_layer norm
             layer.input_layernorm = patch_rmsnorm(rmsnorm=layer.input_layernorm,
                                                 eps=self.model.config.rms_norm_eps,
