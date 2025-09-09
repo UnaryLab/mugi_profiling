@@ -63,9 +63,9 @@ class OutputLayer(nn.Module):
     
     def forward(self, input):
         if self.rank == 0:
-            gathered = [torch.empty_like(input) for _ in range(self.world_size)]
-            dist.all_gather(gathered, input)
-            full_input = torch.cat(gathered, dim=-1)
-            output = self.output(full_input)
+            # gathered = [torch.empty_like(input) for _ in range(self.world_size)]
+            # dist.all_gather(gathered, input)
+            # full_input = torch.cat(gathered, dim=-1)
+            output = self.output(input)
             return output
         return input
