@@ -150,6 +150,7 @@ def forward(
         # Accumulate all slices from all ranks inplace
         if dist.get_rank() == 0:
             dist.all_reduce(hidden_states, op=dist.ReduceOp.SUM)
+            self.lm_head = self.lm_head.cuda()
 
             print(hidden_states.device, hidden_states.dtype, hidden_states.shape)
             print(self.lm_head.weight.device, self.lm_head.weight.dtype, self.lm_head.weight.shape)
