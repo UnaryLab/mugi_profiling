@@ -101,6 +101,7 @@ class LlamaInference(InferenceModel):
         del input_ids, attention_mask
         if self.rank == 0:
             loss = outputs.loss
+            print(loss)
             return loss
         else:
             return None
