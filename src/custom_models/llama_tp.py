@@ -126,12 +126,14 @@ def forward(
         >>> tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
         "Hey, are you conscious? Can you talk to me?\nI'm not conscious, but I can talk to you."
         ```"""
+        print('new input')
         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
         output_hidden_states = (
             output_hidden_states if output_hidden_states is not None else self.config.output_hidden_states
         )
 
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
+        print('decoder')
         outputs: BaseModelOutputWithPast = self.model(
             input_ids=input_ids,
             attention_mask=attention_mask,
@@ -145,6 +147,7 @@ def forward(
             **kwargs,
         )
 
+        print('hidden_states')
         hidden_states = outputs.last_hidden_state
 
         # Accumulate all slices from all ranks inplace
