@@ -109,7 +109,8 @@ class InferenceModel(ABC):
     def run_batched_inference(self):
         total_loss = torch.tensor(0, dtype=torch.float64)
         num_batches = torch.tensor(0, dtype=torch.float64)
-        for batch in self.inputs:
+        for i, batch in enumerate(self.inputs):
+            print(f'Batch {i}')
             batched_loss = self.run_inference(
                 batch=batch
             )
