@@ -56,15 +56,23 @@ def patch_rmsnorm(rmsnorm, eps, world_size):
 
 #     return local_rmsnorm
 
-def patch_linear(linear, bias, world_size, rank):
+def patch_linear(linear, bias, world_size, rank, dim):
     n, k = linear.weight.shape
 
-    n_per_gpu = n // world_size
-    start = rank * n_per_gpu
-    end = (rank + 1) * n_per_gpu
+    if dim == 0:
+        k_per_gpu = k // world_size
+        start = rank * k_per_gpu
+        end = (rank + 1) * k_per_gpu
 
-    local_weight = linear.weight[start:end, :].contiguous()
-    local_linear = nn.Linear(k, n_per_gpu, bias=bias, dtype=linear.weight.dtype)
+        local_weight = linear.weight[:, start:end].contiguous()
+        local_linear = nn.Linear(k_per_gpu, n, bias=bias, dtype=linear.weight.dtype)
+    else:
+        n_per_gpu = n // world_size
+        start = rank * n_per_gpu
+        end = (rank + 1) * n_per_gpu
+
+        local_weight = linear.weight[start:end, :].contiguous()
+        local_linear = nn.Linear(k, n_per_gpu, bias=bias, dtype=linear.weight.dtype)
     
     with torch.no_grad():
         local_linear.weight.copy_(local_weight)

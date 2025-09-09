@@ -138,31 +138,38 @@ class LlamaInference(InferenceModel):
             layer.self_attn.q_proj = patch_linear(linear=layer.self_attn.q_proj,
                                                   bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
-                                                  rank=self.rank)
+                                                  rank=self.rank,
+                                                  dim=1)
             layer.self_attn.k_proj = patch_linear(linear=layer.self_attn.k_proj,
                                                   bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
-                                                  rank=self.rank)
+                                                  rank=self.rank,
+                                                  dim=1)
             layer.self_attn.v_proj = patch_linear(linear=layer.self_attn.v_proj,
                                                   bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
-                                                  rank=self.rank)
+                                                  rank=self.rank,
+                                                  dim=1)
             layer.self_attn.o_proj = patch_output_linear(linear=layer.self_attn.o_proj,
                                                   bias=self.model.config.attention_bias,
                                                   world_size=self.world_size,
-                                                  rank=self.rank)
+                                                  rank=self.rank,
+                                                  dim=1)
             # mlp
             layer.mlp.gate_proj = patch_linear(linear=layer.mlp.gate_proj,
                                                bias=self.model.config.mlp_bias,
                                                world_size=self.world_size,
-                                               rank=self.rank)
+                                               rank=self.rank,
+                                               dim=1)
             layer.mlp.up_proj = patch_linear(linear=layer.mlp.up_proj,
                                              bias=self.model.config.mlp_bias,
                                              world_size=self.world_size,
-                                             rank=self.rank)
+                                             rank=self.rank,
+                                             dim=1)
             layer.mlp.down_proj = patch_linear(linear=layer.mlp.down_proj,
                                                bias=self.model.config.mlp_bias,
                                                world_size=self.world_size,
-                                               rank=self.rank)
+                                               rank=self.rank,
+                                               dim=0)
 
             
