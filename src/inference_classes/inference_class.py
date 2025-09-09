@@ -114,12 +114,14 @@ class InferenceModel(ABC):
                 batch=batch
             )
 
-            total_loss += batched_loss.item()
-            num_batches += 1
-            del batch, batched_loss
-            torch.cuda.empty_cache()
-
-        self.metric = self.compute_metric(total_loss, num_batches).item()
+            if batched_loss is not None:
+                total_loss += batched_loss.item()
+                num_batches += 1
+                del batch, batched_loss
+            
+        if batched_loss is not None:
+            self.metric = self.compute_metric(total_loss, num_batches).item()
+        torch.cuda.empty_cache()
 
     def set_profiling_dims(self):
         self.profile_dims = -1
@@ -148,30 +150,31 @@ class InferenceModel(ABC):
         # torch.cuda.empty_cache()
         # gc.collect()
 
-        new_row = {
-            'model': self.model_name,
-            'value': self.metric,
-            'function_name': self.approx_function,
-            'attn_fn': self.attn_function,
-            'ffn_fn': self.ffn_function
-        }
+        if self.rank == 0:
+            new_row = {
+                'model': self.model_name,
+                'value': self.metric,
+                'function_name': self.approx_function,
+                'attn_fn': self.attn_function,
+                'ffn_fn': self.ffn_function
+            }
 
-        # Add attention parameters with prefixed column names to avoid conflicts
-        if attn_params:
-            for key, value in attn_params.items():
-                new_row[f'attn_{key}'] = value
-        
-        # Add FFN parameters with prefixed column names to avoid conflicts
-        if ffn_params:
-            for key, value in ffn_params.items():
-                new_row[f'ffn_{key}'] = value
+            # Add attention parameters with prefixed column names to avoid conflicts
+            if attn_params:
+                for key, value in attn_params.items():
+                    new_row[f'attn_{key}'] = value
+            
+            # Add FFN parameters with prefixed column names to avoid conflicts
+            if ffn_params:
+                for key, value in ffn_params.items():
+                    new_row[f'ffn_{key}'] = value
 
-        new_row = pd.DataFrame([new_row])
+            new_row = pd.DataFrame([new_row])
 
-        if self.df is None:
-            self.df = new_row
-        else:
-            self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
+            if self.df is None:
+                self.df = new_row
+            else:
+                self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
 
         
     def patch_model(self):

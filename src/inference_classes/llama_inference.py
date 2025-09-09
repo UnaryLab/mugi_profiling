@@ -99,8 +99,11 @@ class LlamaInference(InferenceModel):
         with torch.inference_mode():
             outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids, use_cache=False)
         del input_ids, attention_mask
-        loss = outputs.loss
-        return loss
+        if self.rank == 0:
+            loss = outputs.loss
+            return loss
+        else:
+            return None
 
     def set_profiling_dims(self):
         self.profiling_dims = [(self.max_length - 1) // 4,
