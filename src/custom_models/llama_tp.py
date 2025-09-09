@@ -7,7 +7,7 @@ from src.custom_models.parallel_modules import ColumnParallelRMSNorm, ColumnPara
 from typing import Optional, Union
 from typing_extensions import Unpack
 from transformers.cache_utils import Cache
-from transformers.models.llama.modeling_llama import KwargsForCausalLM
+from transformers.models.llama.modeling_llama import KwargsForCausalLM, LlamaModel
 from transformers.modeling_outputs import CausalLMOutputWithPast, BaseModelOutputWithPast
 
 def init_dist():
@@ -171,3 +171,13 @@ def forward(
             )
         else:
             return None
+        
+def __init__(self, config):
+    super().__init__(config)
+    self.model = LlamaModel(config)
+    self.vocab_size = config.vocab_size
+    if dist.get_rank() == 0:
+        self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+
+    # Initialize weights and apply final processing
+    self.post_init()
