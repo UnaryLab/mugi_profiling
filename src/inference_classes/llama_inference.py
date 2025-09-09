@@ -5,15 +5,12 @@ from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import LlamaEager
 from src.custom_nonlinear.custom_forward import llama_forward
 
-from src.custom_models.llama_tp import init_dist, patch_embedding, patch_rmsnorm, patch_linear, patch_output_linear, forward, __init__
-
 import torch
 import types
 
 class LlamaInference(InferenceModel):
     def __init__(self, model_dict, nonlinear_dict, parameter_dict, device):
         super().__init__(model_dict, nonlinear_dict, parameter_dict, device)
-        self.world_size, self.rank = init_dist()
 
     def batch_dataset(self):
         batched_data = []
@@ -106,70 +103,3 @@ class LlamaInference(InferenceModel):
         self.profiling_dims = [(self.max_length - 1) // 4,
                                (self.max_length - 1) // 2,
                                 self.max_length - 1]
-        
-    def tp_patch(self):
-
-        self.model.forward = types.MethodType(forward, self.model)
-        self.model.__init__ = types.MethodType(__init__, self.model)
-
-        # embedding
-        self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
-                                                        vocab_size=self.model.config.vocab_size,
-                                                        hidden_size=self.model.config.hidden_size,
-                                                        padding_idx=self.tokenizer.pad_token_id)
-
-        # rmsnorm
-        self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
-                                            eps=self.model.config.rms_norm_eps,
-                                            world_size=self.world_size)
-        
-        # # ignore rope
-
-        # Decoder Layer
-        for i, layer in enumerate(self.model.model.layers):
-            # input_layer norm
-            layer.input_layernorm = patch_rmsnorm(rmsnorm=layer.input_layernorm,
-                                                eps=self.model.config.rms_norm_eps,
-                                                world_size=self.world_size)
-
-            # # post_attention_layernorm
-            layer.post_attention_layernorm = patch_rmsnorm(rmsnorm=layer.post_attention_layernorm,
-                                                        eps=self.model.config.rms_norm_eps,
-                                                        world_size=self.world_size)
-
-            # self_attn
-            layer.self_attn.q_proj = patch_linear(linear=layer.self_attn.q_proj,
-                                                  bias=self.model.config.attention_bias,
-                                                  world_size=self.world_size,
-                                                  rank=self.rank,
-                                                  dim=1)
-            layer.self_attn.k_proj = patch_linear(linear=layer.self_attn.k_proj,
-                                                  bias=self.model.config.attention_bias,
-                                                  world_size=self.world_size,
-                                                  rank=self.rank,
-                                                  dim=1)
-            layer.self_attn.v_proj = patch_linear(linear=layer.self_attn.v_proj,
-                                                  bias=self.model.config.attention_bias,
-                                                  world_size=self.world_size,
-                                                  rank=self.rank,
-                                                  dim=1)
-            layer.self_attn.o_proj = patch_output_linear(linear=layer.self_attn.o_proj,
-                                                  bias=self.model.config.attention_bias,
-                                                  world_size=self.world_size,
-                                                  rank=self.rank)
-            # mlp
-            layer.mlp.gate_proj = patch_linear(linear=layer.mlp.gate_proj,
-                                               bias=self.model.config.mlp_bias,
-                                               world_size=self.world_size,
-                                               rank=self.rank,
-                                               dim=1)
-            layer.mlp.up_proj = patch_linear(linear=layer.mlp.up_proj,
-                                             bias=self.model.config.mlp_bias,
-                                             world_size=self.world_size,
-                                             rank=self.rank,
-                                             dim=1)
-            layer.mlp.down_proj = patch_linear(linear=layer.mlp.down_proj,
-                                               bias=self.model.config.mlp_bias,
-                                               world_size=self.world_size,
-                                               rank=self.rank,
-                                               dim=0)
