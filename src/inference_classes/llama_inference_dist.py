@@ -51,12 +51,13 @@ class LlamaInference(InferenceModel):
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map='auto', use_cache=False)
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map={"":"cuda:0", "":"cuda:1"}, use_cache=False)
         self.max_length = self.model.config.max_position_embeddings
 
         if self.max_length > 4096:
             self.max_length = 4096
 
+        self.tp_patch()
 
     def patch_layers(self, attention_class, ffn_class, path):
         for i, layer in enumerate(self.model.model.layers):
@@ -100,7 +101,10 @@ class LlamaInference(InferenceModel):
         del input_ids, attention_mask
         if self.rank == 0:
             loss = outputs.loss
+            print(loss)
             return loss
+        else:
+            return None
 
     def set_profiling_dims(self):
         self.profiling_dims = [(self.max_length - 1) // 4,
