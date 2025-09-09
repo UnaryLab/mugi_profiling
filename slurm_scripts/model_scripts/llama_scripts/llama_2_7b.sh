@@ -37,18 +37,18 @@ echo "----------------------------------------"
 # Run the transformer script with the current config
 export PYTHONPATH=~/mugi_profiling:$PYTHONPATH
 
-# NUM_GPUS=$(nvidia-smi -L | wc -l)
+NUM_GPUS=$(nvidia-smi -L | wc -l)
 
-# python -m torch.distributed.run \
-#     --nproc_per_node=$NUM_GPUS \
-#     src/model_script.py \
-#     --model_config "$model_config" \
-#     --nonlinear_config "$nonlinear_config" \
-#     --parameter_config "$parameter_config"
+python -m torch.distributed.run \
+    --nproc_per_node=$NUM_GPUS \
+    src/model_script.py \
+    --model_config "$model_config" \
+    --nonlinear_config "$nonlinear_config" \
+    --parameter_config "$parameter_config"
 
-python src/model_script.py --model_config "$model_config" \
-                            --nonlinear_config "$nonlinear_config" \
-                            --parameter_config "$parameter_config"
+# python src/model_script.py --model_config "$model_config" \
+#                             --nonlinear_config "$nonlinear_config" \
+#                             --parameter_config "$parameter_config"
 
 # Capture the exit code
 exit_code=$?
