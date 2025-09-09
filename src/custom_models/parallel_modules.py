@@ -36,7 +36,7 @@ class ColumnParallelLinear(nn.Module):
         self.world_size = world_size
         self.out_per_gpu = out_features // world_size
 
-        self.output = nn.Linear(in_features, out_features, bias=bias)
+        self.output = nn.Linear(in_features, out_features, bias=bias).to(weights.dtype).cuda()
         with torch.no_grad():
             self.output.weight.copy_(weights)
     
