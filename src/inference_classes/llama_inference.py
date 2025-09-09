@@ -110,31 +110,29 @@ class LlamaInference(InferenceModel):
     def tp_patch(self):
 
         # embedding
-        if self.rank == 0:
-            self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
-                                                            vocab_size=self.model.config.vocab_size,
-                                                            hidden_size=self.model.config.hidden_size,
-                                                            padding_idx=self.tokenizer.pad_token_id)
+        self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
+                                                        vocab_size=self.model.config.vocab_size,
+                                                        hidden_size=self.model.config.hidden_size,
+                                                        padding_idx=self.tokenizer.pad_token_id)
 
-            # rmsnorm
-            self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
-                                                eps=self.model.config.rms_norm_eps,
-                                                world_size=self.world_size)
+        # rmsnorm
+        self.model.model.norm = patch_rmsnorm(rmsnorm=self.model.model.norm,
+                                            eps=self.model.config.rms_norm_eps,
+                                            world_size=self.world_size)
         
         # # ignore rope
 
         # Decoder Layer
         for i, layer in enumerate(self.model.model.layers):
-            if self.rank == 0:
-                # input_layer norm
-                layer.input_layernorm = patch_rmsnorm(rmsnorm=layer.input_layernorm,
-                                                    eps=self.model.config.rms_norm_eps,
-                                                    world_size=self.world_size)
+            # input_layer norm
+            layer.input_layernorm = patch_rmsnorm(rmsnorm=layer.input_layernorm,
+                                                eps=self.model.config.rms_norm_eps,
+                                                world_size=self.world_size)
 
-                # # post_attention_layernorm
-                layer.post_attention_layernorm = patch_rmsnorm(rmsnorm=layer.post_attention_layernorm,
-                                                            eps=self.model.config.rms_norm_eps,
-                                                            world_size=self.world_size)
+            # # post_attention_layernorm
+            layer.post_attention_layernorm = patch_rmsnorm(rmsnorm=layer.post_attention_layernorm,
+                                                        eps=self.model.config.rms_norm_eps,
+                                                        world_size=self.world_size)
 
             # self_attn
             layer.self_attn.q_proj = patch_linear(linear=layer.self_attn.q_proj,
