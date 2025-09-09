@@ -171,4 +171,9 @@ class LlamaInference(InferenceModel):
                                                rank=self.rank,
                                                dim=0)
 
-            
+        # output linear
+        if self.rank == 0:
+            self.model.lm_head = patch_output_linear(linear=self.model.lm_head,
+                                                    bias=False,
+                                                    world_size=self.world_size,
+                                                    rank=self.rank)
