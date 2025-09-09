@@ -3,12 +3,12 @@ import torch.nn as nn
 import torch.distributed as dist
 
 class ColumnParallelRMSNorm(nn.Module):
-    def __init__(self, world_size, hidden_size, eps):
+    def __init__(self, world_size, hidden_size, eps, dtype):
         super().__init__()
         self.world_size = world_size
         self.eps = eps
         self.hidden_size = hidden_size
-        self.weight = nn.Parameter(torch.ones(self.hidden_size))
+        self.weight = nn.Parameter(torch.ones(self.hidden_size)).to(dtype).cuda()
 
     def forward(self, hidden_states):
         input_dtype = hidden_states.dtype
@@ -21,10 +21,9 @@ class ColumnParallelRMSNorm(nn.Module):
         return self.weight * hidden_states.to(input_dtype)
     
 class ColumnParallelEmbedding(nn.Module):
-    def __init__(self, vocab_size, hidden_size, padding_idx, world_size):
+    def __init__(self, vocab_size, hidden_size, padding_idx, dtype):
         super().__init__()
-        self.world_size = world_size
-        self.embed_tokens = nn.Embedding(vocab_size, hidden_size, padding_idx).cuda()
+        self.embed_tokens = nn.Embedding(vocab_size, hidden_size, padding_idx).to(dtype).cuda()
 
     def forward(self, inputs):
         print('inputs', inputs.shape, inputs.device, inputs.dtype)

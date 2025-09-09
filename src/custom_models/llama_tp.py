@@ -9,18 +9,18 @@ def init_dist():
     torch.cuda.set_device(dist.get_rank() % torch.cuda.device_count())
     return dist.get_world_size(), dist.get_rank()
     
-def patch_embedding(embed_tokens, vocab_size, hidden_size, padding_idx, world_size):
-    local_embed = ColumnParallelEmbedding(vocab_size, hidden_size, padding_idx, world_size)
+def patch_embedding(embed_tokens, vocab_size, hidden_size, padding_idx, world_size, dtype):
+    local_embed = ColumnParallelEmbedding(vocab_size, hidden_size, padding_idx, world_size, dtype)
     with torch.no_grad():
         local_embed.embed_tokens.weight.copy_(embed_tokens.weight)
     local_embed = local_embed.cuda()
     return local_embed
 
-def patch_rmsnorm(rmsnorm, eps, world_size):
+def patch_rmsnorm(rmsnorm, eps, world_size, dtype):
     hidden_size = rmsnorm.weight.shape[0]
-    local_rmsnorm = ColumnParallelRMSNorm(world_size, hidden_size, eps)
+    local_rmsnorm = ColumnParallelRMSNorm(world_size, hidden_size, eps, dtype)
     with torch.no_grad():
-        local_rmsnorm.weight.data = rmsnorm.weight.data.clone()
+        local_rmsnorm.weight = rmsnorm.weight.copy_(rmsnorm.weight)
     local_rmsnorm = local_rmsnorm.cuda()
     return local_rmsnorm
 
