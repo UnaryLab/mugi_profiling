@@ -27,9 +27,13 @@ class ColumnParallelEmbedding(nn.Module):
         self.embed_tokens = nn.Embedding(vocab_size, hidden_size, padding_idx).cuda()
 
     def forward(self, inputs):
-        print('embedding')
-        print(inputs.device, self.embed_tokens.weight.device)
-        return self.embed_tokens(inputs)
+        print('inputs', inputs.shape, inputs.device, inputs.dtype)
+        print('embedding', self.embed_tokens.weight.shape, self.embed_tokens.weight.device, self.embed_tokens.weight.dtype)
+        inputs = self.embed_tokens(inputs)
+        print('inputs', inputs.shape, inputs.device, inputs.dtype)
+        print('embedding', self.embed_tokens.weight.shape, self.embed_tokens.weight.device, self.embed_tokens.weight.dtype)
+        exit()
+        return inputs
 
 class ColumnParallelLinear(nn.Module):
     def __init__(self, in_features, out_features, weights, bias, world_size):
