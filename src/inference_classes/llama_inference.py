@@ -5,7 +5,7 @@ from src.inference_classes.inference_class import InferenceModel
 from src.custom_nonlinear.custom_eager import LlamaEager
 from src.custom_nonlinear.custom_forward import llama_forward
 
-from src.custom_models.llama_tp import init_dist, patch_embedding, patch_rmsnorm, patch_linear, patch_output_linear
+from src.custom_models.llama_tp import init_dist, patch_embedding, patch_rmsnorm, patch_linear, patch_output_linear, forward
 
 import torch
 import types
@@ -109,6 +109,8 @@ class LlamaInference(InferenceModel):
         
     def tp_patch(self):
 
+        self.model.forward = types.MethodType(forward, self.model)
+
         # embedding
         self.model.model.embed_tokens = patch_embedding(embed_tokens=self.model.model.embed_tokens,
                                                         vocab_size=self.model.config.vocab_size,
@@ -170,10 +172,3 @@ class LlamaInference(InferenceModel):
                                                world_size=self.world_size,
                                                rank=self.rank,
                                                dim=0)
-
-        # output linear
-        if self.rank == 0:
-            self.model.lm_head = patch_output_linear(linear=self.model.lm_head,
-                                                    bias=False,
-                                                    world_size=self.world_size,
-                                                    rank=self.rank)
