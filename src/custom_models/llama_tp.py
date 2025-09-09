@@ -151,6 +151,9 @@ def forward(
         if dist.get_rank() == 0:
             dist.all_reduce(hidden_states, op=dist.ReduceOp.SUM)
 
+            print(hidden_states.device, hidden_states.dtype, hidden_states.shape)
+            print(self.lm_head.weight.device, self.lm_head.weight.dtype, self.lm_head.weight.shape)
+
             # Only compute necessary logits, and do not upcast them to float if we are not computing the loss
             slice_indices = slice(-logits_to_keep, None) if isinstance(logits_to_keep, int) else logits_to_keep
             logits = self.lm_head(hidden_states[:, slice_indices, :])
