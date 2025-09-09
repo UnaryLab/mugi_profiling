@@ -51,7 +51,7 @@ class LlamaInference(InferenceModel):
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map={"":"cuda:0"}, use_cache=False)
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.float16, attn_implementation='eager', device_map={"":"cuda:0", "":"cuda:1"}, use_cache=False)
         self.max_length = self.model.config.max_position_embeddings
 
         if self.max_length > 4096:
