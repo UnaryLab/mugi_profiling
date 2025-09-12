@@ -13,6 +13,7 @@ class VLPSoftmax(CustomSoftmax):
         self.lut_build = lut_build
         self.exp_dim = exp_dim
         self.mant_dim = mant_dim
+        self.mant_round = mant_dim * 2
         self.window_size = window_size
 
         if lut_build == 'max':
@@ -102,16 +103,16 @@ class VLPSoftmax(CustomSoftmax):
         exp = exp.to(torch.int8)
         
         # Increment exponent where mantissa has overflow (i.e., mantissa is 16 / needs)
-        mant.mul_(16).round_().abs_()
+        mant.mul_(self.mant_round).round_().abs_()
         mant = mant.to(torch.int8)
 
         exp = torch.where(attn_mask, exp - 1, exp)
-        exp = torch.where(mant == 16, exp + 1, exp)
+        exp = torch.where(mant == self.mant_round, exp + 1, exp)
 
         max_exp_mask = exp > self.max_exp
 
         # Convert mantissa to unsigned 3 bit integer
-        mant &= 0x7
+        mant &= self.mant_dim - 1
 
         # Remove inf values to increase window selection stability
         exp[attn_inf] = 0
@@ -125,7 +126,7 @@ class VLPSoftmax(CustomSoftmax):
         exp = torch.pow(2, exp)
 
         mant = mant.to(torch.bfloat16)
-        mant.div_(8).add_(1).mul_(-1)
+        mant.div_(self.mant_dim).add_(1).mul_(-1)
 
         #exponentials = torch.ldexp(mant, exp)
         attn_weights = mant * exp
