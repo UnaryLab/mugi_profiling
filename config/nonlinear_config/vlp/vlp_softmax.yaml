@@ -10,5 +10,5 @@ parameters:
   exp_dim: 8
   window_size: 256
   lut_build: max
-  mant_dim: 8
+  mant_dim: 16
   max_min_exp: 1
