@@ -229,7 +229,7 @@ class InferenceModel(ABC):
 
     def loop_configuration(self):
         if self.nonlinear_function_parameters:
-            for key, value in tqdm(self.nonlinear_function_parameters.items(), desc="Inferencing configurations"):
+            for key, value in self.nonlinear_function_parameters.items():
                 if not isinstance(value, list):
                     self.nonlinear_function_parameters[key] = [value]
 
@@ -237,7 +237,7 @@ class InferenceModel(ABC):
             combinations = list(product(*values))
             combinations = [dict(zip(keys, combo)) for combo in combinations]
             
-            for combination in combinations:
+            for combination in tqdm(combinations, desc="Running configurations"):
                 if self.nonlinear_function in ['softmax', 'both']:
                     attn_params = combination
                 else:

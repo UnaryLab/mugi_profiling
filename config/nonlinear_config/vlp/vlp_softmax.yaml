@@ -12,4 +12,4 @@ parameters:
   window_size: 256
   lut_build: max
   mant_dim: 8
-  max_min_exp: [-2, -1, 0, 1, 2]
+  max_min_exp: 3
