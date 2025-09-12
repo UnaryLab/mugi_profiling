@@ -15,7 +15,7 @@ from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_silu_approx import 
 from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_softmax_approx import PWLSoftmax
 from src.custom_nonlinear.custom_nonlinear_functions.taylor.taylor_softmax_approx import TaylorSoftmax
 from src.custom_nonlinear.custom_nonlinear_functions.vlp.vlp_gelu_approx import VLPGelu
-from custom_nonlinear.custom_nonlinear_functions.vlp.vlp_silu_approx import VLPSilu
+from src.custom_nonlinear.custom_nonlinear_functions.vlp.vlp_silu_approx import VLPSilu
 from src.custom_nonlinear.custom_nonlinear_functions.vlp.vlp_softmax_approx import VLPSoftmax
 
 class InferenceModel(ABC):

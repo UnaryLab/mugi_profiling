@@ -7,8 +7,9 @@ approx_function: vlp
 #   mant_dim: 8
 #   max_min_exp: [-4, -3, -2, -1, 0, 1, 2, 3, 4]
 parameters:
-  exp_dim: 8
+  exp_dim: 16
+  window_dim: 16
   window_size: 256
   lut_build: max
-  mant_dim: 16
+  mant_dim: 8
   max_min_exp: 1
