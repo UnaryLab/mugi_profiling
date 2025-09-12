@@ -109,7 +109,7 @@ class InferenceModel(ABC):
     def run_batched_inference(self):
         total_loss = torch.tensor(0, dtype=torch.float64)
         num_batches = torch.tensor(0, dtype=torch.float64)
-        for i, batch in enumerate(self.inputs):
+        for batch in tqdm(self.inputs, desc="Batched Inference"):
             batched_loss = self.run_inference(
                 batch=batch
             )
@@ -229,7 +229,7 @@ class InferenceModel(ABC):
 
     def loop_configuration(self):
         if self.nonlinear_function_parameters:
-            for key, value in self.nonlinear_function_parameters.items():
+            for key, value in tqdm(self.nonlinear_function_parameters.items(), desc="Inferencing configurations"):
                 if not isinstance(value, list):
                     self.nonlinear_function_parameters[key] = [value]
 
