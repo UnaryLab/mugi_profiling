@@ -52,6 +52,8 @@ class InferenceModel(ABC):
         self.n_samples = parameter_dict.get('n_samples', 1)
         self.profile = parameter_dict.get('profile', False)
         self.batch_size = self.inference_parameters.get('batch_size', 1)
+
+        self.patch_per_layer = self.nonlinear_parameters.get('patch_per_layer', False)
         
         # Initialize DataFrame for collecting results
         self.df = None
