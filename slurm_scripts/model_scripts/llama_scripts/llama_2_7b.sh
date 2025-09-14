@@ -4,19 +4,20 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
 #SBATCH --job-name=llama_2_7b
-#SBATCH --constraint=gpu32
+#SBATCH --constraint=h100
 #SBATCH --job-name=llama_2_7b_profiling
 #SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
 
 module load cuda
 module load openblas
+module load python
 module load anaconda
 
 # Initialize conda properly for bash script
-# source $(conda info --base)/etc/profile.d/conda.sh
-# eval "$(conda shell.bash hook)"
+source $(conda info --base)/etc/profile.d/conda.sh
 
+conda deactivate
 conda activate mugi_profiling
 
 cd ~/mugi_profiling

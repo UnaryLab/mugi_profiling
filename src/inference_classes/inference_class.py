@@ -229,6 +229,10 @@ class InferenceModel(ABC):
             path=path
         )
 
+    def per_layer_configuration(self):
+        if self.nonlinear_function_parameters:
+            print(self.nonlinear_function_parameters)
+
     def loop_configuration(self):
         if self.nonlinear_function_parameters:
             for key, value in self.nonlinear_function_parameters.items():
