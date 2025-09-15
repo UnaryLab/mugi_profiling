@@ -216,10 +216,16 @@ class InferenceModel(ABC):
                 for layer_value in value:
                     ffn_layer_params.append({key: layer_value})
 
-        for i, (attn_layer, ffn_layer) in enumerate(zip(self.attention_objects, self.ffn_objects)):
-            print(i)
-            attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
-            ffn_layer.set_params(**ffn_global_params, **ffn_layer_params[i], config_path=ffn_config_path)
+        if attn_params:
+            for i, attn_layer in enumerate(self.attention_objects):
+                print(i)
+                attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
+
+        if ffn_params:
+            for i, ffn_layer in enumerate(self.ffn_objects):
+                print(i)
+                attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
+                ffn_layer.set_params(**ffn_global_params, **ffn_layer_params[i], config_path=ffn_config_path)
 
         
         exit()
