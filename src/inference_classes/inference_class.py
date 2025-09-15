@@ -225,6 +225,36 @@ class InferenceModel(ABC):
                 attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
                 ffn_layer.set_params(**ffn_global_params, **ffn_layer_params[i], config_path=ffn_config_path)
 
+        self.run_batched_inference()
+
+        # torch.cuda.empty_cache()
+        # gc.collect()
+
+        new_row = {
+            'model': self.model_name,
+            'value': self.metric,
+            'function_name': self.approx_function,
+            'attn_fn': self.attn_function,
+            'ffn_fn': self.ffn_function
+        }
+
+        # Add attention parameters with prefixed column names to avoid conflicts
+        if attn_params:
+            for key, value in attn_global_params.items():
+                new_row[f'attn_{key}'] = value
+        
+        # Add FFN parameters with prefixed column names to avoid conflicts
+        if ffn_params:
+            for key, value in ffn_global_params.items():
+                new_row[f'ffn_{key}'] = value
+
+        new_row = pd.DataFrame([new_row])
+
+        if self.df is None:
+            self.df = new_row
+        else:
+            self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
+
     def run_configuration(self, attn_params, ffn_params):
         
         attn_config_path = ''
