@@ -58,7 +58,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
     print('Batching dataset...')
     inference_model.batch_dataset()
     print('Inferencing configurations...')
-    inference_model.loop_configuration()
+    inference_model.inference_configurations()
 
     inference_model.df.to_csv(inference_model.csv_file, index=False)
 

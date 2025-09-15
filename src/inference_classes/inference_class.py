@@ -229,6 +229,15 @@ class InferenceModel(ABC):
             path=path
         )
 
+    def inference_configurations(self):
+        print(self.patch_per_layer)
+        if self.patch_per_layer:
+            print('per layer')
+            self.per_layer_configuration()
+        else:
+            print('loop')
+            self.loop_configuration()
+
     def per_layer_configuration(self):
         if self.nonlinear_function_parameters:
             print(self.nonlinear_function_parameters)
