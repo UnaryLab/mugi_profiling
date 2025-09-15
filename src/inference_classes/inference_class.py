@@ -218,11 +218,11 @@ class InferenceModel(ABC):
 
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
+                print(f'{i}: {attn_layer_params[i]}')
                 attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
 
         if ffn_params:
             for i, ffn_layer in enumerate(self.ffn_objects):
-                attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
                 ffn_layer.set_params(**ffn_global_params, **ffn_layer_params[i], config_path=ffn_config_path)
 
         self.run_batched_inference()
