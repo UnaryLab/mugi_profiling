@@ -233,11 +233,13 @@ class InferenceModel(ABC):
         print(self.patch_per_layer)
         if self.patch_per_layer:
             print('per layer')
+            exit()
             self.per_layer_configuration()
         else:
             print('loop')
+            exit()
             self.loop_configuration()
-        exit()
+        
 
     def per_layer_configuration(self):
         if self.nonlinear_function_parameters:
