@@ -196,7 +196,7 @@ class InferenceModel(ABC):
 
         # separate layer specific parameters
         for key, value in attn_params.items():
-            print(key)
+            print(key, isinstance(value, list))
         exit()
 
         print(attn_config_path)
