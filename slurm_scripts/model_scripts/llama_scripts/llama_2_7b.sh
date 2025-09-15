@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
 #SBATCH --job-name=llama_2_7b
-#SBATCH --constraint=high_gpu
+#SBATCH --partition=high_gpu
 #SBATCH --job-name=llama_2_7b_profiling
 #SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
