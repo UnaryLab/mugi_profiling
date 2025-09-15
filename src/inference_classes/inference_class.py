@@ -130,7 +130,7 @@ class InferenceModel(ABC):
         pass
 
     def run_configuration(self, attn_params, ffn_params):
-
+        exit()
         attn_config_path = ''
         ffn_config_path = ''
         if attn_params:
@@ -173,8 +173,7 @@ class InferenceModel(ABC):
             self.df = new_row
         else:
             self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
-
-        
+      
     def patch_model(self):
 
         patch_attention = False
@@ -230,38 +229,38 @@ class InferenceModel(ABC):
         )
 
     def inference_configurations(self):
-        print(self.patch_per_layer)
-        if self.patch_per_layer:
-            self.per_layer_configuration()
-        else:
-            self.loop_configuration()
-        
-
-    def per_layer_configuration(self):
         if self.nonlinear_function_parameters:
-            print(self.nonlinear_function_parameters)
-            exit()
-
-    def loop_configuration(self):
-        if self.nonlinear_function_parameters:
-            for key, value in self.nonlinear_function_parameters.items():
-                if not isinstance(value, list):
-                    self.nonlinear_function_parameters[key] = [value]
-
-            (keys, values) = zip(*self.nonlinear_function_parameters.items())
-            combinations = list(product(*values))
-            combinations = [dict(zip(keys, combo)) for combo in combinations]
-            
-            for combination in tqdm(combinations, desc="Running configurations"):
+            # Manually patch per layer (1 configuration)
+            if self.patch_per_layer:
+                print('patch')
                 if self.nonlinear_function in ['softmax', 'both']:
-                    attn_params = combination
-                else:
-                    attn_params = {}
+                    attn_params = self.nonlinear_function_parameters
                 if self.nonlinear_function in ['ffn', 'both']:
-                    ffn_params = combination
-                else:
-                    ffn_params = {}
+                    ffn_params = self.nonlinear_function_parameters
+
                 self.run_configuration(attn_params=attn_params, ffn_params=ffn_params)
+            # Loop through all combinations (same patch for all layers)
+            else:
+                print('loop')
+                for key, value in self.nonlinear_function_parameters.items():
+                    if not isinstance(value, list):
+                        self.nonlinear_function_parameters[key] = [value]
+
+                (keys, values) = zip(*self.nonlinear_function_parameters.items())
+                combinations = list(product(*values))
+                combinations = [dict(zip(keys, combo)) for combo in combinations]
+                
+                for combination in tqdm(combinations, desc="Running configurations"):
+                    if self.nonlinear_function in ['softmax', 'both']:
+                        attn_params = combination
+                    else:
+                        attn_params = {}
+                    if self.nonlinear_function in ['ffn', 'both']:
+                        ffn_params = combination
+                    else:
+                        ffn_params = {}
+                    self.run_configuration(attn_params=attn_params, ffn_params=ffn_params)
+        # Single configuration
         else:
             self.run_configuration(attn_params={}, ffn_params={})
         
