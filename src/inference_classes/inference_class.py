@@ -237,6 +237,7 @@ class InferenceModel(ABC):
         else:
             print('loop')
             self.loop_configuration()
+        exit()
 
     def per_layer_configuration(self):
         if self.nonlinear_function_parameters:
