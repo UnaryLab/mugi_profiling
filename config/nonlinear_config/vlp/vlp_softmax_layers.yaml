@@ -13,7 +13,7 @@ parameters:
   window_size: 32
   lut_build: max
   mant_dim: 16
-  max_min_exp: [2, 2, 2, 2, 2, 2, 2, 2,
+  max_min_exp: [1, 2, 2, 2, 2, 2, 2, 2,
                 2, 2, 2, 2, 2, 2, 2, 2,
                 2, 2, 2, 2, 2, 2, 2, 2,
                 2, 2, 2, 2, 2, 2, 2, 2]
