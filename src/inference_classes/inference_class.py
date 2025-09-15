@@ -189,10 +189,12 @@ class InferenceModel(ABC):
             for key, value in attn_params.items():
                 if not isinstance(value, list):
                     attn_config_path += f'{key}_{value}/'
+            attn_config_path += 'layer_config/'
         if ffn_params:
             for key, value in ffn_params.items():
                 if not isinstance(value, list):
                     ffn_config_path += f'{key}_{value}/'
+            ffn_config_path += 'layer_config/'
 
         # separate layer specific parameters
         attn_global_params = {}
@@ -214,13 +216,12 @@ class InferenceModel(ABC):
                 for layer_value in value:
                     ffn_layer_params.append({key: layer_value})
 
-        print(attn_global_params)
-        print(attn_layer_params)
-        print(ffn_global_params)
-        print(ffn_layer_params)
+        for i, (attn_layer, ffn_layer) in enumerate(zip(self.attention_objects, self.ffn_objects)):
+            print(i)
+            attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
+            ffn_layer.set_params(**ffn_global_params, **ffn_layer_params[i], config_path=ffn_config_path)
 
-        print(attn_config_path)
-        print(ffn_config_path)
+        
         exit()
 
     def run_configuration(self, attn_params, ffn_params):
