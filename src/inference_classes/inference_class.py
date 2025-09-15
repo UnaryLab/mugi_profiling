@@ -129,53 +129,7 @@ class InferenceModel(ABC):
     def patch_layers(self):
         pass
 
-    def run_configuration(self, attn_params, ffn_params):
-        exit()
-        attn_config_path = ''
-        ffn_config_path = ''
-        if attn_params:
-            for key, value in attn_params.items():
-                attn_config_path += f'{key}_{value}/'
-        if ffn_params:
-            for key, value in ffn_params.items():
-                ffn_config_path += f'{key}_{value}/'
-
-        for attn_layer, ffn_layer in zip(self.attention_objects, self.ffn_objects):
-            attn_layer.set_params(**attn_params, config_path=attn_config_path)
-            ffn_layer.set_params(**ffn_params, config_path=ffn_config_path)
-
-        self.run_batched_inference()
-
-        # torch.cuda.empty_cache()
-        # gc.collect()
-
-        new_row = {
-            'model': self.model_name,
-            'value': self.metric,
-            'function_name': self.approx_function,
-            'attn_fn': self.attn_function,
-            'ffn_fn': self.ffn_function
-        }
-
-        # Add attention parameters with prefixed column names to avoid conflicts
-        if attn_params:
-            for key, value in attn_params.items():
-                new_row[f'attn_{key}'] = value
-        
-        # Add FFN parameters with prefixed column names to avoid conflicts
-        if ffn_params:
-            for key, value in ffn_params.items():
-                new_row[f'ffn_{key}'] = value
-
-        new_row = pd.DataFrame([new_row])
-
-        if self.df is None:
-            self.df = new_row
-        else:
-            self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
-      
     def patch_model(self):
-
         patch_attention = False
         patch_ffn = False
         if self.nonlinear_function in ['softmax', 'both']:
@@ -228,6 +182,71 @@ class InferenceModel(ABC):
             path=path
         )
 
+    def run_layer_configuration(self, attn_params, ffn_params):
+        attn_config_path = ''
+        ffn_config_path = ''
+        if attn_params:
+            for key, value in attn_params.items():
+                if not isinstance(value, list):
+                    attn_config_path += f'{key}_{value}/'
+        if ffn_params:
+            for key, value in ffn_params.items():
+                if not isinstance(value, list):
+                    ffn_config_path += f'{key}_{value}/'
+
+        # separate layer specific parameters
+        for key, value in attn_params.items():
+            print(key)
+        exit()
+
+        print(attn_config_path)
+        print(ffn_config_path)
+
+    def run_configuration(self, attn_params, ffn_params):
+        
+        attn_config_path = ''
+        ffn_config_path = ''
+        if attn_params:
+            for key, value in attn_params.items():
+                attn_config_path += f'{key}_{value}/'
+        if ffn_params:
+            for key, value in ffn_params.items():
+                ffn_config_path += f'{key}_{value}/'
+
+        for attn_layer, ffn_layer in zip(self.attention_objects, self.ffn_objects):
+            attn_layer.set_params(**attn_params, config_path=attn_config_path)
+            ffn_layer.set_params(**ffn_params, config_path=ffn_config_path)
+
+        self.run_batched_inference()
+
+        # torch.cuda.empty_cache()
+        # gc.collect()
+
+        new_row = {
+            'model': self.model_name,
+            'value': self.metric,
+            'function_name': self.approx_function,
+            'attn_fn': self.attn_function,
+            'ffn_fn': self.ffn_function
+        }
+
+        # Add attention parameters with prefixed column names to avoid conflicts
+        if attn_params:
+            for key, value in attn_params.items():
+                new_row[f'attn_{key}'] = value
+        
+        # Add FFN parameters with prefixed column names to avoid conflicts
+        if ffn_params:
+            for key, value in ffn_params.items():
+                new_row[f'ffn_{key}'] = value
+
+        new_row = pd.DataFrame([new_row])
+
+        if self.df is None:
+            self.df = new_row
+        else:
+            self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
+
     def inference_configurations(self):
         if self.nonlinear_function_parameters:
             # Manually patch per layer (1 configuration)
@@ -235,7 +254,7 @@ class InferenceModel(ABC):
                 print('patch')
                 attn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['softmax', 'both'] else {}
                 ffn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['ffn', 'both'] else {}
-                self.run_configuration(attn_params=attn_params, ffn_params=ffn_params)
+                self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
             # Loop through all combinations (same patch for all layers)
             else:
                 print('loop')
