@@ -198,32 +198,45 @@ class InferenceModel(ABC):
 
         # separate layer specific parameters
         attn_global_params = {}
-        attn_layer_params = []
+        attn_layer_params = {}
+        attn_default_params = {}
         ffn_global_params = {}
-        ffn_layer_params = []
+        ffn_layer_params = {}
+        ffn_default_params = {}
+        
 
         for key, value in attn_params.items():
-            if not isinstance(value, list):
+            if not isinstance(value, dict):
                 attn_global_params[key] = value
             else:
-                for layer_value in value:
-                    attn_layer_params.append({key: layer_value})
+                attn_layer_params = {key: value.get('value')}
+                attn_default_params = {key: value.get('default')}
+                layer_idx = value.get('layer')
 
         for key, value in ffn_params.items():
-            if not isinstance(value, list):
+            if not isinstance(value, dict):
                 ffn_global_params[key] = value
             else:
-                for layer_value in value:
-                    ffn_layer_params.append({key: layer_value})
+                ffn_layer_params = {key: value.get('value')}
+                ffn_default_params = {key: value.get('default')}
+                layer_idx = value.get('layer')
+
+        print(attn_params)
+        print(attn_layer_params)
+        print(attn_default_params)
+        exit()
 
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
-                print(f'{i}: {attn_layer_params[i]}')
-                attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
+                if i == layer_idx:
+                    attn_layer.set_params(**attn_global_params, **attn_layer_params, config_path=attn_config_path)
+                attn_layer.set_params(**attn_global_params, **attn_default_params, config_path=attn_config_path)
 
         if ffn_params:
             for i, ffn_layer in enumerate(self.ffn_objects):
-                ffn_layer.set_params(**ffn_global_params, **ffn_layer_params[i], config_path=ffn_config_path)
+                if i == layer_idx:
+                    ffn_layer.set_params(**ffn_global_params, **ffn_layer_params, config_path=ffn_config_path)
+                ffn_layer.set_params(**ffn_global_params, **ffn_default_params, config_path=ffn_config_path)
 
         self.run_batched_inference()
 
@@ -304,13 +317,11 @@ class InferenceModel(ABC):
         if self.nonlinear_function_parameters:
             # Manually patch per layer (1 configuration)
             if self.patch_per_layer:
-                print('patch')
                 attn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['softmax', 'both'] else {}
                 ffn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['ffn', 'both'] else {}
                 self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
             # Loop through all combinations (same patch for all layers)
             else:
-                print('loop')
                 for key, value in self.nonlinear_function_parameters.items():
                     if not isinstance(value, list):
                         self.nonlinear_function_parameters[key] = [value]
