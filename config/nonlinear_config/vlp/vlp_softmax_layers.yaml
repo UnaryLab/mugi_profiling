@@ -15,6 +15,6 @@ parameters:
   mant_dim: 16
   max_min_exp: {
     layer: 1,
-    value: [-2, -1, 0, 1, 2],
+    value: [3, 4],
     default: 2
   }
