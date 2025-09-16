@@ -219,22 +219,29 @@ class InferenceModel(ABC):
                 for subkey, subvalue in value.items():
                     if subkey == 'value':
                         assert self.patched_layer not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
-                        attn_layer_params[self.patched_layer] = {key: subvalue}
+                        attn_layer_params[str(self.patched_layer)] = {key: subvalue}
                         attn_layer_value = subvalue
                     elif subkey == 'default':
                         attn_default_params = {key: subvalue}
                     else:
                         assert subkey not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
-                        attn_layer_params[subkey] = {key: subvalue}
+                        attn_layer_params[str(subkey)] = {key: subvalue}
 
         for key, value in ffn_params.items():
             if not isinstance(value, dict):
                 ffn_global_params[key] = value
             else:
                 ffn_layer_key = key
-                ffn_layer_value = value.get('value')
-                ffn_layer_params = {key: value.get('value')}
-                ffn_default_params = {key: value.get('default')}
+                for subkey, subvalue in value.items():
+                    if subkey == 'value':
+                        assert self.patched_layer not in ffn_layer_params, "Multiple 'value' keys found in FFN parameters."
+                        ffn_layer_params[str(self.patched_layer)] = {key: subvalue}
+                        ffn_layer_value = subvalue
+                    elif subkey == 'default':
+                        ffn_default_params = {key: subvalue}
+                    else:
+                        assert subkey not in ffn_layer_params, "Multiple 'value' keys found in FFN parameters."
+                        ffn_layer_params[str(subkey)] = {key: subvalue}
 
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
