@@ -330,9 +330,9 @@ class InferenceModel(ABC):
                     params = deepcopy(self.nonlinear_function_parameters)
                     params[config_key]['value'] = value.get('value')[run]
 
-                attn_params = params if self.nonlinear_function in ['softmax', 'both'] else {}
-                ffn_params = params if self.nonlinear_function in ['ffn', 'both'] else {}
-                self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
+                    attn_params = params if self.nonlinear_function in ['softmax', 'both'] else {}
+                    ffn_params = params if self.nonlinear_function in ['ffn', 'both'] else {}
+                    self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
             # Loop through all combinations (same patch for all layers)
             else:
                 for key, value in self.nonlinear_function_parameters.items():
