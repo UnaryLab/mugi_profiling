@@ -15,6 +15,6 @@ parameters:
   lut_build: max
   mant_dim: 16
   max_min_exp: {
-    value: [5, 6],
+    value: [7, 8],
     default: 2
   }
