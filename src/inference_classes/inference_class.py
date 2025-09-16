@@ -319,8 +319,11 @@ class InferenceModel(ABC):
             if self.patch_per_layer:
 
                 for key, value in self.nonlinear_function_parameters.items():
-                    print(key, value)
-                    exit()
+                    if isinstance(value, dict):
+                        runs = len(value.get('value'))
+
+                print(runs)
+                exit()
 
                 attn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['softmax', 'both'] else {}
                 ffn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['ffn', 'both'] else {}
