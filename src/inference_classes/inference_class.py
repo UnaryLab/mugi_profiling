@@ -317,6 +317,11 @@ class InferenceModel(ABC):
         if self.nonlinear_function_parameters:
             # Manually patch per layer (1 configuration)
             if self.patch_per_layer:
+
+                for key, value in self.nonlinear_function_parameters.items():
+                    print(key, value)
+                    exit()
+
                 attn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['softmax', 'both'] else {}
                 ffn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['ffn', 'both'] else {}
                 self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
