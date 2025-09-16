@@ -332,7 +332,7 @@ class InferenceModel(ABC):
                         config_key = key
                         runs = len(value.get('value'))
 
-                for run in range(runs):
+                for run in tqdm(range(runs), desc="Running configurations"):
                     params = deepcopy(self.nonlinear_function_parameters)
                     params[config_key]['value'] = value.get('value')[run]
 
