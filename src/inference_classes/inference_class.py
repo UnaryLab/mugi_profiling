@@ -204,12 +204,15 @@ class InferenceModel(ABC):
         ffn_global_params = {}
         ffn_layer_params = {}
         ffn_default_params = {}
+        attn_layer_key = None
+        ffn_layer_key = None
         
 
         for key, value in attn_params.items():
             if not isinstance(value, dict):
                 attn_global_params[key] = value
             else:
+                attn_layer_key = key
                 attn_layer_params = {key: value.get('value')}
                 attn_default_params = {key: value.get('default')}
                 layer_idx = value.get('layer')
@@ -218,14 +221,10 @@ class InferenceModel(ABC):
             if not isinstance(value, dict):
                 ffn_global_params[key] = value
             else:
+                ffn_layer_key = key
                 ffn_layer_params = {key: value.get('value')}
                 ffn_default_params = {key: value.get('default')}
                 layer_idx = value.get('layer')
-
-        print(attn_params)
-        print(attn_layer_params)
-        print(attn_default_params)
-        exit()
 
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
@@ -249,7 +248,10 @@ class InferenceModel(ABC):
             'value': self.metric,
             'function_name': self.approx_function,
             'attn_fn': self.attn_function,
-            'ffn_fn': self.ffn_function
+            'ffn_fn': self.ffn_function,
+            'config_layer': layer_idx,
+            f'attn_layer_{attn_layer_key}': attn_layer_key,
+            f'ffn_layer_{ffn_layer_key}': ffn_layer_key
         }
 
         # Add attention parameters with prefixed column names to avoid conflicts
@@ -328,13 +330,8 @@ class InferenceModel(ABC):
                     params = deepcopy(self.nonlinear_function_parameters)
                     params[config_key]['value'] = value.get('value')[run]
 
-                    print(params)
-                    continue
-                exit()
-
-
-                attn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['softmax', 'both'] else {}
-                ffn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['ffn', 'both'] else {}
+                attn_params = params if self.nonlinear_function in ['softmax', 'both'] else {}
+                ffn_params = params if self.nonlinear_function in ['ffn', 'both'] else {}
                 self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
             # Loop through all combinations (same patch for all layers)
             else:
