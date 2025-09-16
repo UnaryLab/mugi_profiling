@@ -55,6 +55,8 @@ class InferenceModel(ABC):
         self.batch_size = self.inference_parameters.get('batch_size', 1)
 
         self.patch_per_layer = self.nonlinear_dict.get('patch_per_layer', False)
+        self.patched_layer = self.nonlinear_dict.get('patched_layer', None)
+        self.patched_layer_path = f'{self.patched_layer}/' if self.patched_layer is not None else ''
         
         # Initialize DataFrame for collecting results
         self.df = None
@@ -218,7 +220,6 @@ class InferenceModel(ABC):
                 attn_layer_value = value.get('value')
                 attn_layer_params = {key: value.get('value')}
                 attn_default_params = {key: value.get('default')}
-                layer_idx = value.get('layer')
 
         for key, value in ffn_params.items():
             if not isinstance(value, dict):
@@ -228,18 +229,17 @@ class InferenceModel(ABC):
                 ffn_layer_value = value.get('value')
                 ffn_layer_params = {key: value.get('value')}
                 ffn_default_params = {key: value.get('default')}
-                layer_idx = value.get('layer')
 
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
-                if i == layer_idx:
+                if i == self.patched_layer:
                     attn_layer.set_params(**attn_global_params, **attn_layer_params, config_path=attn_config_path)
                 else:
                     attn_layer.set_params(**attn_global_params, **attn_default_params, config_path=attn_config_path)
 
         if ffn_params:
             for i, ffn_layer in enumerate(self.ffn_objects):
-                if i == layer_idx:
+                if i == self.patched_layer:
                     ffn_layer.set_params(**ffn_global_params, **ffn_layer_params, config_path=ffn_config_path)
                 else:
                     ffn_layer.set_params(**ffn_global_params, **ffn_default_params, config_path=ffn_config_path)

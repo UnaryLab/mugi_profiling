@@ -39,7 +39,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
     else:
         raise ValueError(f"Unsupported model: {model_name}")
     
-    inference_model.csv_file = f'output/csv/{inference_model.model_name}/{nonlinear_config_path}/metric.csv'
+    inference_model.csv_file = f'output/csv/{inference_model.model_name}/{nonlinear_config_path}/{inference_model.patched_layer}metric.csv'
     if os.path.exists(inference_model.csv_file):
         inference_model.df = pd.read_csv(inference_model.csv_file)
     else:
