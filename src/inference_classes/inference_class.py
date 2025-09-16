@@ -206,6 +206,8 @@ class InferenceModel(ABC):
         ffn_default_params = {}
         attn_layer_key = None
         ffn_layer_key = None
+        attn_layer_value = None
+        ffn_layer_value = None
         
 
         for key, value in attn_params.items():
@@ -213,6 +215,7 @@ class InferenceModel(ABC):
                 attn_global_params[key] = value
             else:
                 attn_layer_key = key
+                attn_layer_value = value.get('value')
                 attn_layer_params = {key: value.get('value')}
                 attn_default_params = {key: value.get('default')}
                 layer_idx = value.get('layer')
@@ -222,6 +225,7 @@ class InferenceModel(ABC):
                 ffn_global_params[key] = value
             else:
                 ffn_layer_key = key
+                ffn_layer_value = value.get('value')
                 ffn_layer_params = {key: value.get('value')}
                 ffn_default_params = {key: value.get('default')}
                 layer_idx = value.get('layer')
@@ -252,8 +256,8 @@ class InferenceModel(ABC):
             'attn_fn': self.attn_function,
             'ffn_fn': self.ffn_function,
             'config_layer': layer_idx,
-            f'attn_layer_{attn_layer_key}': attn_layer_key,
-            f'ffn_layer_{ffn_layer_key}': ffn_layer_key
+            f'attn_layer_{attn_layer_key}': attn_layer_value,
+            f'ffn_layer_{ffn_layer_key}': ffn_layer_value
         }
 
         # Add attention parameters with prefixed column names to avoid conflicts
