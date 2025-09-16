@@ -7,6 +7,7 @@ import math
 import pandas as pd
 from tqdm import tqdm
 from abc import ABC, abstractmethod
+from copy import deepcopy
 
 from src.custom_nonlinear.custom_approx import CustomSoftmax, CustomSilu, CustomGelu, CustomFastGelu
 from src.custom_nonlinear.custom_nonlinear_functions.pwl.pwl_gelu_approx import PWLGelu
@@ -320,10 +321,17 @@ class InferenceModel(ABC):
 
                 for key, value in self.nonlinear_function_parameters.items():
                     if isinstance(value, dict):
+                        config_key = key
                         runs = len(value.get('value'))
 
-                print(runs)
+                for run in range(runs):
+                    params = deepcopy(self.nonlinear_function_parameters)
+                    params[config_key]['value'] = value.get('value')[run]
+
+                    print(params)
+                    continue
                 exit()
+
 
                 attn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['softmax', 'both'] else {}
                 ffn_params = self.nonlinear_function_parameters if self.nonlinear_function in ['ffn', 'both'] else {}
