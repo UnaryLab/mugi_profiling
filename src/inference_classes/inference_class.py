@@ -255,7 +255,7 @@ class InferenceModel(ABC):
             'function_name': self.approx_function,
             'attn_fn': self.attn_function,
             'ffn_fn': self.ffn_function,
-            'config_layer': layer_idx,
+            'config_layer': self.patched_layer,
             f'attn_layer_{attn_layer_key}': attn_layer_value,
             f'ffn_layer_{ffn_layer_key}': ffn_layer_value
         }

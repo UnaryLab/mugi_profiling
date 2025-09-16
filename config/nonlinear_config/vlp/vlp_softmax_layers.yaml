@@ -15,7 +15,6 @@ parameters:
   lut_build: max
   mant_dim: 16
   max_min_exp: {
-    layer: 1,
     value: [5, 6],
     default: 2
   }
