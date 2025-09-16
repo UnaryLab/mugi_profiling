@@ -8,11 +8,11 @@ approx_function: vlp
 #   max_min_exp: [-4, -3, -2, -1, 0, 1, 2, 3, 4]
 patch_per_layer: True
 parameters:
-  exp_dim: 16
+  exp_dim: 8
   window_dim: 8
   window_size: 32
   lut_build: max
-  mant_dim: 8
+  mant_dim: 16
   max_min_exp: {
     layer: 1,
     value: [-2, -1, 0, 1, 2],
