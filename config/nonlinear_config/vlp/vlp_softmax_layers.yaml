@@ -12,7 +12,7 @@ parameters:
   window_dim: 8
   window_size: 32
   lut_build: max
-  mant_dim: 16
+  mant_dim: 8
   max_min_exp: {
     layer: 1,
     value: [-2, -1, 0, 1, 2],

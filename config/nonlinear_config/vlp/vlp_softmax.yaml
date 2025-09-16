@@ -9,8 +9,8 @@ approx_function: vlp
 patch_per_layer: False
 parameters:
   exp_dim: 16
-  window_dim: 8
+  window_dim: 16
   window_size: 32
   lut_build: max
-  mant_dim: 16
-  max_min_exp: 2
+  mant_dim: 8
+  max_min_exp: [0, 1, 2, 3]
