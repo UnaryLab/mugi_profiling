@@ -1,0 +1,3 @@
+model,value,function_name,attn_fn,ffn_fn,config_layer,attn_layer_max_min_exp,ffn_layer_None,attn_exp_dim,attn_window_dim,attn_window_size,attn_lut_build,attn_mant_dim
+meta-llama/Llama-2-7b-hf,6.177539334872842,vlp,VLPSoftmax,torch,1,7,,8,8,32,max,16
+meta-llama/Llama-2-7b-hf,6.3205866270904885,vlp,VLPSoftmax,torch,1,8,,8,8,32,max,16
