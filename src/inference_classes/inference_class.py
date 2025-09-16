@@ -210,16 +210,22 @@ class InferenceModel(ABC):
         ffn_layer_key = None
         attn_layer_value = None
         ffn_layer_value = None
-        
 
         for key, value in attn_params.items():
             if not isinstance(value, dict):
                 attn_global_params[key] = value
             else:
                 attn_layer_key = key
-                attn_layer_value = value.get('value')
-                attn_layer_params = {key: value.get('value')}
-                attn_default_params = {key: value.get('default')}
+                for subkey, subvalue in value.items():
+                    if subkey == 'value':
+                        assert self.patched_layer not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
+                        attn_layer_params[self.patched_layer] = {key: subvalue}
+                        attn_layer_value = subvalue
+                    elif subkey == 'default':
+                        attn_default_params = {key: subvalue}
+                    else:
+                        assert subkey not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
+                        attn_layer_params[subkey] = {key: subvalue}
 
         for key, value in ffn_params.items():
             if not isinstance(value, dict):
@@ -232,7 +238,7 @@ class InferenceModel(ABC):
 
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
-                if i == self.patched_layer:
+                if i+1 in attn_layer_params:
                     attn_layer.set_params(**attn_global_params, **attn_layer_params, config_path=attn_config_path)
                 else:
                     attn_layer.set_params(**attn_global_params, **attn_default_params, config_path=attn_config_path)

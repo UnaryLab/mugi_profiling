@@ -9,17 +9,17 @@
 #SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
 
-module load cuda
-module load openblas
-module load anaconda
+# module load cuda
+# module load openblas
+# module load anaconda
 
-# Initialize conda properly for bash script
-source $(conda info --base)/etc/profile.d/conda.sh
+# # Initialize conda properly for bash script
+# source $(conda info --base)/etc/profile.d/conda.sh
 
-conda deactivate
-conda activate mugi_profiling
+# conda deactivate
+# conda activate mugi_profiling
 
-cd ~/mugi_profiling
+# cd ~/mugi_profiling
 
 # Configuration files to process
 model_config="config/model_config/llama/llama_2_7b.yaml"
