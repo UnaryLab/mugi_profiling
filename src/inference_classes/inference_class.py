@@ -257,8 +257,6 @@ class InferenceModel(ABC):
                 else:
                     ffn_layer.set_params(**ffn_global_params, **ffn_default_params, config_path=ffn_config_path)
 
-        exit()
-
         self.run_batched_inference()
 
         # torch.cuda.empty_cache()
