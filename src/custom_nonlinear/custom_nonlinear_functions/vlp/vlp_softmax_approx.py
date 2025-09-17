@@ -26,7 +26,7 @@ class VLPSoftmax(CustomSoftmax):
         else:
             raise ValueError("lut_build must be 'max' or 'min'")
         
-        print(self.layer, self.min_max_exp)
+        print(self.layer, max_min_exp)
 
     def window_softmax_approx(self, exp, mant):
         input_shape = exp.shape
