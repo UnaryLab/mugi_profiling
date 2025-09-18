@@ -277,6 +277,12 @@ class InferenceModel(ABC):
         if attn_params:
             for key, value in attn_global_params.items():
                 new_row[f'attn_{key}'] = value
+
+        if attn_layer_params:
+            for layer, params in attn_layer_params.items():
+                print(layer, params)
+        exit()
+
         
         # Add FFN parameters with prefixed column names to avoid conflicts
         if ffn_params:
