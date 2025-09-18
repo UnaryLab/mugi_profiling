@@ -206,21 +206,15 @@ class InferenceModel(ABC):
         ffn_global_params = {}
         ffn_layer_params = {}
         ffn_default_params = {}
-        attn_layer_key = None
-        ffn_layer_key = None
-        attn_layer_value = None
-        ffn_layer_value = None
 
         for key, value in attn_params.items():
             if not isinstance(value, dict):
                 attn_global_params[key] = value
             else:
-                attn_layer_key = key
                 for subkey, subvalue in value.items():
                     if subkey == 'value':
                         assert self.patched_layer not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
                         attn_layer_params[self.patched_layer] = {key: subvalue}
-                        attn_layer_value = subvalue
                     elif subkey == 'default':
                         attn_default_params = {key: subvalue}
                     else:
@@ -232,12 +226,10 @@ class InferenceModel(ABC):
             if not isinstance(value, dict):
                 ffn_global_params[key] = value
             else:
-                ffn_layer_key = key
                 for subkey, subvalue in value.items():
                     if subkey == 'value':
                         assert self.patched_layer not in ffn_layer_params, "Multiple 'value' keys found in FFN parameters."
                         ffn_layer_params[self.patched_layer] = {key: subvalue}
-                        ffn_layer_value = subvalue
                     elif subkey == 'default':
                         ffn_default_params = {key: subvalue}
                     else:
@@ -247,6 +239,7 @@ class InferenceModel(ABC):
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
                 if i in attn_layer_params:
+                    print(i, attn_layer_params[i])
                     attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
                 else:
                     attn_layer.set_params(**attn_global_params, **attn_default_params, config_path=attn_config_path)
@@ -269,9 +262,7 @@ class InferenceModel(ABC):
             'function_name': self.approx_function,
             'attn_fn': self.attn_function,
             'ffn_fn': self.ffn_function,
-            'config_layer': self.patched_layer,
-            f'attn_layer_{attn_layer_key}': attn_layer_value,
-            f'ffn_layer_{ffn_layer_key}': ffn_layer_value
+            'config_layer': self.patched_layer
         }
 
         # Add attention parameters with prefixed column names to avoid conflicts
@@ -279,16 +270,18 @@ class InferenceModel(ABC):
             for key, value in attn_global_params.items():
                 new_row[f'attn_{key}'] = value
 
-        if attn_layer_params:
-            for layer, params in attn_layer_params.items():
-                print(layer, params)
-        exit()
-
-        
         # Add FFN parameters with prefixed column names to avoid conflicts
         if ffn_params:
             for key, value in ffn_global_params.items():
                 new_row[f'ffn_{key}'] = value
+
+        if attn_layer_params:
+            for layer, params in attn_layer_params.items():
+                new_row[f'attn_layer_{layer}_{list(params.keys()[0])}'] = list(params.values())[0]
+        
+        if ffn_layer_params:
+            for layer, params in ffn_layer_params.items():
+                new_row[f'ffn_layer_{layer}_{list(params.keys())[0]}'] = list(params.values())[0]
 
         new_row = pd.DataFrame([new_row])
 
