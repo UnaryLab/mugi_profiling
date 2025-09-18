@@ -277,7 +277,7 @@ class InferenceModel(ABC):
 
         if attn_layer_params:
             for layer, params in attn_layer_params.items():
-                new_row[f'attn_layer_{layer}_{list(params.keys()[0])}'] = list(params.values())[0]
+                new_row[f'attn_layer_{layer}_{list(params.keys())[0]}'] = list(params.values())[0]
         
         if ffn_layer_params:
             for layer, params in ffn_layer_params.items():
