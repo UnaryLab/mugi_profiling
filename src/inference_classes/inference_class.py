@@ -225,7 +225,8 @@ class InferenceModel(ABC):
                         attn_default_params = {key: subvalue}
                     else:
                         assert subkey not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
-                        attn_layer_params[subkey] = {key: subvalue}
+                        assert isinstance(subkey, int), "Attention layer keys must be integers."
+                        attn_layer_params[subkey - 1] = {key: subvalue}
 
         for key, value in ffn_params.items():
             if not isinstance(value, dict):
@@ -245,15 +246,15 @@ class InferenceModel(ABC):
 
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
-                if i+1 in attn_layer_params:
-                    attn_layer.set_params(**attn_global_params, **attn_layer_params[i+1], config_path=attn_config_path)
+                if i in attn_layer_params:
+                    attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
                 else:
                     attn_layer.set_params(**attn_global_params, **attn_default_params, config_path=attn_config_path)
 
         if ffn_params:
             for i, ffn_layer in enumerate(self.ffn_objects):
-                if i+1 in ffn_layer_params:
-                    ffn_layer.set_params(**ffn_global_params, **ffn_layer_params[i+1], config_path=ffn_config_path)
+                if i in ffn_layer_params:
+                    ffn_layer.set_params(**ffn_global_params, **ffn_layer_params[i], config_path=ffn_config_path)
                 else:
                     ffn_layer.set_params(**ffn_global_params, **ffn_default_params, config_path=ffn_config_path)
 
