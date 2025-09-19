@@ -236,6 +236,8 @@ class InferenceModel(ABC):
                         assert subkey not in ffn_layer_params, "Multiple 'value' keys found in FFN parameters."
                         ffn_layer_params[subkey] = {key: subvalue}
 
+        print(attn_layer_params)
+
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
                 if i in attn_layer_params:
