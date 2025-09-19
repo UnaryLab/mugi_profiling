@@ -56,8 +56,8 @@ class InferenceModel(ABC):
 
         self.patch_per_layer = self.nonlinear_dict.get('patch_per_layer', False)
         self.patched_layer = self.nonlinear_dict.get('patched_layer', None)
-        self.patched_layer = self.patched_layer - 1 if self.patched_layer is not None else None
         self.patched_layer_path = f'{self.patched_layer}/' if self.patched_layer is not None else ''
+        self.patched_layer = self.patched_layer - 1 if self.patched_layer is not None else None
         
         # Initialize DataFrame for collecting results
         self.df = None
