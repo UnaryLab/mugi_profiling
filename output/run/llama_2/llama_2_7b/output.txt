@@ -28,3 +28,14 @@ Inferencing configurations...
 {0: {'max_min_exp': 1}, 1: {'max_min_exp': 5}}
 0 {'max_min_exp': 1}
 1 {'max_min_exp': 5}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}}
+0 {'max_min_exp': 1}
+1 {'max_min_exp': 6}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 7}}
+0 {'max_min_exp': 1}
+1 {'max_min_exp': 7}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 8}}
+0 {'max_min_exp': 1}
+1 {'max_min_exp': 8}
+✓ Successfully completed experiment with config/model_config/llama/llama_2_7b.yaml
+----------------------------------------
