@@ -17,3 +17,4 @@ meta-llama/Llama-2-7b-hf,6.3295160037245095,vlp,VLPSoftmax,torch,3,8,8,32,max,16
 meta-llama/Llama-2-7b-hf,6.341333414761951,vlp,VLPSoftmax,torch,3,8,8,32,max,16,6,1,6
 meta-llama/Llama-2-7b-hf,6.359457895540059,vlp,VLPSoftmax,torch,3,8,8,32,max,16,6,1,7
 meta-llama/Llama-2-7b-hf,6.445656641865195,vlp,VLPSoftmax,torch,3,8,8,32,max,16,6,1,8
+meta-llama/Llama-2-7b-hf,8.167315685452065,vlp,VLPSoftmax,torch,2,8,8,32,max,16,6,1,0
