@@ -1,0 +1,10 @@
+model,value,function_name,attn_fn,ffn_fn,config_layer,attn_exp_dim,attn_window_dim,attn_window_size,attn_lut_build,attn_mant_dim,attn_layer_0_max_min_exp,attn_layer_1_max_min_exp,attn_layer_2_max_min_exp,attn_layer_3_max_min_exp,attn_layer_4_max_min_exp,attn_layer_5_max_min_exp,attn_layer_6_max_min_exp,attn_layer_7_max_min_exp,attn_layer_8_max_min_exp
+meta-llama/Llama-2-7b-hf,,vlp,VLPSoftmax,torch,8,8,8,32,max,16,1,6,1,3,2,2,1,1,-1
+meta-llama/Llama-2-7b-hf,6.133016131700534,vlp,VLPSoftmax,torch,8,8,8,32,max,16,1,6,1,3,2,2,1,1,0
+meta-llama/Llama-2-7b-hf,6.013186606392213,vlp,VLPSoftmax,torch,8,8,8,32,max,16,1,6,1,3,2,2,1,1,1
+meta-llama/Llama-2-7b-hf,5.986680780731314,vlp,VLPSoftmax,torch,8,8,8,32,max,16,1,6,1,3,2,2,1,1,2
+meta-llama/Llama-2-7b-hf,5.989338641844023,vlp,VLPSoftmax,torch,8,8,8,32,max,16,1,6,1,3,2,2,1,1,3
+meta-llama/Llama-2-7b-hf,5.98956176625138,vlp,VLPSoftmax,torch,8,8,8,32,max,16,1,6,1,3,2,2,1,1,4
+meta-llama/Llama-2-7b-hf,5.990827770845423,vlp,VLPSoftmax,torch,8,8,8,32,max,16,1,6,1,3,2,2,1,1,5
+meta-llama/Llama-2-7b-hf,5.994313753976567,vlp,VLPSoftmax,torch,8,8,8,32,max,16,1,6,1,3,2,2,1,1,6
+meta-llama/Llama-2-7b-hf,6.0026548886186974,vlp,VLPSoftmax,torch,8,8,8,32,max,16,1,6,1,3,2,2,1,1,7
