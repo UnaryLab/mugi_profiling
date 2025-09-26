@@ -13,7 +13,7 @@ parameters:
   window_dim: 8
   window_size: 32
   lut_build: max
-  mant_dim: 16
+  mant_dim: 17
   max_min_exp: {
     1: 1,
     2: 6,
@@ -30,6 +30,7 @@ parameters:
     13: 2,
     14: 2,
     15: 2,
+    16: 2,
     # value: [-8, -7, -6, -5], # min
     value: [-1, 0, 1, 2, 3, 4, 5, 6, 7], # max
     default: 2
