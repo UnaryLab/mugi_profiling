@@ -7,7 +7,7 @@ approx_function: vlp
 #   mant_dim: 8
 #   max_min_exp: [-4, -3, -2, -1, 0, 1, 2, 3, 4]
 patch_per_layer: True
-patched_layer: 22
+patched_layer: 23
 parameters:
   exp_dim: 8
   window_dim: 8
@@ -36,6 +36,7 @@ parameters:
     19: 3,
     20: 4,
     21: 3,
+    22: 2,
     # value: [-8, -7, -6, -5], # min
     value: [-1, 0, 1, 2, 3, 4, 5, 6, 7], # max
     default: 2
