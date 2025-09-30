@@ -10,107 +10,7 @@ Loading dataset...
 Processing dataset...
 Batching dataset...
 Inferencing configurations...
-{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': -1}}
-0 {'max_min_exp': 1}
-1 {'max_min_exp': 6}
-2 {'max_min_exp': 1}
-3 {'max_min_exp': 3}
-4 {'max_min_exp': 2}
-5 {'max_min_exp': 2}
-6 {'max_min_exp': 1}
-7 {'max_min_exp': 1}
-8 {'max_min_exp': 2}
-9 {'max_min_exp': 2}
-10 {'max_min_exp': 2}
-11 {'max_min_exp': 2}
-12 {'max_min_exp': 2}
-13 {'max_min_exp': 2}
-14 {'max_min_exp': 2}
-15 {'max_min_exp': 2}
-16 {'max_min_exp': 2}
-17 {'max_min_exp': 3}
-18 {'max_min_exp': 3}
-19 {'max_min_exp': 4}
-20 {'max_min_exp': 3}
-21 {'max_min_exp': 2}
-22 {'max_min_exp': 4}
-23 {'max_min_exp': -1}
-{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 0}}
-0 {'max_min_exp': 1}
-1 {'max_min_exp': 6}
-2 {'max_min_exp': 1}
-3 {'max_min_exp': 3}
-4 {'max_min_exp': 2}
-5 {'max_min_exp': 2}
-6 {'max_min_exp': 1}
-7 {'max_min_exp': 1}
-8 {'max_min_exp': 2}
-9 {'max_min_exp': 2}
-10 {'max_min_exp': 2}
-11 {'max_min_exp': 2}
-12 {'max_min_exp': 2}
-13 {'max_min_exp': 2}
-14 {'max_min_exp': 2}
-15 {'max_min_exp': 2}
-16 {'max_min_exp': 2}
-17 {'max_min_exp': 3}
-18 {'max_min_exp': 3}
-19 {'max_min_exp': 4}
-20 {'max_min_exp': 3}
-21 {'max_min_exp': 2}
-22 {'max_min_exp': 4}
-23 {'max_min_exp': 0}
-{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 1}}
-0 {'max_min_exp': 1}
-1 {'max_min_exp': 6}
-2 {'max_min_exp': 1}
-3 {'max_min_exp': 3}
-4 {'max_min_exp': 2}
-5 {'max_min_exp': 2}
-6 {'max_min_exp': 1}
-7 {'max_min_exp': 1}
-8 {'max_min_exp': 2}
-9 {'max_min_exp': 2}
-10 {'max_min_exp': 2}
-11 {'max_min_exp': 2}
-12 {'max_min_exp': 2}
-13 {'max_min_exp': 2}
-14 {'max_min_exp': 2}
-15 {'max_min_exp': 2}
-16 {'max_min_exp': 2}
-17 {'max_min_exp': 3}
-18 {'max_min_exp': 3}
-19 {'max_min_exp': 4}
-20 {'max_min_exp': 3}
-21 {'max_min_exp': 2}
-22 {'max_min_exp': 4}
-23 {'max_min_exp': 1}
-{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 2}}
-0 {'max_min_exp': 1}
-1 {'max_min_exp': 6}
-2 {'max_min_exp': 1}
-3 {'max_min_exp': 3}
-4 {'max_min_exp': 2}
-5 {'max_min_exp': 2}
-6 {'max_min_exp': 1}
-7 {'max_min_exp': 1}
-8 {'max_min_exp': 2}
-9 {'max_min_exp': 2}
-10 {'max_min_exp': 2}
-11 {'max_min_exp': 2}
-12 {'max_min_exp': 2}
-13 {'max_min_exp': 2}
-14 {'max_min_exp': 2}
-15 {'max_min_exp': 2}
-16 {'max_min_exp': 2}
-17 {'max_min_exp': 3}
-18 {'max_min_exp': 3}
-19 {'max_min_exp': 4}
-20 {'max_min_exp': 3}
-21 {'max_min_exp': 2}
-22 {'max_min_exp': 4}
-23 {'max_min_exp': 2}
-{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}, 24: {'max_min_exp': -1}}
 0 {'max_min_exp': 1}
 1 {'max_min_exp': 6}
 2 {'max_min_exp': 1}
@@ -135,7 +35,8 @@ Inferencing configurations...
 21 {'max_min_exp': 2}
 22 {'max_min_exp': 4}
 23 {'max_min_exp': 3}
-{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 4}}
+24 {'max_min_exp': -1}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}, 24: {'max_min_exp': 0}}
 0 {'max_min_exp': 1}
 1 {'max_min_exp': 6}
 2 {'max_min_exp': 1}
@@ -159,8 +60,9 @@ Inferencing configurations...
 20 {'max_min_exp': 3}
 21 {'max_min_exp': 2}
 22 {'max_min_exp': 4}
-23 {'max_min_exp': 4}
-{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 5}}
+23 {'max_min_exp': 3}
+24 {'max_min_exp': 0}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}, 24: {'max_min_exp': 1}}
 0 {'max_min_exp': 1}
 1 {'max_min_exp': 6}
 2 {'max_min_exp': 1}
@@ -184,8 +86,9 @@ Inferencing configurations...
 20 {'max_min_exp': 3}
 21 {'max_min_exp': 2}
 22 {'max_min_exp': 4}
-23 {'max_min_exp': 5}
-{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 6}}
+23 {'max_min_exp': 3}
+24 {'max_min_exp': 1}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}, 24: {'max_min_exp': 2}}
 0 {'max_min_exp': 1}
 1 {'max_min_exp': 6}
 2 {'max_min_exp': 1}
@@ -209,8 +112,9 @@ Inferencing configurations...
 20 {'max_min_exp': 3}
 21 {'max_min_exp': 2}
 22 {'max_min_exp': 4}
-23 {'max_min_exp': 6}
-{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 7}}
+23 {'max_min_exp': 3}
+24 {'max_min_exp': 2}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}, 24: {'max_min_exp': 3}}
 0 {'max_min_exp': 1}
 1 {'max_min_exp': 6}
 2 {'max_min_exp': 1}
@@ -234,6 +138,111 @@ Inferencing configurations...
 20 {'max_min_exp': 3}
 21 {'max_min_exp': 2}
 22 {'max_min_exp': 4}
-23 {'max_min_exp': 7}
+23 {'max_min_exp': 3}
+24 {'max_min_exp': 3}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}, 24: {'max_min_exp': 4}}
+0 {'max_min_exp': 1}
+1 {'max_min_exp': 6}
+2 {'max_min_exp': 1}
+3 {'max_min_exp': 3}
+4 {'max_min_exp': 2}
+5 {'max_min_exp': 2}
+6 {'max_min_exp': 1}
+7 {'max_min_exp': 1}
+8 {'max_min_exp': 2}
+9 {'max_min_exp': 2}
+10 {'max_min_exp': 2}
+11 {'max_min_exp': 2}
+12 {'max_min_exp': 2}
+13 {'max_min_exp': 2}
+14 {'max_min_exp': 2}
+15 {'max_min_exp': 2}
+16 {'max_min_exp': 2}
+17 {'max_min_exp': 3}
+18 {'max_min_exp': 3}
+19 {'max_min_exp': 4}
+20 {'max_min_exp': 3}
+21 {'max_min_exp': 2}
+22 {'max_min_exp': 4}
+23 {'max_min_exp': 3}
+24 {'max_min_exp': 4}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}, 24: {'max_min_exp': 5}}
+0 {'max_min_exp': 1}
+1 {'max_min_exp': 6}
+2 {'max_min_exp': 1}
+3 {'max_min_exp': 3}
+4 {'max_min_exp': 2}
+5 {'max_min_exp': 2}
+6 {'max_min_exp': 1}
+7 {'max_min_exp': 1}
+8 {'max_min_exp': 2}
+9 {'max_min_exp': 2}
+10 {'max_min_exp': 2}
+11 {'max_min_exp': 2}
+12 {'max_min_exp': 2}
+13 {'max_min_exp': 2}
+14 {'max_min_exp': 2}
+15 {'max_min_exp': 2}
+16 {'max_min_exp': 2}
+17 {'max_min_exp': 3}
+18 {'max_min_exp': 3}
+19 {'max_min_exp': 4}
+20 {'max_min_exp': 3}
+21 {'max_min_exp': 2}
+22 {'max_min_exp': 4}
+23 {'max_min_exp': 3}
+24 {'max_min_exp': 5}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}, 24: {'max_min_exp': 6}}
+0 {'max_min_exp': 1}
+1 {'max_min_exp': 6}
+2 {'max_min_exp': 1}
+3 {'max_min_exp': 3}
+4 {'max_min_exp': 2}
+5 {'max_min_exp': 2}
+6 {'max_min_exp': 1}
+7 {'max_min_exp': 1}
+8 {'max_min_exp': 2}
+9 {'max_min_exp': 2}
+10 {'max_min_exp': 2}
+11 {'max_min_exp': 2}
+12 {'max_min_exp': 2}
+13 {'max_min_exp': 2}
+14 {'max_min_exp': 2}
+15 {'max_min_exp': 2}
+16 {'max_min_exp': 2}
+17 {'max_min_exp': 3}
+18 {'max_min_exp': 3}
+19 {'max_min_exp': 4}
+20 {'max_min_exp': 3}
+21 {'max_min_exp': 2}
+22 {'max_min_exp': 4}
+23 {'max_min_exp': 3}
+24 {'max_min_exp': 6}
+{0: {'max_min_exp': 1}, 1: {'max_min_exp': 6}, 2: {'max_min_exp': 1}, 3: {'max_min_exp': 3}, 4: {'max_min_exp': 2}, 5: {'max_min_exp': 2}, 6: {'max_min_exp': 1}, 7: {'max_min_exp': 1}, 8: {'max_min_exp': 2}, 9: {'max_min_exp': 2}, 10: {'max_min_exp': 2}, 11: {'max_min_exp': 2}, 12: {'max_min_exp': 2}, 13: {'max_min_exp': 2}, 14: {'max_min_exp': 2}, 15: {'max_min_exp': 2}, 16: {'max_min_exp': 2}, 17: {'max_min_exp': 3}, 18: {'max_min_exp': 3}, 19: {'max_min_exp': 4}, 20: {'max_min_exp': 3}, 21: {'max_min_exp': 2}, 22: {'max_min_exp': 4}, 23: {'max_min_exp': 3}, 24: {'max_min_exp': 7}}
+0 {'max_min_exp': 1}
+1 {'max_min_exp': 6}
+2 {'max_min_exp': 1}
+3 {'max_min_exp': 3}
+4 {'max_min_exp': 2}
+5 {'max_min_exp': 2}
+6 {'max_min_exp': 1}
+7 {'max_min_exp': 1}
+8 {'max_min_exp': 2}
+9 {'max_min_exp': 2}
+10 {'max_min_exp': 2}
+11 {'max_min_exp': 2}
+12 {'max_min_exp': 2}
+13 {'max_min_exp': 2}
+14 {'max_min_exp': 2}
+15 {'max_min_exp': 2}
+16 {'max_min_exp': 2}
+17 {'max_min_exp': 3}
+18 {'max_min_exp': 3}
+19 {'max_min_exp': 4}
+20 {'max_min_exp': 3}
+21 {'max_min_exp': 2}
+22 {'max_min_exp': 4}
+23 {'max_min_exp': 3}
+24 {'max_min_exp': 7}
 ✓ Successfully completed experiment with config/model_config/llama/llama_2_7b.yaml
 ----------------------------------------
