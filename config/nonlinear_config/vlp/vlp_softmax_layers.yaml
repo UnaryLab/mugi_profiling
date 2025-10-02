@@ -12,7 +12,7 @@ parameters:
   exp_dim: 8
   window_dim: 8
   window_size: 32
-  lut_build: max
+  lut_build: min
   mant_dim: 16
   max_min_exp: {
     1: 1,
