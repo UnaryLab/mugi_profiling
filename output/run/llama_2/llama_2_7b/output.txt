@@ -4,5 +4,5 @@ Running experiment with configuration: config/model_config/llama/llama_2_7b.yaml
 Loading configuration files...
 Successfully loaded configuration files.
 Inferencing configurations...
-✓ Successfully completed experiment with config/model_config/llama/llama_2_7b.yaml
+✗ Error occurred while running experiment with config/model_config/llama/llama_2_7b.yaml (exit code: 1)
 ----------------------------------------

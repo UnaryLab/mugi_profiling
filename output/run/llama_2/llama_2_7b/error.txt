@@ -5,3 +5,23 @@ Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
 Running configurations:   0%|          | 0/9 [00:00<?, ?it/s]Running configurations:   0%|          | 0/9 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 91, in <module>
+    main()
+    ~~~~^^
+  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 87, in main
+    evaluate_model(model_config, nonlinear_config, parameter_config, args.nonlinear_config)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 61, in evaluate_model
+    inference_model.inference_configurations()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 362, in inference_configurations
+    self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 262, in run_layer_configuration
+    self.run_batched_inference()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 118, in run_batched_inference
+    for batch in tqdm(self.inputs, desc="Batched Inference"):
+                      ^^^^^^^^^^^
+AttributeError: 'LlamaInference' object has no attribute 'inputs'
