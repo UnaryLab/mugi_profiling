@@ -208,20 +208,27 @@ class InferenceModel(ABC):
         ffn_layer_params = {}
         ffn_default_params = {}
 
+        assert 'lut_build' in attn_params, "'lut_build' must be specified in attention parameters."
+        default_attn_lut_build = attn_params.get('lut_build')
+
         for key, value in attn_params.items():
             if not isinstance(value, dict):
-                attn_global_params[key] = value
+                if key != 'lut_build':
+                    attn_global_params[key] = value
             else:
                 for subkey, subvalue in value.items():
                     if subkey == 'value':
                         assert self.patched_layer not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
                         attn_layer_params[self.patched_layer] = {key: subvalue}
+                        attn_layer_params[self.patched_layer]['lut_build'] = default_attn_lut_build
                     elif subkey == 'default':
-                        attn_default_params = {key: subvalue}
+                        attn_default_params = {key: subvalue[0]}
+                        attn_default_params['lut_build'] = subvalue[1]
                     else:
                         assert subkey not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
                         assert isinstance(subkey, int), "Attention layer keys must be integers."
-                        attn_layer_params[subkey - 1] = {key: subvalue}
+                        attn_layer_params[subkey - 1] = {key: subvalue[0]}
+                        attn_layer_params[subkey - 1]['lut_build'] = subvalue[1]
 
         for key, value in ffn_params.items():
             if not isinstance(value, dict):
@@ -237,7 +244,8 @@ class InferenceModel(ABC):
                         assert subkey not in ffn_layer_params, "Multiple 'value' keys found in FFN parameters."
                         ffn_layer_params[subkey] = {key: subvalue}
 
-        print(attn_layer_params)
+        
+        exit()
 
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
