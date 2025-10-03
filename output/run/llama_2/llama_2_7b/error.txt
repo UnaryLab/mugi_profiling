@@ -4,113 +4,113 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:16<00:16, 16.25s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:21<00:00,  9.81s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:21<00:00, 10.78s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:15<00:15, 15.58s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:20<00:00,  9.55s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:20<00:00, 10.45s/it]
 Running configurations:   0%|          | 0/9 [00:00<?, ?it/s]
 Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
-Batched Inference:  10%|█         | 1/10 [00:30<04:35, 30.59s/it][A
-Batched Inference:  20%|██        | 2/10 [00:47<03:00, 22.56s/it][A
-Batched Inference:  30%|███       | 3/10 [01:04<02:20, 20.00s/it][A
-Batched Inference:  40%|████      | 4/10 [01:21<01:52, 18.80s/it][A
-Batched Inference:  50%|█████     | 5/10 [01:38<01:30, 18.13s/it][A
-Batched Inference:  60%|██████    | 6/10 [01:55<01:10, 17.73s/it][A
-Batched Inference:  70%|███████   | 7/10 [02:12<00:52, 17.47s/it][A
-Batched Inference:  80%|████████  | 8/10 [02:29<00:34, 17.31s/it][A
-Batched Inference:  90%|█████████ | 9/10 [02:46<00:17, 17.20s/it][A
-Batched Inference: 100%|██████████| 10/10 [03:03<00:00, 17.12s/it][ABatched Inference: 100%|██████████| 10/10 [03:03<00:00, 18.31s/it]
-Running configurations:  11%|█         | 1/9 [03:03<24:28, 183.58s/it]
+Batched Inference:  10%|█         | 1/10 [00:28<04:15, 28.37s/it][A
+Batched Inference:  20%|██        | 2/10 [00:45<02:53, 21.64s/it][A
+Batched Inference:  30%|███       | 3/10 [01:02<02:16, 19.49s/it][A
+Batched Inference:  40%|████      | 4/10 [01:19<01:50, 18.48s/it][A
+Batched Inference:  50%|█████     | 5/10 [01:36<01:29, 17.94s/it][A
+Batched Inference:  60%|██████    | 6/10 [01:53<01:10, 17.60s/it][A
+Batched Inference:  70%|███████   | 7/10 [02:10<00:52, 17.38s/it][A
+Batched Inference:  80%|████████  | 8/10 [02:26<00:34, 17.25s/it][A
+Batched Inference:  90%|█████████ | 9/10 [02:45<00:17, 17.34s/it][A
+Batched Inference: 100%|██████████| 10/10 [03:02<00:00, 17.44s/it][ABatched Inference: 100%|██████████| 10/10 [03:02<00:00, 18.22s/it]
+Running configurations:  11%|█         | 1/9 [03:02<24:23, 182.94s/it]
 Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
-Batched Inference:  10%|█         | 1/10 [00:16<02:28, 16.52s/it][A
-Batched Inference:  20%|██        | 2/10 [00:33<02:14, 16.78s/it][A
-Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.86s/it][A
-Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.90s/it][A
-Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.92s/it][A
+Batched Inference:  10%|█         | 1/10 [00:16<02:27, 16.41s/it][A
+Batched Inference:  20%|██        | 2/10 [00:33<02:13, 16.71s/it][A
+Batched Inference:  30%|███       | 3/10 [00:50<01:57, 16.81s/it][A
+Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.86s/it][A
+Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.89s/it][A
+Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.90s/it][A
+Batched Inference:  70%|███████   | 7/10 [01:57<00:50, 16.91s/it][A
+Batched Inference:  80%|████████  | 8/10 [02:14<00:33, 16.93s/it][A
+Batched Inference:  90%|█████████ | 9/10 [02:31<00:16, 16.93s/it][A
+Batched Inference: 100%|██████████| 10/10 [02:48<00:00, 16.93s/it][ABatched Inference: 100%|██████████| 10/10 [02:48<00:00, 16.88s/it]
+Running configurations:  22%|██▏       | 2/9 [05:51<20:22, 174.67s/it]
+Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
+Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.91s/it][A
+Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.92s/it][A
+Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.93s/it][A
+Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.93s/it][A
+Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.93s/it][A
 Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.93s/it][A
-Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.94s/it][A
-Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.95s/it][A
-Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.95s/it][A
-Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.95s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.91s/it]
-Running configurations:  22%|██▏       | 2/9 [05:52<20:25, 175.09s/it]
+Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.93s/it][A
+Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.93s/it][A
+Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.93s/it][A
+Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it]
+Running configurations:  33%|███▎      | 3/9 [08:41<17:13, 172.24s/it]
 Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
-Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.96s/it][A
-Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.96s/it][A
-Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.96s/it][A
-Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.96s/it][A
-Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.96s/it][A
-Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.96s/it][A
-Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.96s/it][A
-Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.96s/it][A
-Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.96s/it][A
-Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it]
-Running configurations:  33%|███▎      | 3/9 [08:42<17:15, 172.59s/it]
-Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
-Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.96s/it][A
-Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.96s/it][A
-Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.96s/it][A
-Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.96s/it][A
-Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.96s/it][A
-Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.96s/it][A
-Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.96s/it][A
-Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.96s/it][A
-Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.96s/it][A
-Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it]
-Running configurations:  44%|████▍     | 4/9 [11:31<14:17, 171.41s/it]
-Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
-Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.97s/it][A
-Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.96s/it][A
-Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.96s/it][A
-Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.96s/it][A
-Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.96s/it][A
-Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.96s/it][A
-Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.97s/it][A
-Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.97s/it][A
-Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.96s/it][A
-Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it]
-Running configurations:  56%|█████▌    | 5/9 [14:22<11:23, 170.98s/it]
-Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
-Batched Inference:  10%|█         | 1/10 [00:16<02:27, 16.43s/it][A
-Batched Inference:  20%|██        | 2/10 [00:33<02:13, 16.74s/it][A
-Batched Inference:  30%|███       | 3/10 [00:50<01:57, 16.85s/it][A
-Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.89s/it][A
-Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.92s/it][A
+Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.90s/it][A
+Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.92s/it][A
+Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.93s/it][A
+Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.93s/it][A
+Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.93s/it][A
 Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.93s/it][A
-Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.94s/it][A
-Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.95s/it][A
-Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.96s/it][A
-Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.91s/it]
-Running configurations:  67%|██████▋   | 6/9 [17:11<08:31, 170.34s/it]
+Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.93s/it][A
+Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.93s/it][A
+Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.93s/it][A
+Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it]
+Running configurations:  44%|████▍     | 4/9 [11:30<14:15, 171.09s/it]
 Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
-Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.96s/it][A
-Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.96s/it][A
-Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.96s/it][A
-Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.96s/it][A
-Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.96s/it][A
-Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.96s/it][A
-Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.97s/it][A
-Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.97s/it][A
-Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.96s/it][A
-Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it]
-Running configurations:  78%|███████▊  | 7/9 [20:00<05:40, 170.11s/it]
-Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
-Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.95s/it][A
-Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.96s/it][A
-Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.96s/it][A
-Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.96s/it][A
-Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.96s/it][A
-Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.96s/it][A
-Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.96s/it][A
-Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.96s/it][A
-Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.96s/it][A
-Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.97s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it]
-Running configurations:  89%|████████▉ | 8/9 [22:50<02:49, 169.98s/it]
-Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
-Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.89s/it][A
-Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.93s/it][A
-Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.94s/it][A
+Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.91s/it][A
+Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.92s/it][A
+Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.93s/it][A
 Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.95s/it][A
 Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.95s/it][A
-Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.95s/it][A
-Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.95s/it][A
-Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.95s/it][A
-Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.96s/it][A
-Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.96s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.95s/it]
-Running configurations: 100%|██████████| 9/9 [25:40<00:00, 169.84s/it]Running configurations: 100%|██████████| 9/9 [25:40<00:00, 171.12s/it]
+Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.94s/it][A
+Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.94s/it][A
+Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.94s/it][A
+Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.94s/it][A
+Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.94s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.94s/it]
+Running configurations:  56%|█████▌    | 5/9 [14:19<11:21, 170.49s/it]
+Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
+Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.90s/it][A
+Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.92s/it][A
+Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.93s/it][A
+Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.93s/it][A
+Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.93s/it][A
+Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.93s/it][A
+Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.93s/it][A
+Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.93s/it][A
+Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.93s/it][A
+Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it]
+Running configurations:  67%|██████▋   | 6/9 [17:09<08:30, 170.09s/it]
+Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
+Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.93s/it][A
+Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.93s/it][A
+Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.93s/it][A
+Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.93s/it][A
+Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.93s/it][A
+Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.93s/it][A
+Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.93s/it][A
+Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.93s/it][A
+Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.93s/it][A
+Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it]
+Running configurations:  78%|███████▊  | 7/9 [19:58<05:39, 169.85s/it]
+Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
+Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.90s/it][A
+Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.92s/it][A
+Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.93s/it][A
+Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.93s/it][A
+Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.93s/it][A
+Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.93s/it][A
+Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.93s/it][A
+Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.93s/it][A
+Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.93s/it][A
+Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it]
+Running configurations:  89%|████████▉ | 8/9 [22:47<02:49, 169.69s/it]
+Batched Inference:   0%|          | 0/10 [00:00<?, ?it/s][A
+Batched Inference:  10%|█         | 1/10 [00:16<02:32, 16.91s/it][A
+Batched Inference:  20%|██        | 2/10 [00:33<02:15, 16.92s/it][A
+Batched Inference:  30%|███       | 3/10 [00:50<01:58, 16.92s/it][A
+Batched Inference:  40%|████      | 4/10 [01:07<01:41, 16.93s/it][A
+Batched Inference:  50%|█████     | 5/10 [01:24<01:24, 16.93s/it][A
+Batched Inference:  60%|██████    | 6/10 [01:41<01:07, 16.93s/it][A
+Batched Inference:  70%|███████   | 7/10 [01:58<00:50, 16.93s/it][A
+Batched Inference:  80%|████████  | 8/10 [02:15<00:33, 16.93s/it][A
+Batched Inference:  90%|█████████ | 9/10 [02:32<00:16, 16.93s/it][A
+Batched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it][ABatched Inference: 100%|██████████| 10/10 [02:49<00:00, 16.93s/it]
+Running configurations: 100%|██████████| 9/9 [25:37<00:00, 169.57s/it]Running configurations: 100%|██████████| 9/9 [25:37<00:00, 170.80s/it]
