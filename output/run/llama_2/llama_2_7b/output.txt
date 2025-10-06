@@ -11,7 +11,7 @@ Processing dataset...
 Batching dataset...
 Inferencing configurations...
 0 {'max_min_exp': -5, 'lut_build': 'min'}
-1 {'max_min_exp': 7, 'lut_build': 'min'}
+1 {'max_min_exp': -1, 'lut_build': 'max'}
 2 {'max_min_exp': 1, 'lut_build': 'max'}
 3 {'max_min_exp': 3, 'lut_build': 'max'}
 4 {'max_min_exp': 2, 'lut_build': 'max'}
@@ -43,7 +43,7 @@ Inferencing configurations...
 30 {'max_min_exp': 4, 'lut_build': 'max'}
 31 {'max_min_exp': 2, 'lut_build': 'max'}
 0 {'max_min_exp': -5, 'lut_build': 'min'}
-1 {'max_min_exp': -6, 'lut_build': 'min'}
+1 {'max_min_exp': 0, 'lut_build': 'max'}
 2 {'max_min_exp': 1, 'lut_build': 'max'}
 3 {'max_min_exp': 3, 'lut_build': 'max'}
 4 {'max_min_exp': 2, 'lut_build': 'max'}
@@ -75,7 +75,7 @@ Inferencing configurations...
 30 {'max_min_exp': 4, 'lut_build': 'max'}
 31 {'max_min_exp': 2, 'lut_build': 'max'}
 0 {'max_min_exp': -5, 'lut_build': 'min'}
-1 {'max_min_exp': -5, 'lut_build': 'min'}
+1 {'max_min_exp': 1, 'lut_build': 'max'}
 2 {'max_min_exp': 1, 'lut_build': 'max'}
 3 {'max_min_exp': 3, 'lut_build': 'max'}
 4 {'max_min_exp': 2, 'lut_build': 'max'}
@@ -107,7 +107,7 @@ Inferencing configurations...
 30 {'max_min_exp': 4, 'lut_build': 'max'}
 31 {'max_min_exp': 2, 'lut_build': 'max'}
 0 {'max_min_exp': -5, 'lut_build': 'min'}
-1 {'max_min_exp': -4, 'lut_build': 'min'}
+1 {'max_min_exp': 2, 'lut_build': 'max'}
 2 {'max_min_exp': 1, 'lut_build': 'max'}
 3 {'max_min_exp': 3, 'lut_build': 'max'}
 4 {'max_min_exp': 2, 'lut_build': 'max'}
@@ -139,7 +139,7 @@ Inferencing configurations...
 30 {'max_min_exp': 4, 'lut_build': 'max'}
 31 {'max_min_exp': 2, 'lut_build': 'max'}
 0 {'max_min_exp': -5, 'lut_build': 'min'}
-1 {'max_min_exp': -3, 'lut_build': 'min'}
+1 {'max_min_exp': 3, 'lut_build': 'max'}
 2 {'max_min_exp': 1, 'lut_build': 'max'}
 3 {'max_min_exp': 3, 'lut_build': 'max'}
 4 {'max_min_exp': 2, 'lut_build': 'max'}
@@ -171,7 +171,7 @@ Inferencing configurations...
 30 {'max_min_exp': 4, 'lut_build': 'max'}
 31 {'max_min_exp': 2, 'lut_build': 'max'}
 0 {'max_min_exp': -5, 'lut_build': 'min'}
-1 {'max_min_exp': -2, 'lut_build': 'min'}
+1 {'max_min_exp': 4, 'lut_build': 'max'}
 2 {'max_min_exp': 1, 'lut_build': 'max'}
 3 {'max_min_exp': 3, 'lut_build': 'max'}
 4 {'max_min_exp': 2, 'lut_build': 'max'}
@@ -203,7 +203,7 @@ Inferencing configurations...
 30 {'max_min_exp': 4, 'lut_build': 'max'}
 31 {'max_min_exp': 2, 'lut_build': 'max'}
 0 {'max_min_exp': -5, 'lut_build': 'min'}
-1 {'max_min_exp': -1, 'lut_build': 'min'}
+1 {'max_min_exp': 5, 'lut_build': 'max'}
 2 {'max_min_exp': 1, 'lut_build': 'max'}
 3 {'max_min_exp': 3, 'lut_build': 'max'}
 4 {'max_min_exp': 2, 'lut_build': 'max'}
@@ -235,7 +235,7 @@ Inferencing configurations...
 30 {'max_min_exp': 4, 'lut_build': 'max'}
 31 {'max_min_exp': 2, 'lut_build': 'max'}
 0 {'max_min_exp': -5, 'lut_build': 'min'}
-1 {'max_min_exp': 0, 'lut_build': 'min'}
+1 {'max_min_exp': 6, 'lut_build': 'max'}
 2 {'max_min_exp': 1, 'lut_build': 'max'}
 3 {'max_min_exp': 3, 'lut_build': 'max'}
 4 {'max_min_exp': 2, 'lut_build': 'max'}
@@ -267,7 +267,7 @@ Inferencing configurations...
 30 {'max_min_exp': 4, 'lut_build': 'max'}
 31 {'max_min_exp': 2, 'lut_build': 'max'}
 0 {'max_min_exp': -5, 'lut_build': 'min'}
-1 {'max_min_exp': 1, 'lut_build': 'min'}
+1 {'max_min_exp': 7, 'lut_build': 'max'}
 2 {'max_min_exp': 1, 'lut_build': 'max'}
 3 {'max_min_exp': 3, 'lut_build': 'max'}
 4 {'max_min_exp': 2, 'lut_build': 'max'}
