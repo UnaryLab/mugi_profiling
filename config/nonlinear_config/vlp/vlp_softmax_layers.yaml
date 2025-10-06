@@ -12,12 +12,12 @@ parameters:
   exp_dim: 8
   window_dim: 8
   window_size: 32
-  lut_build: max
+  lut_build: min
   mant_dim: 16
   max_min_exp: {
     1: [-5, 'min'],
-    #2: [6, 'max'],
-    3: [1, 'max'],
+    2: [6, 'max'],
+    #3: [1, 'max'],
     4: [3, 'max'],
     5: [2, 'max'],
     6: [2, 'max'],
@@ -47,7 +47,7 @@ parameters:
     30: [4, 'max'],
     31: [4, 'max'],
     32: [2, 'max'],
-    # value: [7, -6, -5, -4, -3, -2, -1, 0, 1], # min
-    value: [-1, 0, 1, 2, 3, 4, 5, 6, 7], # max
+    value: [7, -6, -5, -4, -3, -2, -1, 0, 1], # min
+    #value: [-1, 0, 1, 2, 3, 4, 5, 6, 7], # max
     default: [2, 'max']
   }
