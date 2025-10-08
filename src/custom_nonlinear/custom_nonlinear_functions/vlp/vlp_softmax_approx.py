@@ -18,11 +18,11 @@ class VLPSoftmax(CustomSoftmax):
         self.window_size = window_size
 
         if lut_build == 'max':
-            self.min_exp = max_min_exp - (exp_dim - 1)
+            self.min_exp = max_min_exp - (window_dim - 1)
             self.max_exp = max_min_exp
         elif lut_build == 'min':
             self.min_exp = max_min_exp
-            self.max_exp = max_min_exp + (exp_dim - 1)
+            self.max_exp = max_min_exp + (window_dim - 1)
         else:
             raise ValueError("lut_build must be 'max' or 'min'")
 
@@ -54,7 +54,7 @@ class VLPSoftmax(CustomSoftmax):
             # process exp first
             max_exp_window = torch.max(exp, dim=0, keepdim=True)[0]
             max_exp_window[max_exp_window > self.max_exp] = self.max_exp
-            min_exp_window = max_exp_window - (self.window_dim - 1)
+            min_exp_window = max_exp_window - (self.exp_dim - 1)
             min_exp_window[min_exp_window < self.min_exp] = self.min_exp
 
             mant = torch.where(exp <= max_exp_window, mant, self.mant_dim - 1)
@@ -66,7 +66,7 @@ class VLPSoftmax(CustomSoftmax):
             # process exp first
             min_exp_window = torch.min(exp, dim=0, keepdim=True)[0]
             min_exp_window[min_exp_window < self.min_exp] = self.min_exp
-            max_exp_window = min_exp_window + (self.window_dim - 1)
+            max_exp_window = min_exp_window + (self.exp_dim - 1)
             max_exp_window[max_exp_window > self.max_exp] = self.max_exp
 
             mant = torch.where(exp >= min_exp_window, mant, 0)

@@ -247,7 +247,6 @@ class InferenceModel(ABC):
         if attn_params:
             for i, attn_layer in enumerate(self.attention_objects):
                 if i in attn_layer_params:
-                    print(i, attn_layer_params[i])
                     attn_layer.set_params(**attn_global_params, **attn_layer_params[i], config_path=attn_config_path)
                 else:
                     attn_layer.set_params(**attn_global_params, **attn_default_params, config_path=attn_config_path)
