@@ -10,14 +10,14 @@ Loading dataset...
 Processing dataset...
 Batching dataset...
 Inferencing configurations...
-0 {'max_min_exp': -1, 'lut_build': 'max'}
-0 {'max_min_exp': 0, 'lut_build': 'max'}
-0 {'max_min_exp': 1, 'lut_build': 'max'}
-0 {'max_min_exp': 2, 'lut_build': 'max'}
-0 {'max_min_exp': 3, 'lut_build': 'max'}
-0 {'max_min_exp': 4, 'lut_build': 'max'}
-0 {'max_min_exp': 5, 'lut_build': 'max'}
-0 {'max_min_exp': 6, 'lut_build': 'max'}
-0 {'max_min_exp': 7, 'lut_build': 'max'}
+0 {'max_min_exp': 7, 'lut_build': 'min'}
+0 {'max_min_exp': -6, 'lut_build': 'min'}
+0 {'max_min_exp': -5, 'lut_build': 'min'}
+0 {'max_min_exp': -4, 'lut_build': 'min'}
+0 {'max_min_exp': -3, 'lut_build': 'min'}
+0 {'max_min_exp': -2, 'lut_build': 'min'}
+0 {'max_min_exp': -1, 'lut_build': 'min'}
+0 {'max_min_exp': 0, 'lut_build': 'min'}
+0 {'max_min_exp': 1, 'lut_build': 'min'}
 ✓ Successfully completed experiment with config/model_config/llama/llama_2_13b.yaml
 ----------------------------------------
