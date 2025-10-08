@@ -2,7 +2,7 @@
 
 #SBATCH --time=01:00:00
 #SBATCH --cpus-per-task=32
-#SBATCH --gres=gpu:8
+#SBATCH --gres=gpu:2
 #SBATCH --job-name=llama_2_13b
 #SBATCH --partition=highgpu
 #SBATCH --job-name=llama_2_7b_profiling
