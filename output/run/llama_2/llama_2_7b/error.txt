@@ -4,7 +4,7 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:13<00:13, 13.52s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.11s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.92s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:13<00:13, 13.80s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.10s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.95s/it]
 Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 91, in <module>
     main()
@@ -15,7 +15,7 @@ Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 61, in evaluate_model
     inference_model.inference_configurations()
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 351, in inference_configurations
-    max_runs = self.nonlinear_parameters.get('max_min_exp').get('max_value', 0) if lut_build in ['max', 'both'] else 0
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'NoneType' object has no attribute 'get'
+  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 356, in inference_configurations
+    max_params['value'] = max_params['max_value']
+                          ~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: 'max_value'
