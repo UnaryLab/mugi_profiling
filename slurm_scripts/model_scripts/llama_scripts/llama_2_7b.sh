@@ -23,8 +23,8 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_config="config/model_config/llama/llama_2_7b.yaml"
-nonlinear_config="config/nonlinear_config/vlp/vlp_softmax_layers_llama_2_7b.yaml"
-# nonlinear_config="config/nonlinear_config/vlp/vlp_softmax.yaml"
+# nonlinear_config="config/nonlinear_config/vlp/vlp_softmax_layers_llama_2_7b.yaml"
+nonlinear_config="config/nonlinear_config/vlp/vlp_softmax.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
