@@ -348,8 +348,8 @@ class InferenceModel(ABC):
             if self.patch_per_layer:
 
                 lut_build = self.nonlinear_function_parameters.get('lut_build', None)
-                max_runs = self.nonlinear_parameters.get('max_min_exp').get('max_value', 0) if lut_build in ['max', 'both'] else 0
-                min_runs = self.nonlinear_parameters.get('max_min_exp').get('min_value', 0) if lut_build in ['min', 'both'] else 0
+                max_runs = self.nonlinear_function_parameters.get('max_min_exp').get('max_value', 0) if lut_build in ['max', 'both'] else 0
+                min_runs = self.nonlinear_function_parameters.get('max_min_exp').get('min_value', 0) if lut_build in ['min', 'both'] else 0
 
                 if max_runs != 0:
                     max_params = deepcopy(self.nonlinear_function_parameters)
