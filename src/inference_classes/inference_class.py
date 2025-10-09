@@ -350,14 +350,31 @@ class InferenceModel(ABC):
                 for key, value in self.nonlinear_function_parameters.items():
                     if isinstance(value, dict):
                         config_key = key
-                        runs = len(value.get('value'))
+                        max_runs = len(value.get('max_value'))
+                        min_runs = len(value.get('min_value'))
 
-                for run in tqdm(range(runs), desc="Running configurations"):
+                for run in tqdm(range(max_runs), desc="Running configurations"):
                     params = deepcopy(self.nonlinear_function_parameters)
-                    params[config_key]['value'] = value.get('value')[run]
+                    params[config_key]['max_value'] = value.get('max_value')[run]
+
+                    if params['lut_build'] == 'both':
+                        params['lut_build'] = 'max'
 
                     attn_params = params if self.nonlinear_function in ['softmax', 'both'] else {}
                     ffn_params = params if self.nonlinear_function in ['ffn', 'both'] else {}
+
+                    self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
+
+                for run in tqdm(range(min_runs), desc="Running configurations"):
+                    params = deepcopy(self.nonlinear_function_parameters)
+                    params[config_key]['min_value'] = value.get('min_value')[run]
+
+                    if params['lut_build'] == 'both':
+                        params['lut_build'] = 'min'
+
+                    attn_params = params if self.nonlinear_function in ['softmax', 'both'] else {}
+                    ffn_params = params if self.nonlinear_function in ['ffn', 'both'] else {}
+
                     self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
             # Loop through all combinations (same patch for all layers)
             else:
