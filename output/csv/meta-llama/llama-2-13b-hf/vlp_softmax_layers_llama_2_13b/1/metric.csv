@@ -24,5 +24,14 @@ meta-llama/Llama-2-13b-hf,5.977666026685924,vlp,VLPSoftmax,torch,0,8,16,32,16,-4
 meta-llama/Llama-2-13b-hf,5.977462620383472,vlp,VLPSoftmax,torch,0,8,16,32,16,-3
 meta-llama/Llama-2-13b-hf,5.979861252728384,vlp,VLPSoftmax,torch,0,8,16,32,16,-2
 meta-llama/Llama-2-13b-hf,5.98899911599425,vlp,VLPSoftmax,torch,0,8,16,32,16,-1
-meta-llama/Llama-2-13b-hf,6.0384817450777275,vlp,VLPSoftmax,torch,0,8,16,32,16,0
+meta-llama/Llama-2-13b-hf,6.038481745077728,vlp,VLPSoftmax,torch,0,8,16,32,16,0
 meta-llama/Llama-2-13b-hf,8428.407277942371,vlp,VLPSoftmax,torch,0,8,16,32,16,1
+meta-llama/Llama-2-13b-hf,,vlp,VLPSoftmax,torch,0,8,16,32,16,-1
+meta-llama/Llama-2-13b-hf,208.55688722748593,vlp,VLPSoftmax,torch,0,8,16,32,16,0
+meta-llama/Llama-2-13b-hf,5.936060578230384,vlp,VLPSoftmax,torch,0,8,16,32,16,1
+meta-llama/Llama-2-13b-hf,5.961732371515451,vlp,VLPSoftmax,torch,0,8,16,32,16,2
+meta-llama/Llama-2-13b-hf,5.977283233811316,vlp,VLPSoftmax,torch,0,8,16,32,16,3
+meta-llama/Llama-2-13b-hf,5.977197016162916,vlp,VLPSoftmax,torch,0,8,16,32,16,4
+meta-llama/Llama-2-13b-hf,5.977197016162916,vlp,VLPSoftmax,torch,0,8,16,32,16,5
+meta-llama/Llama-2-13b-hf,5.977197016162916,vlp,VLPSoftmax,torch,0,8,16,32,16,6
+meta-llama/Llama-2-13b-hf,5.977197016162916,vlp,VLPSoftmax,torch,0,8,16,32,16,7
