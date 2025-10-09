@@ -226,7 +226,7 @@ class InferenceModel(ABC):
                         attn_default_params['lut_build'] = subvalue[1]
                     else:
                         assert subkey not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
-                        assert isinstance(subkey, int), "Attention layer keys must be integers."
+                        assert isinstance(subkey, int), f"Attention layer key {subkey} must be integers."
                         attn_layer_params[subkey - 1] = {key: subvalue[0]}
                         attn_layer_params[subkey - 1]['lut_build'] = subvalue[1]
 
