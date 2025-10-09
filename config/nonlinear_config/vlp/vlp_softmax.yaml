@@ -5,6 +5,6 @@ parameters:
   exp_dim: 8
   window_dim: 16
   window_size: 32
-  lut_build: max
+  lut_build: min
   mant_dim: 16
-  max_min_exp: [-2, -1, 0, 1, 2, 3]
+  max_min_exp: [-6, -5, -4, -3, -2, -1, 0]
