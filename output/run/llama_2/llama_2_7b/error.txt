@@ -4,7 +4,7 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:13<00:13, 13.16s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  7.79s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.59s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:11<00:11, 11.78s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  7.20s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  7.89s/it]
 Running configurations:   0%|          | 0/9 [00:00<?, ?it/s]Running configurations:   0%|          | 0/9 [00:00<?, ?it/s]
 Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 91, in <module>
@@ -20,6 +20,6 @@ Traceback (most recent call last):
     self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 229, in run_layer_configuration
-    assert isinstance(subkey, int), "Attention layer keys must be integers."
+    assert isinstance(subkey, int), f"Attention layer key {subkey} must be integers."
            ~~~~~~~~~~^^^^^^^^^^^^^
-AssertionError: Attention layer keys must be integers.
+AssertionError: Attention layer key min_value must be integers.
