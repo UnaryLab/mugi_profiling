@@ -218,7 +218,7 @@ class InferenceModel(ABC):
             else:
                 for subkey, subvalue in value.items():
                     if subkey == 'value':
-                        assert self.patched_layer not in attn_layer_params, "Multiple 'value' keys found in attention parameters."
+                        assert self.patched_layer not in attn_layer_params, "Multiple 'value' keys found in attention parameters (check patched_layer)."
                         attn_layer_params[self.patched_layer] = {key: subvalue}
                         attn_layer_params[self.patched_layer]['lut_build'] = default_attn_lut_build
                     elif subkey == 'default':
