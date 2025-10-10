@@ -269,7 +269,8 @@ class InferenceModel(ABC):
             'function_name': self.approx_function,
             'attn_fn': self.attn_function,
             'ffn_fn': self.ffn_function,
-            'config_layer': self.patched_layer
+            'lut_build': default_attn_lut_build,
+            'config_layer': self.patched_layer,
         }
 
         # Add attention parameters with prefixed column names to avoid conflicts
