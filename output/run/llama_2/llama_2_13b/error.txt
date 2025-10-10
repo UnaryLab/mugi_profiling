@@ -4,7 +4,7 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:11<00:22, 11.28s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:23<00:11, 11.59s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:29<00:00,  9.32s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:29<00:00,  9.90s/it]
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:11<00:22, 11.31s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:25<00:13, 13.21s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:32<00:00, 10.25s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:32<00:00, 10.86s/it]
 Running configurations:   0%|          | 0/9 [00:00<?, ?it/s]Running configurations:   0%|          | 0/9 [00:00<?, ?it/s]
 Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 91, in <module>
