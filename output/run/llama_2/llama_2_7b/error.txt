@@ -4,7 +4,7 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:13<00:13, 13.34s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:20<00:00,  9.59s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:20<00:00, 10.15s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:14<00:14, 14.12s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:21<00:00,  9.97s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:21<00:00, 10.60s/it]
 Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 91, in <module>
     main()
@@ -35,14 +35,52 @@ Traceback (most recent call last):
   File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/load.py", line 1629, in dataset_module_factory
     ).get_module()
       ~~~~~~~~~~^^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/load.py", line 978, in get_module
-    standalone_yaml_path = cached_path(
-        hf_dataset_url(self.name, config.REPOYAML_FILENAME, revision=self.commit_hash),
-        download_config=download_config,
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/load.py", line 1019, in get_module
+    data_files = DataFilesDict.from_patterns(
+        patterns,
+    ...<2 lines>...
+        download_config=self.download_config,
     )
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/utils/file_utils.py", line 189, in cached_path
-    ).resolve_path(url_or_filename)
-      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/data_files.py", line 689, in from_patterns
+    else DataFilesList.from_patterns(
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        patterns_for_key,
+        ^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        download_config=download_config,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/data_files.py", line 592, in from_patterns
+    origin_metadata = _get_origin_metadata(data_files, download_config=download_config)
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/data_files.py", line 506, in _get_origin_metadata
+    return thread_map(
+        partial(_get_single_origin_metadata, download_config=download_config),
+    ...<5 lines>...
+        disable=len(data_files) <= 16 or None,
+    )
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/tqdm/contrib/concurrent.py", line 69, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/tqdm/contrib/concurrent.py", line 51, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, chunksize=chunksize), **kwargs))
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/tqdm/std.py", line 1169, in __iter__
+    for obj in iterable:
+               ^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/concurrent/futures/_base.py", line 619, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/concurrent/futures/_base.py", line 317, in _result_or_cancel
+    return fut.result(timeout)
+           ~~~~~~~~~~^^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/data_files.py", line 485, in _get_single_origin_metadata
+    resolved_path = fs.resolve_path(data_file)
   File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/huggingface_hub/hf_file_system.py", line 198, in resolve_path
     repo_and_revision_exist, err = self._repo_and_revision_exist(repo_type, repo_id, revision)
                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -77,4 +115,4 @@ Traceback (most recent call last):
            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/requests/adapters.py", line 713, in send
     raise ReadTimeout(e, request=request)
-requests.exceptions.ReadTimeout: (ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: e3fb9245-cb07-416c-8a6c-eced57baa902)')
+requests.exceptions.ReadTimeout: (ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 818ea6e3-b64b-49bf-aebf-6dd6c1d91012)')

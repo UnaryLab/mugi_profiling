@@ -4,7 +4,7 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:11<00:23, 11.91s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:26<00:13, 13.74s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:33<00:00, 10.57s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:33<00:00, 11.24s/it]
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:11<00:22, 11.41s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:26<00:13, 13.62s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:33<00:00, 10.63s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:33<00:00, 11.22s/it]
 Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 91, in <module>
     main()
@@ -115,4 +115,4 @@ Traceback (most recent call last):
            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/requests/adapters.py", line 713, in send
     raise ReadTimeout(e, request=request)
-requests.exceptions.ReadTimeout: (ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 0793528d-d99b-409e-a068-1c1db160cd7d)')
+requests.exceptions.ReadTimeout: (ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 7138743a-91d4-414a-a700-fbad14f3be39)')
