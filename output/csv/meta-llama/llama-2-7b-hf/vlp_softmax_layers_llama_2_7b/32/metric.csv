@@ -1,0 +1,17 @@
+model,value,function_name,attn_fn,ffn_fn,lut_build,config_layer,attn_exp_dim,attn_window_dim,attn_window_size,attn_mant_dim,attn_layer_0_max_min_exp,attn_layer_1_max_min_exp,attn_layer_2_max_min_exp,attn_layer_3_max_min_exp,attn_layer_4_max_min_exp,attn_layer_5_max_min_exp,attn_layer_6_max_min_exp,attn_layer_7_max_min_exp,attn_layer_8_max_min_exp,attn_layer_9_max_min_exp,attn_layer_10_max_min_exp,attn_layer_11_max_min_exp,attn_layer_12_max_min_exp,attn_layer_13_max_min_exp,attn_layer_14_max_min_exp,attn_layer_15_max_min_exp,attn_layer_16_max_min_exp,attn_layer_17_max_min_exp,attn_layer_18_max_min_exp,attn_layer_19_max_min_exp,attn_layer_20_max_min_exp,attn_layer_21_max_min_exp,attn_layer_22_max_min_exp,attn_layer_23_max_min_exp,attn_layer_24_max_min_exp,attn_layer_25_max_min_exp,attn_layer_26_max_min_exp,attn_layer_27_max_min_exp,attn_layer_28_max_min_exp,attn_layer_29_max_min_exp,attn_layer_30_max_min_exp,attn_layer_31_max_min_exp
+meta-llama/Llama-2-7b-hf,6.013034569158431,vlp,VLPSoftmax,torch,max,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,0
+meta-llama/Llama-2-7b-hf,5.991620614898549,vlp,VLPSoftmax,torch,max,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,1
+meta-llama/Llama-2-7b-hf,5.9840564139847405,vlp,VLPSoftmax,torch,max,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,2
+meta-llama/Llama-2-7b-hf,5.984459901239439,vlp,VLPSoftmax,torch,max,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,3
+meta-llama/Llama-2-7b-hf,5.984449342881197,vlp,VLPSoftmax,torch,max,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,4
+meta-llama/Llama-2-7b-hf,5.984456476904994,vlp,VLPSoftmax,torch,max,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,5
+meta-llama/Llama-2-7b-hf,5.984456762266124,vlp,VLPSoftmax,torch,max,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,6
+meta-llama/Llama-2-7b-hf,5.984456762266124,vlp,VLPSoftmax,torch,max,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,7
+meta-llama/Llama-2-7b-hf,5.984561276694659,vlp,VLPSoftmax,torch,min,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,-7
+meta-llama/Llama-2-7b-hf,5.984491005700366,vlp,VLPSoftmax,torch,min,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,-6
+meta-llama/Llama-2-7b-hf,5.9844565482452765,vlp,VLPSoftmax,torch,min,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,-5
+meta-llama/Llama-2-7b-hf,5.98443750042047,vlp,VLPSoftmax,torch,min,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,-4
+meta-llama/Llama-2-7b-hf,5.984438855881655,vlp,VLPSoftmax,torch,min,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,-3
+meta-llama/Llama-2-7b-hf,5.984444491749874,vlp,VLPSoftmax,torch,min,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,-2
+meta-llama/Llama-2-7b-hf,5.984515546948772,vlp,VLPSoftmax,torch,min,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,-1
+meta-llama/Llama-2-7b-hf,5.9851065648476505,vlp,VLPSoftmax,torch,min,31,8,16,32,16,1,-1,1,-6,2,2,1,1,2,2,2,2,2,2,2,2,2,-5,3,-4,-4,2,6,-4,-4,-4,2,3,-5,-6,-2,0
