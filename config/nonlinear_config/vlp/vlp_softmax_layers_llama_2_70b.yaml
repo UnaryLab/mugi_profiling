@@ -1,0 +1,15 @@
+nonlinear_function: softmax
+approx_function: vlp
+patch_per_layer: True
+patched_layer: 1
+parameters:
+  exp_dim: 8
+  window_dim: 16
+  window_size: 32
+  lut_build: both
+  mant_dim: 16
+  max_min_exp: {
+    min_value: [-6, -5, -4, -3, -2, -1], # min
+    max_value: [1, 2, 3, 4, 5, 6], # max
+    default: [2, 'max']
+  }
