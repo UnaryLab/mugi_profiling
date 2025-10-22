@@ -9,4 +9,4 @@ nonlinear:
   attention: softmax
   ffn: silu
 parameters:
-  batch_size: 4
+  batch_size: 8
