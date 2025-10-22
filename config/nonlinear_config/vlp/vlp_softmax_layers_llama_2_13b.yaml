@@ -40,7 +40,8 @@ parameters:
     29: [3, 'max'],
     30: [3, 'max'],
     31: [-5, 'min'],
-    min_value: [7, -6, -5, -4, -3, -2, -1, 0], # min
-    max_value: [0, 1, 2, 3, 4, 5, 6, 7], # max
+    32: [-4, 'min'],
+    min_value: [7, -6, -5, -4, -3, -2, -1], # min
+    max_value: [1, 2, 3, 4, 5, 6, 7], # max
     default: [2, 'max']
   }
