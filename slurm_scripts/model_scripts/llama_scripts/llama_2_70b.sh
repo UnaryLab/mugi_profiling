@@ -1,14 +1,12 @@
 #!/bin/bash
 
-#SBATCH --account=bebv-delta-gpu
-#SBATCH --time=8:00:00
+#SBATCH --time=04:00:00
 #SBATCH --cpus-per-task=64
-#SBATCH --partition=gpuH200x8
-#SBATCH --gres=gpu:2
-#SBATCH --mem=64g
-#SBATCH --job-name=llama_2_70b_profiling
-#SBATCH --error=error/llama_2/llama_2_70b_error.txt
-#SBATCH --output=output/llama_2/llama_2_70b_output.txt
+#SBATCH --gres=gpu:4
+#SBATCH --job-name=llama_2_70b
+#SBATCH --partition=highgpu
+#SBATCH --error=output/run/llama_2/llama_2_70b/error.txt
+#SBATCH --output=output/run/llama_2/llama_2_70b/output.txt
 
 module load cuda
 module load openblas
