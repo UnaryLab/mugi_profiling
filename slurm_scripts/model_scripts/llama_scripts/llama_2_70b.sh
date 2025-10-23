@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --time=04:00:00
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=64
 #SBATCH --gres=gpu:4
 #SBATCH --job-name=llama_2_70b
 #SBATCH --partition=highgpu
