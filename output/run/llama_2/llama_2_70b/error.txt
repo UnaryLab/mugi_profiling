@@ -4,10 +4,7 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:07<01:49,  7.82s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:17<01:59,  9.17s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:28<01:57,  9.79s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:39<01:54, 10.41s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [00:50<01:43, 10.36s/it]Loading checkpoint shards:  40%|████      | 6/15 [01:00<01:34, 10.48s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [01:10<01:21, 10.20s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [01:22<01:14, 10.64s/it]Loading checkpoint shards:  60%|██████    | 9/15 [01:32<01:04, 10.70s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [01:42<00:51, 10.30s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [01:52<00:41, 10.42s/it]Loading checkpoint shards:  80%|████████  | 12/15 [02:02<00:30, 10.30s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [02:12<00:20, 10.18s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [02:21<00:09,  9.75s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:22<00:00,  7.01s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:22<00:00,  9.49s/it]
-Running configurations:   0%|          | 0/6 [00:00<?, ?it/s]
-Batched Inference:   0%|          | 0/25 [00:00<?, ?it/s][ABatched Inference:   0%|          | 0/25 [00:01<?, ?it/s]
-Running configurations:   0%|          | 0/6 [00:01<?, ?it/s]
+Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:10<02:22, 10.21s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:20<02:09,  9.97s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:30<02:02, 10.24s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:41<01:56, 10.55s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [00:51<01:43, 10.40s/it]Loading checkpoint shards:  40%|████      | 6/15 [01:02<01:34, 10.48s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [01:12<01:21, 10.25s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [01:22<01:12, 10.37s/it]Loading checkpoint shards:  60%|██████    | 9/15 [01:33<01:02, 10.41s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [01:42<00:50, 10.06s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [01:53<00:40, 10.19s/it]Loading checkpoint shards:  80%|████████  | 12/15 [02:03<00:30, 10.20s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [02:13<00:20, 10.14s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [02:22<00:09,  9.73s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:22<00:00,  6.99s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:22<00:00,  9.51s/it]
 Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 91, in <module>
     main()
@@ -15,101 +12,33 @@ Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 87, in main
     evaluate_model(model_config, nonlinear_config, parameter_config, args.nonlinear_config)
     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 61, in evaluate_model
-    inference_model.inference_configurations()
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 369, in inference_configurations
-    self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 261, in run_layer_configuration
-    self.run_batched_inference()
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 119, in run_batched_inference
-    batched_loss = self.run_inference(
-        batch=batch
-    )
-  File "/home/da109073/mugi_profiling/src/inference_classes/llama_inference.py", line 96, in run_inference
-    outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids, use_cache=False)
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/accelerate/hooks.py", line 175, in new_forward
-    output = module._old_forward(*args, **kwargs)
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/transformers/utils/generic.py", line 943, in wrapper
-    output = func(self, *args, **kwargs)
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/transformers/models/llama/modeling_llama.py", line 553, in forward
-    outputs: BaseModelOutputWithPast = self.model(
-                                       ~~~~~~~~~~^
-        input_ids=input_ids,
-        ^^^^^^^^^^^^^^^^^^^^
-    ...<8 lines>...
-        **kwargs,
-        ^^^^^^^^^
-    )
-    ^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/transformers/utils/generic.py", line 943, in wrapper
-    output = func(self, *args, **kwargs)
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/transformers/models/llama/modeling_llama.py", line 441, in forward
-    layer_outputs = decoder_layer(
-        hidden_states,
-    ...<7 lines>...
-        **flash_attn_kwargs,
-    )
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/transformers/modeling_layers.py", line 83, in __call__
-    return super().__call__(*args, **kwargs)
-           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/accelerate/hooks.py", line 175, in new_forward
-    output = module._old_forward(*args, **kwargs)
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/transformers/models/llama/modeling_llama.py", line 290, in forward
-    hidden_states, self_attn_weights = self.self_attn(
-                                       ~~~~~~~~~~~~~~^
-        hidden_states=hidden_states,
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ...<7 lines>...
-        **kwargs,
-        ^^^^^^^^^
-    )
-    ^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/home/da109073/mugi_profiling/src/custom_nonlinear/custom_forward.py", line 44, in forward
-    attn_output, attn_weights = attention_interface(
-                                ~~~~~~~~~~~~~~~~~~~^
-        self,
-        ^^^^^
-    ...<6 lines>...
-        **kwargs,
-        ^^^^^^^^^
-    )
-    ^
-  File "/home/da109073/mugi_profiling/src/custom_nonlinear/custom_eager.py", line 85, in eager_attention_forward
-    attn_weights = nonlinear_object(attn_weights, dim=-1, dtype=torch.float32).to(query.dtype)
-                   ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/lustre/fs1/home/da109073/mugi_profiling/src/custom_nonlinear/custom_approx.py", line 29, in forward
-    outputs = self.nonlinear_forward(*args, **kwargs)
-  File "/lustre/fs1/home/da109073/mugi_profiling/src/custom_nonlinear/custom_approx.py", line 118, in nonlinear_forward
-    attn_weights = self.nonlinear(attn_weights, dim=dim, dtype=dtype)
-  File "/home/da109073/mugi_profiling/src/custom_nonlinear/custom_nonlinear_functions/vlp/vlp_softmax_approx.py", line 105, in nonlinear
-    mant, exp = torch.frexp(attn_weights)
-                ~~~~~~~~~~~^^^^^^^^^^^^^^
-torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 16.00 GiB. GPU 0 has a total capacity of 79.10 GiB of which 12.12 GiB is free. Including non-PyTorch memory, this process has 66.96 GiB memory in use. Of the allocated memory 65.83 GiB is allocated by PyTorch, and 481.20 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 57, in evaluate_model
+    inference_model.process_dataset()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/da109073/mugi_profiling/src/inference_classes/llama_inference.py", line 78, in process_dataset
+    for example in self.dataset:
+                   ^^^^^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/iterable_dataset.py", line 2270, in __iter__
+    for key, example in ex_iterable:
+                        ^^^^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/iterable_dataset.py", line 1856, in __iter__
+    for key, pa_table in self._iter_arrow():
+                         ~~~~~~~~~~~~~~~~^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/iterable_dataset.py", line 1879, in _iter_arrow
+    for key, pa_table in self.ex_iterable._iter_arrow():
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/iterable_dataset.py", line 476, in _iter_arrow
+    for key, pa_table in iterator:
+                         ^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/iterable_dataset.py", line 323, in _iter_arrow
+    for key, pa_table in self.generate_tables_fn(**gen_kwags):
+                         ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/packaged_modules/json/json.py", line 99, in _generate_tables
+    for file_idx, file in enumerate(itertools.chain.from_iterable(files)):
+                          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/utils/track.py", line 49, in __iter__
+    for x in self.generator(*self.args):
+             ~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/da109073/.conda/envs/mugi_profiling/lib/python3.13/site-packages/datasets/utils/file_utils.py", line 1379, in _iter_from_urlpaths
+    raise FileNotFoundError(urlpath)
+FileNotFoundError: gzip://c4-validation.00000-of-00008.json::hf://datasets/allenai/c4@1588ec454efa1a09f29cd18ddd04fe05fc8653a2/en/c4-validation.00000-of-00008.json.gz
