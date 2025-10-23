@@ -1,7 +1,7 @@
 nonlinear_function: softmax
 approx_function: vlp
 patch_per_layer: True
-patched_layer: 39
+patched_layer: 40
 parameters:
   exp_dim: 8
   window_dim: 16
