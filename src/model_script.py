@@ -60,6 +60,14 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
     print('Inferencing configurations...')
     inference_model.inference_configurations()
 
+    min_row = inference_model.df.loc[inference_model.df['value'].idxmin()]
+    new_row = {
+        'value': min_row['value'],
+        inference_model.df.columns[-1]: min_row[inference_model.df.columns[-1]]
+    }
+
+    inference_model.df = pd.concat([inference_model.df, pd.DataFrame([new_row])], ignore_index=True)
+
     inference_model.df.to_csv(inference_model.csv_file, index=False)
 
 def main():
