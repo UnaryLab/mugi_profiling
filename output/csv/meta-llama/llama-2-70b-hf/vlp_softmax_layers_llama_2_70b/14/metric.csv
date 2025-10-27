@@ -1,0 +1,12 @@
+model,value,function_name,attn_fn,ffn_fn,lut_build,config_layer,attn_exp_dim,attn_window_dim,attn_window_size,attn_mant_dim,attn_layer_0_max_min_exp,attn_layer_1_max_min_exp,attn_layer_2_max_min_exp,attn_layer_3_max_min_exp,attn_layer_4_max_min_exp,attn_layer_5_max_min_exp,attn_layer_6_max_min_exp,attn_layer_7_max_min_exp,attn_layer_8_max_min_exp,attn_layer_9_max_min_exp,attn_layer_10_max_min_exp,attn_layer_11_max_min_exp,attn_layer_12_max_min_exp,attn_layer_13_max_min_exp
+meta-llama/Llama-2-70b-hf,4.916067080658305,vlp,VLPSoftmax,torch,max,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,1
+meta-llama/Llama-2-70b-hf,4.84831580214993,vlp,VLPSoftmax,torch,max,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,2
+meta-llama/Llama-2-70b-hf,4.854958965457748,vlp,VLPSoftmax,torch,max,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,3
+meta-llama/Llama-2-70b-hf,4.859173282148374,vlp,VLPSoftmax,torch,max,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,4
+meta-llama/Llama-2-70b-hf,4.859306687233986,vlp,VLPSoftmax,torch,max,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,5
+meta-llama/Llama-2-70b-hf,4.858313445951615,vlp,VLPSoftmax,torch,min,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,-5
+meta-llama/Llama-2-70b-hf,4.860839025839926,vlp,VLPSoftmax,torch,min,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,-4
+meta-llama/Llama-2-70b-hf,4.8540056160939296,vlp,VLPSoftmax,torch,min,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,-3
+meta-llama/Llama-2-70b-hf,4.854820372686579,vlp,VLPSoftmax,torch,min,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,-2
+meta-llama/Llama-2-70b-hf,4.857721144372778,vlp,VLPSoftmax,torch,min,13.0,8.0,16.0,32.0,16.0,-4.0,2.0,2.0,2.0,-4.0,3.0,2.0,3.0,2.0,-2.0,4.0,2.0,1.0,-1
+,4.84831580214993,,,,,,,,,,,,,,,,,,,,,,,2
