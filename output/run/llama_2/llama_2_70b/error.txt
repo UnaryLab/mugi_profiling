@@ -4,7 +4,60 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:07<01:40,  7.19s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:17<01:59,  9.21s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:28<01:56,  9.69s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:38<01:50, 10.04s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [00:48<01:40, 10.08s/it]Loading checkpoint shards:  40%|████      | 6/15 [00:58<01:30, 10.05s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [01:09<01:21, 10.21s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [01:21<01:15, 10.75s/it]Loading checkpoint shards:  60%|██████    | 9/15 [01:30<01:02, 10.42s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [01:40<00:51, 10.30s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [01:51<00:41, 10.30s/it]Loading checkpoint shards:  80%|████████  | 12/15 [02:01<00:30, 10.31s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [02:11<00:20, 10.13s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [02:21<00:10, 10.06s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:21<00:00,  7.09s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:21<00:00,  9.43s/it]
+Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:10<02:29, 10.71s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:21<02:20, 10.78s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:31<02:06, 10.56s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:42<01:56, 10.59s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [00:52<01:42, 10.30s/it]Loading checkpoint shards:  40%|████      | 6/15 [01:02<01:31, 10.15s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [01:13<01:23, 10.40s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [01:25<01:16, 10.93s/it]Loading checkpoint shards:  60%|██████    | 9/15 [01:34<01:03, 10.54s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [01:44<00:52, 10.41s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [01:55<00:41, 10.44s/it]Loading checkpoint shards:  80%|████████  | 12/15 [02:05<00:31, 10.41s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [02:15<00:20, 10.27s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [02:25<00:10, 10.03s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:25<00:00,  7.06s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:25<00:00,  9.69s/it]
+Running configurations:   0%|          | 0/1 [00:00<?, ?it/s]
+Batched Inference:   0%|          | 0/50 [00:00<?, ?it/s][A
+Batched Inference:   2%|▏         | 1/50 [00:17<14:33, 17.83s/it][A
+Batched Inference:   4%|▍         | 2/50 [00:34<13:50, 17.30s/it][A
+Batched Inference:   6%|▌         | 3/50 [00:51<13:27, 17.17s/it][A
+Batched Inference:   8%|▊         | 4/50 [01:08<13:05, 17.07s/it][A
+Batched Inference:  10%|█         | 5/50 [01:25<12:47, 17.05s/it][A
+Batched Inference:  12%|█▏        | 6/50 [01:42<12:28, 17.02s/it][A
+Batched Inference:  14%|█▍        | 7/50 [01:59<12:11, 17.02s/it][A
+Batched Inference:  16%|█▌        | 8/50 [02:16<11:53, 16.99s/it][A
+Batched Inference:  18%|█▊        | 9/50 [02:33<11:36, 17.00s/it][A
+Batched Inference:  20%|██        | 10/50 [02:50<11:19, 16.98s/it][A
+Batched Inference:  22%|██▏       | 11/50 [03:07<11:02, 16.99s/it][A
+Batched Inference:  24%|██▍       | 12/50 [03:24<10:45, 16.98s/it][A
+Batched Inference:  26%|██▌       | 13/50 [03:41<10:28, 16.99s/it][A
+Batched Inference:  28%|██▊       | 14/50 [03:58<10:11, 16.98s/it][A
+Batched Inference:  30%|███       | 15/50 [04:15<09:54, 16.99s/it][A
+Batched Inference:  32%|███▏      | 16/50 [04:32<09:37, 16.98s/it][A
+Batched Inference:  34%|███▍      | 17/50 [04:49<09:20, 16.99s/it][A
+Batched Inference:  36%|███▌      | 18/50 [05:06<09:03, 16.98s/it][A
+Batched Inference:  38%|███▊      | 19/50 [05:23<08:46, 16.98s/it][A
+Batched Inference:  40%|████      | 20/50 [05:40<08:28, 16.97s/it][A
+Batched Inference:  42%|████▏     | 21/50 [05:57<08:12, 16.97s/it][A
+Batched Inference:  44%|████▍     | 22/50 [06:14<07:55, 16.97s/it][A
+Batched Inference:  46%|████▌     | 23/50 [06:31<07:38, 16.99s/it][A
+Batched Inference:  48%|████▊     | 24/50 [06:48<07:21, 16.97s/it][A
+Batched Inference:  50%|█████     | 25/50 [07:05<07:04, 16.99s/it][A
+Batched Inference:  52%|█████▏    | 26/50 [07:22<06:47, 16.98s/it][A
+Batched Inference:  54%|█████▍    | 27/50 [07:39<06:30, 16.99s/it][A
+Batched Inference:  56%|█████▌    | 28/50 [07:56<06:13, 16.97s/it][A
+Batched Inference:  58%|█████▊    | 29/50 [08:13<05:56, 16.98s/it][A
+Batched Inference:  60%|██████    | 30/50 [08:30<05:39, 16.97s/it][A
+Batched Inference:  62%|██████▏   | 31/50 [08:47<05:22, 16.98s/it][A
+Batched Inference:  64%|██████▍   | 32/50 [09:04<05:05, 16.97s/it][A
+Batched Inference:  66%|██████▌   | 33/50 [09:21<04:48, 16.98s/it][A
+Batched Inference:  68%|██████▊   | 34/50 [09:38<04:31, 16.97s/it][A
+Batched Inference:  70%|███████   | 35/50 [09:55<04:14, 16.99s/it][A
+Batched Inference:  72%|███████▏  | 36/50 [10:11<03:57, 16.97s/it][A
+Batched Inference:  74%|███████▍  | 37/50 [10:28<03:40, 16.98s/it][A
+Batched Inference:  76%|███████▌  | 38/50 [10:45<03:23, 16.97s/it][A
+Batched Inference:  78%|███████▊  | 39/50 [11:02<03:06, 16.98s/it][A
+Batched Inference:  80%|████████  | 40/50 [11:19<02:49, 16.97s/it][A
+Batched Inference:  82%|████████▏ | 41/50 [11:36<02:32, 16.98s/it][A
+Batched Inference:  84%|████████▍ | 42/50 [11:53<02:15, 16.97s/it][A
+Batched Inference:  86%|████████▌ | 43/50 [12:10<01:58, 16.98s/it][A
+Batched Inference:  88%|████████▊ | 44/50 [12:27<01:41, 16.97s/it][A
+Batched Inference:  90%|█████████ | 45/50 [12:44<01:24, 16.98s/it][A
+Batched Inference:  92%|█████████▏| 46/50 [13:01<01:07, 16.97s/it][A
+Batched Inference:  94%|█████████▍| 47/50 [13:18<00:50, 16.99s/it][A
+Batched Inference:  96%|█████████▌| 48/50 [13:35<00:33, 16.97s/it][A
+Batched Inference:  98%|█████████▊| 49/50 [13:52<00:16, 16.99s/it][A
+Batched Inference: 100%|██████████| 50/50 [14:09<00:00, 16.97s/it][ABatched Inference: 100%|██████████| 50/50 [14:09<00:00, 16.99s/it]
+Running configurations: 100%|██████████| 1/1 [14:09<00:00, 849.68s/it]Running configurations: 100%|██████████| 1/1 [14:09<00:00, 849.68s/it]
 Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 99, in <module>
     main()
@@ -15,7 +68,7 @@ Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 61, in evaluate_model
     inference_model.inference_configurations()
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 360, in inference_configurations
-    max_params['max_min_exp'].pop('min_value')
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-KeyError: 'min_value'
+  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 378, in inference_configurations
+    for run in tqdm(range(min_runs), desc="Running configurations"):
+                    ~~~~~^^^^^^^^^^
+TypeError: 'NoneType' object cannot be interpreted as an integer
