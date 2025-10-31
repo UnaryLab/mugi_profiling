@@ -352,37 +352,39 @@ class InferenceModel(ABC):
                 max_runs = len(self.nonlinear_function_parameters.get('max_min_exp').get('max_value', None)) if lut_build in ['max', 'both'] else None
                 min_runs = len(self.nonlinear_function_parameters.get('max_min_exp').get('min_value', None)) if lut_build in ['min', 'both'] else None
 
-                if max_runs != 0:
-                    max_params = deepcopy(self.nonlinear_function_parameters)
-                    max_params['max_min_exp']['value'] = max_params['max_min_exp']['max_value']
-                    max_params['lut_build'] = 'max'
-                    max_params['max_min_exp'].pop('max_value')
-                    max_params['max_min_exp'].pop('min_value')
+                if max_runs is not None:
+                    if max_runs != 0:
+                        max_params = deepcopy(self.nonlinear_function_parameters)
+                        max_params['max_min_exp']['value'] = max_params['max_min_exp']['max_value']
+                        max_params['lut_build'] = 'max'
+                        max_params['max_min_exp'].pop('max_value')
+                        max_params['max_min_exp'].pop('min_value')
 
-                    for run in tqdm(range(max_runs), desc="Running configurations"):
-                        params = deepcopy(max_params)
-                        params['max_min_exp']['value'] = max_params['max_min_exp'].get('value')[run]
-                        
-                        attn_params = params if self.nonlinear_function in ['softmax', 'both'] else {}
-                        ffn_params = params if self.nonlinear_function in ['ffn', 'both'] else {}
+                        for run in tqdm(range(max_runs), desc="Running configurations"):
+                            params = deepcopy(max_params)
+                            params['max_min_exp']['value'] = max_params['max_min_exp'].get('value')[run]
+                            
+                            attn_params = params if self.nonlinear_function in ['softmax', 'both'] else {}
+                            ffn_params = params if self.nonlinear_function in ['ffn', 'both'] else {}
 
-                        self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
+                            self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
 
-                if min_runs != 0:
-                    min_params = deepcopy(self.nonlinear_function_parameters)
-                    min_params['max_min_exp']['value'] = min_params['max_min_exp']['min_value']
-                    min_params['lut_build'] = 'min'
-                    min_params['max_min_exp'].pop('max_value')
-                    min_params['max_min_exp'].pop('min_value')
+                if min_runs is not None:
+                    if min_runs != 0:
+                        min_params = deepcopy(self.nonlinear_function_parameters)
+                        min_params['max_min_exp']['value'] = min_params['max_min_exp']['min_value']
+                        min_params['lut_build'] = 'min'
+                        min_params['max_min_exp'].pop('max_value')
+                        min_params['max_min_exp'].pop('min_value')
 
-                    for run in tqdm(range(min_runs), desc="Running configurations"):
-                        params = deepcopy(min_params)
-                        params['max_min_exp']['value'] = min_params['max_min_exp'].get('value')[run]
+                        for run in tqdm(range(min_runs), desc="Running configurations"):
+                            params = deepcopy(min_params)
+                            params['max_min_exp']['value'] = min_params['max_min_exp'].get('value')[run]
 
-                        attn_params = params if self.nonlinear_function in ['softmax', 'both'] else {}
-                        ffn_params = params if self.nonlinear_function in ['ffn', 'both'] else {}
+                            attn_params = params if self.nonlinear_function in ['softmax', 'both'] else {}
+                            ffn_params = params if self.nonlinear_function in ['ffn', 'both'] else {}
 
-                        self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
+                            self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
             # Loop through all combinations (same patch for all layers)
             else:
                 for key, value in self.nonlinear_function_parameters.items():
