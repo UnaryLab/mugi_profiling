@@ -358,7 +358,8 @@ class InferenceModel(ABC):
                         max_params['max_min_exp']['value'] = max_params['max_min_exp']['max_value']
                         max_params['lut_build'] = 'max'
                         max_params['max_min_exp'].pop('max_value')
-                        max_params['max_min_exp'].pop('min_value')
+                        if min_runs is not None:
+                            max_params['max_min_exp'].pop('min_value')
 
                         for run in tqdm(range(max_runs), desc="Running configurations"):
                             params = deepcopy(max_params)
@@ -374,7 +375,8 @@ class InferenceModel(ABC):
                         min_params = deepcopy(self.nonlinear_function_parameters)
                         min_params['max_min_exp']['value'] = min_params['max_min_exp']['min_value']
                         min_params['lut_build'] = 'min'
-                        min_params['max_min_exp'].pop('max_value')
+                        if max_runs is not None:
+                            min_params['max_min_exp'].pop('max_value')
                         min_params['max_min_exp'].pop('min_value')
 
                         for run in tqdm(range(min_runs), desc="Running configurations"):
