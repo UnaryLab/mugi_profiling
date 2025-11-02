@@ -4,7 +4,8 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:12<02:48, 12.02s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:24<02:36, 12.04s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:36<02:25, 12.09s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:47<02:07, 11.62s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [00:57<01:53, 11.32s/it]Loading checkpoint shards:  40%|████      | 6/15 [01:07<01:37, 10.88s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [01:18<01:27, 10.92s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [01:30<01:18, 11.28s/it]Loading checkpoint shards:  60%|██████    | 9/15 [01:42<01:07, 11.27s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [01:52<00:54, 10.92s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [02:05<00:45, 11.48s/it]Loading checkpoint shards:  80%|████████  | 12/15 [02:16<00:33, 11.31s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [02:26<00:22, 11.07s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [02:37<00:11, 11.17s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:38<00:00,  8.08s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:38<00:00, 10.59s/it]
+Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:11<02:42, 11.62s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:22<02:24, 11.10s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:32<02:09, 10.79s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:43<01:58, 10.75s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [00:53<01:43, 10.40s/it]Loading checkpoint shards:  40%|████      | 6/15 [01:03<01:32, 10.23s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [01:13<01:22, 10.35s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [01:26<01:18, 11.21s/it]Loading checkpoint shards:  60%|██████    | 9/15 [01:36<01:04, 10.67s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [01:46<00:53, 10.64s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [01:57<00:42, 10.70s/it]Loading checkpoint shards:  80%|████████  | 12/15 [02:08<00:31, 10.63s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [02:18<00:20, 10.48s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [02:27<00:10, 10.20s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:28<00:00,  7.33s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:28<00:00,  9.90s/it]
+Running configurations:   0%|          | 0/1 [00:00<?, ?it/s]Running configurations:   0%|          | 0/1 [00:00<?, ?it/s]
 Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 99, in <module>
     main()
@@ -15,7 +16,10 @@ Traceback (most recent call last):
   File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 61, in evaluate_model
     inference_model.inference_configurations()
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 361, in inference_configurations
-    max_params['max_min_exp'].pop('min_value')
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-KeyError: 'min_value'
+  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 371, in inference_configurations
+    self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 221, in run_layer_configuration
+    assert self.patched_layer not in attn_layer_params, "Multiple 'value' keys found in attention parameters (check patched_layer)."
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Multiple 'value' keys found in attention parameters (check patched_layer).
