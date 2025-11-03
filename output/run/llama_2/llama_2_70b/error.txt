@@ -4,22 +4,57 @@ The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/s
 Your token has been saved to /home/da109073/.cache/huggingface/token
 Login successful.
 The current active token is: `newton_cluster`
-Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:11<02:42, 11.62s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:22<02:24, 11.10s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:32<02:09, 10.79s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:43<01:58, 10.75s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [00:53<01:43, 10.40s/it]Loading checkpoint shards:  40%|████      | 6/15 [01:03<01:32, 10.23s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [01:13<01:22, 10.35s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [01:26<01:18, 11.21s/it]Loading checkpoint shards:  60%|██████    | 9/15 [01:36<01:04, 10.67s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [01:46<00:53, 10.64s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [01:57<00:42, 10.70s/it]Loading checkpoint shards:  80%|████████  | 12/15 [02:08<00:31, 10.63s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [02:18<00:20, 10.48s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [02:27<00:10, 10.20s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:28<00:00,  7.33s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:28<00:00,  9.90s/it]
-Running configurations:   0%|          | 0/1 [00:00<?, ?it/s]Running configurations:   0%|          | 0/1 [00:00<?, ?it/s]
-Traceback (most recent call last):
-  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 99, in <module>
-    main()
-    ~~~~^^
-  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 95, in main
-    evaluate_model(model_config, nonlinear_config, parameter_config, args.nonlinear_config)
-    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 61, in evaluate_model
-    inference_model.inference_configurations()
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 371, in inference_configurations
-    self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/da109073/mugi_profiling/src/inference_classes/inference_class.py", line 221, in run_layer_configuration
-    assert self.patched_layer not in attn_layer_params, "Multiple 'value' keys found in attention parameters (check patched_layer)."
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Multiple 'value' keys found in attention parameters (check patched_layer).
+Loading checkpoint shards:   0%|          | 0/15 [00:00<?, ?it/s]Loading checkpoint shards:   7%|▋         | 1/15 [00:15<03:32, 15.20s/it]Loading checkpoint shards:  13%|█▎        | 2/15 [00:30<03:21, 15.50s/it]Loading checkpoint shards:  20%|██        | 3/15 [00:46<03:06, 15.51s/it]Loading checkpoint shards:  27%|██▋       | 4/15 [00:58<02:34, 14.01s/it]Loading checkpoint shards:  33%|███▎      | 5/15 [01:08<02:06, 12.67s/it]Loading checkpoint shards:  40%|████      | 6/15 [01:18<01:47, 11.92s/it]Loading checkpoint shards:  47%|████▋     | 7/15 [01:30<01:35, 11.92s/it]Loading checkpoint shards:  53%|█████▎    | 8/15 [01:43<01:25, 12.16s/it]Loading checkpoint shards:  60%|██████    | 9/15 [01:54<01:09, 11.66s/it]Loading checkpoint shards:  67%|██████▋   | 10/15 [02:05<00:57, 11.48s/it]Loading checkpoint shards:  73%|███████▎  | 11/15 [02:19<00:49, 12.38s/it]Loading checkpoint shards:  80%|████████  | 12/15 [02:30<00:36, 12.01s/it]Loading checkpoint shards:  87%|████████▋ | 13/15 [02:41<00:23, 11.56s/it]Loading checkpoint shards:  93%|█████████▎| 14/15 [02:51<00:11, 11.14s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:52<00:00,  8.05s/it]Loading checkpoint shards: 100%|██████████| 15/15 [02:52<00:00, 11.49s/it]
+Running configurations:   0%|          | 0/1 [00:00<?, ?it/s]
+Batched Inference:   0%|          | 0/50 [00:00<?, ?it/s][A
+Batched Inference:   2%|▏         | 1/50 [00:30<24:42, 30.26s/it][A
+Batched Inference:   4%|▍         | 2/50 [00:47<18:03, 22.58s/it][A
+Batched Inference:   6%|▌         | 3/50 [01:04<15:41, 20.04s/it][A
+Batched Inference:   8%|▊         | 4/50 [01:21<14:25, 18.81s/it][A
+Batched Inference:  10%|█         | 5/50 [01:38<13:36, 18.14s/it][A
+Batched Inference:  12%|█▏        | 6/50 [01:55<13:00, 17.74s/it][A
+Batched Inference:  14%|█▍        | 7/50 [02:12<12:32, 17.51s/it][A
+Batched Inference:  16%|█▌        | 8/50 [02:29<12:15, 17.52s/it][A
+Batched Inference:  18%|█▊        | 9/50 [02:46<11:51, 17.35s/it][A
+Batched Inference:  20%|██        | 10/50 [03:03<11:30, 17.26s/it][A
+Batched Inference:  22%|██▏       | 11/50 [03:20<11:10, 17.18s/it][A
+Batched Inference:  24%|██▍       | 12/50 [03:38<10:53, 17.19s/it][A
+Batched Inference:  26%|██▌       | 13/50 [03:55<10:36, 17.20s/it][A
+Batched Inference:  28%|██▊       | 14/50 [04:12<10:19, 17.20s/it][A
+Batched Inference:  30%|███       | 15/50 [04:29<09:59, 17.14s/it][A
+Batched Inference:  32%|███▏      | 16/50 [04:46<09:41, 17.12s/it][A
+Batched Inference:  34%|███▍      | 17/50 [05:03<09:25, 17.14s/it][A
+Batched Inference:  36%|███▌      | 18/50 [05:21<09:08, 17.15s/it][A
+Batched Inference:  38%|███▊      | 19/50 [05:38<08:51, 17.16s/it][A
+Batched Inference:  40%|████      | 20/50 [05:55<08:35, 17.18s/it][A
+Batched Inference:  42%|████▏     | 21/50 [06:12<08:18, 17.18s/it][A
+Batched Inference:  44%|████▍     | 22/50 [06:29<08:01, 17.18s/it][A
+Batched Inference:  46%|████▌     | 23/50 [06:47<07:44, 17.20s/it][A
+Batched Inference:  48%|████▊     | 24/50 [07:04<07:26, 17.19s/it][A
+Batched Inference:  50%|█████     | 25/50 [07:21<07:09, 17.17s/it][A
+Batched Inference:  52%|█████▏    | 26/50 [07:38<06:51, 17.16s/it][A
+Batched Inference:  54%|█████▍    | 27/50 [07:55<06:34, 17.14s/it][A
+Batched Inference:  56%|█████▌    | 28/50 [08:12<06:17, 17.17s/it][A
+Batched Inference:  58%|█████▊    | 29/50 [08:29<06:00, 17.16s/it][A
+Batched Inference:  60%|██████    | 30/50 [08:47<05:43, 17.16s/it][A
+Batched Inference:  62%|██████▏   | 31/50 [09:04<05:26, 17.16s/it][A
+Batched Inference:  64%|██████▍   | 32/50 [09:21<05:08, 17.14s/it][A
+Batched Inference:  66%|██████▌   | 33/50 [09:38<04:51, 17.15s/it][A
+Batched Inference:  68%|██████▊   | 34/50 [09:55<04:34, 17.19s/it][A
+Batched Inference:  70%|███████   | 35/50 [10:12<04:17, 17.18s/it][A
+Batched Inference:  72%|███████▏  | 36/50 [10:30<04:00, 17.18s/it][A
+Batched Inference:  74%|███████▍  | 37/50 [10:47<03:43, 17.18s/it][A
+Batched Inference:  76%|███████▌  | 38/50 [11:04<03:25, 17.15s/it][A
+Batched Inference:  78%|███████▊  | 39/50 [11:21<03:08, 17.16s/it][A
+Batched Inference:  80%|████████  | 40/50 [11:38<02:51, 17.16s/it][A
+Batched Inference:  82%|████████▏ | 41/50 [11:55<02:34, 17.16s/it][A
+Batched Inference:  84%|████████▍ | 42/50 [12:13<02:17, 17.15s/it][A
+Batched Inference:  86%|████████▌ | 43/50 [12:30<02:00, 17.16s/it][A
+Batched Inference:  88%|████████▊ | 44/50 [12:47<01:43, 17.23s/it][A
+Batched Inference:  90%|█████████ | 45/50 [13:04<01:26, 17.21s/it][A
+Batched Inference:  92%|█████████▏| 46/50 [13:21<01:08, 17.20s/it][A
+Batched Inference:  94%|█████████▍| 47/50 [13:39<00:51, 17.21s/it][A
+Batched Inference:  96%|█████████▌| 48/50 [13:56<00:34, 17.22s/it][A
+Batched Inference:  98%|█████████▊| 49/50 [14:13<00:17, 17.20s/it][A
+Batched Inference: 100%|██████████| 50/50 [14:30<00:00, 17.18s/it][ABatched Inference: 100%|██████████| 50/50 [14:30<00:00, 17.41s/it]
+Running configurations: 100%|██████████| 1/1 [14:30<00:00, 870.98s/it]Running configurations: 100%|██████████| 1/1 [14:30<00:00, 870.98s/it]
