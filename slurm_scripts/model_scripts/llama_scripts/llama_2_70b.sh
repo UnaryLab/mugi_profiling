@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --time=03:00:00
-#SBATCH --cpus-per-task=32
-#SBATCH --gres=gpu:4
+#SBATCH --cpus-per-task=24
+#SBATCH --gres=gpu:3
 #SBATCH --job-name=llama_2_70b
 #SBATCH --partition=highgpu
 #SBATCH --error=output/run/llama_2/llama_2_70b/error.txt
