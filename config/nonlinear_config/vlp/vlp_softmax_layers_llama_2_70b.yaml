@@ -1,7 +1,7 @@
 nonlinear_function: softmax
 approx_function: vlp
 patch_per_layer: True
-patched_layer: 29
+patched_layer: 30
 parameters:
   exp_dim: 8
   window_dim: 16
@@ -37,6 +37,7 @@ parameters:
     26: [-5, 'min'],
     27: [3, 'max'],
     28: [3, 'max'],
+    29: [4, 'max'],
     min_value: [-5, -4, -3, -2, -1], # min
     max_value: [1, 2, 3, 4, 5], # max
     default: [2, 'max']
