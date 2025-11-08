@@ -45,6 +45,7 @@ parameters:
     34: [-1, 'min'],
     35: [-4, 'min'],
     36: [2, 'max'],
+    37: [1, 'max'],
     min_value: [-5, -4, -3, -2, -1], # min
     max_value: [1, 2, 3, 4, 5], # max
     default: [2, 'max']
