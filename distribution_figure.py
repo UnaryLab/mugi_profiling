@@ -324,6 +324,7 @@ def merge_dicts(d1, d2):
     return d1
 
 def get_subdirs(base_dir, model_dict):
+    print(base_dir)
     if os.path.isdir(base_dir):
         output_dict = {}
         for subdir in os.listdir(base_dir):
@@ -434,6 +435,8 @@ pad = 15
 window_size = 3
 
 model_dict = get_subdirs(base_dir, model_config)
+
+print(model_dict)
 
 per_fig_width = 506 / 72.27
 per_fig_height = per_fig_width * 0.3
