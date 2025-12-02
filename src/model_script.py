@@ -45,6 +45,7 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
     else:
         os.makedirs(os.path.dirname(inference_model.csv_file), exist_ok=True)
         inference_model.df = None
+    print(inference_model.csv_file)
 
     print(f'Running inference for model: {inference_model.model_name}')
     print('Loading model...')
