@@ -6,7 +6,7 @@ import numpy as np
 import os
 
 # Set global font size
-plt.rcParams.update({'font.size': 5})
+plt.rcParams.update({'font.size': 7})
 
 def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
     """Create a 5 x N grid of heatmaps (rows = methods, cols = models).
@@ -52,15 +52,15 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
 
     # Use the same per-axes size as single_heatmap, then scale by grid dimensions
     per_fig_width = 506 / 72.27
-    per_fig_height = per_fig_width * 0.31
+    per_fig_height = per_fig_width * 0.65
 
-    fig, axes = plt.subplots(5, n_models, figsize=(per_fig_width, per_fig_height))
+    fig, axes = plt.subplots(6, n_models, figsize=(per_fig_width, per_fig_height))
     # Ensure axes is always 2D for consistent indexing
     if n_models == 1:
-        axes = axes.reshape(5, 1)
+        axes = axes.reshape(6, 1)
     
     # Increase hspace to make room for x-tick labels at the bottom of each heatmap
-    plt.subplots_adjust(wspace=0.1, hspace=0.25)
+    plt.subplots_adjust(wspace=0.03, hspace=0.2)
 
     for i, (key, value) in enumerate(data_dict.items()):
         data = pd.read_csv(value)
@@ -348,20 +348,20 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                 cbar=False,
                 xticklabels=False,
                 yticklabels=yticklabels,
-                annot_kws={"fontsize": 3}
+                annot_kws={"fontsize": 4.5}
             )
             
             # FORCE x-tick labels to show on EVERY heatmap at the bottom
             ax.set_xticks([x + 0.5 for x in range(len(heatmap_data.columns))])  # Offset by 0.5 to center on cells
             ax.set_xticklabels(heatmap_data.columns, visible=True, fontsize=1)
-            ax.tick_params(axis='x', labelbottom=True, labeltop=False, labelsize=3.5, pad=0)  # pad=0 moves labels closer
+            ax.tick_params(axis='x', labelbottom=True, labeltop=False, labelsize=5.5, pad=0)  # pad=0 moves labels closer
             ax.xaxis.set_ticks_position('bottom')
             ax.xaxis.set_label_position('bottom')
             
             # Move x-tick labels closer to the heatmap by adjusting their position
             for label in ax.get_xticklabels():
                 label.set_verticalalignment('top')
-                label.set_y(0.12)  # Move labels up closer to the heatmap
+                label.set_y(0.08)  # Move labels up closer to the heatmap
             
             # Remove axis labels that seaborn adds automatically
             ax.set_xlabel('')
@@ -375,23 +375,23 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                 # Show labels positioned between the method pairs
                 if y_label == 'VLPActivation':  # Second row of VLP pair
                     right_label = 'Min/Max Exp'
-                    show_label = True
+                    show_label = False
                 elif y_label == 'PWLActivation':  # Second row of PWL pair
                     right_label = 'Segment Range'
-                    show_label = True
+                    show_label = False
                 elif y_label == 'TaylorSoftmax':  # Only row for Taylor
                     right_label = 'Degree Center'
-                    show_label = True
+                    show_label = False
                 
                 if show_label:
                     # Position the label between the current and previous row for pairs
                     if y_label in ['VLPActivation', 'PWLActivation']:
                         # Create text positioned between this row and the previous row
                         fig.text(0.905, (axes[j, i].get_position().y0 + axes[j-1, i].get_position().y1) / 2, 
-                                right_label, fontsize=4, rotation=270, ha='left', va='center')
+                                right_label, fontsize=5, rotation=270, ha='left', va='center')
                     else:  # TaylorSoftmax - centered on its own row
                         fig.text(0.905, (axes[j, i].get_position().y0 + axes[j, i].get_position().y1) / 2,
-                                right_label, fontsize=4, rotation=270, ha='left', va='center')
+                                right_label, fontsize=5, rotation=270, ha='left', va='center')
             
             # Remove x-axis labels
             ax.set_xlabel('')
@@ -415,29 +415,29 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                 # Set title positioned to the left
                 if 'vivit' in key.lower():
                     ax.text(0.5, 1.02, key_title, transform=ax.transAxes, 
-                        fontsize=4.75, ha='center', va='bottom')
+                        fontsize=6.75, ha='center', va='bottom')
                 else:
                     ax.text(0.42, 1.02, key_title, transform=ax.transAxes, 
-                        fontsize=4.75, ha='center', va='bottom')
+                        fontsize=6.75, ha='center', va='bottom')
 
                 # ax.text(0.08, 1.25, torch_dict[key_title], transform=ax.transAxes, 
                 #         fontsize=3.5, ha='center', va='center', color='black',)
                 # Split ppl values and display vertically with line separator
-                ppl_values = str(ppl_dict[key_title]).split('/')
-                if len(ppl_values) == 2:
-                    # First value (top)
-                    ax.text(.91, 1.32, ppl_values[0], transform=ax.transAxes, 
-                           fontsize=3.5, ha='center', va='center')
-                    # Separator line
-                    ax.text(.91, 1.29, '_____', transform=ax.transAxes, 
-                           fontsize=3.0, ha='center', va='center')
-                    # Second value (bottom)
-                    ax.text(.91, 1.1, ppl_values[1], transform=ax.transAxes, 
-                           fontsize=3.5, ha='center', va='center')
-                else:
-                    # Fallback for single values
-                    ax.text(0.5, 1.08, str(ppl_dict[key_title]), transform=ax.transAxes, 
-                           fontsize=3.5, ha='center', va='bottom')
+                # ppl_values = str(ppl_dict[key_title]).split('/')
+                # if len(ppl_values) == 2:
+                #     # First value (top)
+                #     ax.text(.91, 1.32, ppl_values[0], transform=ax.transAxes, 
+                #            fontsize=5.5, ha='center', va='center')
+                #     # Separator line
+                #     ax.text(.91, 1.29, '_____', transform=ax.transAxes, 
+                #            fontsize=5.0, ha='center', va='center')
+                #     # Second value (bottom)
+                #     ax.text(.91, 1.1, ppl_values[1], transform=ax.transAxes, 
+                #            fontsize=5.5, ha='center', va='center')
+                # else:
+                #     # Fallback for single values
+                #     ax.text(0.5, 1.08, str(ppl_dict[key_title]), transform=ax.transAxes, 
+                #            fontsize=5.5, ha='center', va='bottom')
             
             # Add method labels on the y-axis for the first column only
             y_label_title = 'VLP SM' if y_label == 'VLPSoftmax' else \
@@ -447,7 +447,7 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                       'Taylor SM'
 
             if i == 0:
-                ax.set_ylabel(y_label_title, fontsize=5, rotation=90, labelpad=11, 
+                ax.set_ylabel(y_label_title, fontsize=7, rotation=90, labelpad=4, 
                              bbox=dict(boxstyle='round,pad=0.1', facecolor="#C5C7C9", edgecolor="#4A92DA", linewidth=0.5))
             
             # Add left-side y-axis labels for y-data only for the first column, positioned between method pairs
@@ -458,23 +458,23 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                 # Show labels positioned between the method pairs for y-axis data
                 if y_label == 'VLPActivation':  # Second row of VLP pair
                     left_label = 'LUT Size'
-                    show_left_label = True
+                    show_left_label = False
                 elif y_label == 'PWLActivation':  # Second row of PWL pair
                     left_label = 'Segments'
-                    show_left_label = True
+                    show_left_label = False
                 elif y_label == 'TaylorSoftmax':  # Only row for Taylor
                     left_label = 'Degrees'
-                    show_left_label = True
+                    show_left_label = False
                 
                 if show_left_label:
                     # Position the label between the current and previous row for pairs
                     if y_label in ['VLPActivation', 'PWLActivation']:
                         # Create text positioned between this row and the previous row
                         fig.text(0.11, (axes[j, i].get_position().y0 + axes[j-1, i].get_position().y1) / 2, 
-                                left_label, fontsize=5, rotation=90, ha='right', va='center')
+                                left_label, fontsize=6, rotation=90, ha='right', va='center')
                     else:  # TaylorSoftmax - centered on its own row
                         fig.text(0.11, (axes[j, i].get_position().y0 + axes[j, i].get_position().y1) / 2,
-                                left_label, fontsize=5, rotation=90, ha='right', va='center')
+                                left_label, fontsize=6, rotation=90, ha='right', va='center')
             
             # Set tick parameters for consistent styling
             ax.tick_params(axis='x', which='major', pad=0)
@@ -484,7 +484,56 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
             
             # Ensure y-tick labels are handled properly
             if yticklabels:
-                plt.setp(ax.get_yticklabels(), visible=True, fontsize=4)
+                if y_label == 'TaylorSoftmax':
+                    plt.setp(ax.get_yticklabels(), visible=True, fontsize=6, rotation=0)
+                else:
+                    plt.setp(ax.get_yticklabels(), visible=True, fontsize=6)
+
+        # Create table for best perplexity values in the bottom row
+        table_ax = axes[5, i]  # Bottom row for table
+        table_ax.axis('off')  # Turn off axis
+        
+        # Get perplexity values from ppl_dict (same as shown at top of figure)
+        ppl_values = str(ppl_dict[key_title]).split('/')
+        best_vlp = ppl_values[0]  # First value (VLP)
+        best_pwl = ppl_values[1]  # Second value (PWL) 
+        
+        # Get best Taylor values from CSV
+        data = pd.read_csv(value)
+        data = data.drop(columns=['model', 'modality', 'function_name', 'patch_attention', 'patch_ffn'])
+        data['value'] = pd.to_numeric(data['value'], errors='coerce')
+        data = data.dropna(subset=['value'])
+        taylor_data = data[data['attn_fn'] == 'TaylorSoftmax']
+        best_taylor = f'{taylor_data["value"].min():.2f}'
+        
+        # Create table data
+        table_data = [['VLP', 'PWL', 'Taylor'], 
+                     [best_vlp, best_pwl, best_taylor]]
+        
+        # Create table
+        table = table_ax.table(cellText=table_data,
+                              cellLoc='center',
+                              loc='center',
+                              colWidths=[0.33, 0.33, 0.33])
+        
+        # Style the table
+        table.auto_set_font_size(False)
+        table.set_fontsize(5)
+        
+        # Style header row and make border lines thinner
+        for j in range(3):
+            table[(0, j)].set_facecolor('#E8E8E8')
+            table[(0, j)].set_text_props(weight='bold')
+            table[(0, j)].set_linewidth(0.5)
+            table[(1, j)].set_facecolor('#F5F5F5')
+            table[(1, j)].set_linewidth(0.5)
+        
+    # Add "Full PPL" label for the first column only (outside the loop)
+    if len(data_dict) > 0:
+        table_ax_first = axes[5, 0]  # First column table
+        fig.text(0.095, (table_ax_first.get_position().y0 + table_ax_first.get_position().y1) / 2,
+                'Full PPL', fontsize=7, rotation=90, ha='center', va='center',
+                bbox=dict(boxstyle='round,pad=0.1', facecolor="#C5C7C9", edgecolor="#4A92DA", linewidth=0.5))
 
     # Save under local figures/ like single_heatmap and ensure path exists
     save_dir = os.path.expanduser('figures')
