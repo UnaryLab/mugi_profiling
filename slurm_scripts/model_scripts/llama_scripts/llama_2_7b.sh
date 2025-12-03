@@ -5,7 +5,6 @@
 #SBATCH --gres=gpu:1
 #SBATCH --job-name=llama_2_7b
 #SBATCH --partition=highgpu
-#SBATCH --job-name=llama_2_7b_profiling
 #SBATCH --error=output/run/llama_2/llama_2_7b/error.txt
 #SBATCH --output=output/run/llama_2/llama_2_7b/output.txt
 

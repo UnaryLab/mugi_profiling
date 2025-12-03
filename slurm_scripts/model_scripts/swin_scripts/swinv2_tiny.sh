@@ -1,11 +1,9 @@
 #!/bin/bash
 
-#SBATCH --account=bebv-delta-gpu
 #SBATCH --time=1:00:00
-#SBATCH --cpus-per-task=1
-#SBATCH --ntasks=8
+#SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
-#SBATCH --job-name=swinv2_profiling_tiny
+#SBATCH --job-name=swinv2_tiny
 #SBATCH --error=output/run/swin/swin_tiny/error.txt
 #SBATCH --output=output/run/swin/swin_tiny/output.txt
 
@@ -22,15 +20,8 @@ conda activate mugi_profiling
 cd ~/mugi_profiling
 
 # Configuration files to process
-model_configs=("config/model_config/swin/swinv2_tiny.yaml")
-nonlinear_config="config/nonlinear_config/large_model_configs/nonlinear_config_torch.yaml"
-parameter_config="config/parameter_config/parameter_config.yaml"
-hf_token="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"
-
-# Configuration files to process
 model_config="config/model_config/swin/swinv2_tiny.yaml"
 nonlinear_config="config/nonlinear_config/nonlinear_config_dep/nonlinear_config.yaml"
-# nonlinear_config="config/nonlinear_config/vlp/vlp_softmax.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
