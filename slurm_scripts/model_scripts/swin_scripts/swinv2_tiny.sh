@@ -21,7 +21,7 @@ cd ~/mugi_profiling
 
 # Configuration files to process
 model_config="config/model_config/swin/swinv2_tiny.yaml"
-nonlinear_config="config/nonlinear_config/nonlinear_config_dep/nonlinear_config.yaml"
+nonlinear_config="config/nonlinear_config_dep/nonlinear_config.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
