@@ -62,7 +62,7 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
 
     # Use the same per-axes size as single_heatmap, then scale by grid dimensions
     per_fig_width = 506 / 72.27
-    per_fig_height = per_fig_width * 0.65
+    per_fig_height = per_fig_width * 0.575
 
     fig, axes = plt.subplots(6, n_models, figsize=(per_fig_width, per_fig_height))
     # Ensure axes is always 2D for consistent indexing
@@ -544,7 +544,7 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
     # Add "Full PPL" label for the first column only (outside the loop)
     if len(data_dict) > 0:
         table_ax_first = axes[5, 0]  # First column table
-        fig.text(0.081, (table_ax_first.get_position().y0 + table_ax_first.get_position().y1) / 2,
+        fig.text(0.0845, (table_ax_first.get_position().y0 + table_ax_first.get_position().y1) / 2,
                 'Full PPL', fontsize=7, rotation=90, ha='center', va='center',
                 bbox=dict(boxstyle='round,pad=0.1', facecolor="#C5C7C9", edgecolor="#4A92DA", linewidth=0.5))
 
