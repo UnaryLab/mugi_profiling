@@ -5,6 +5,16 @@ import seaborn as sns
 import numpy as np
 import os
 
+base_acc = {
+    'vivit': 1.77392578125,
+    'llama_2_7b': 5.754334063454066,
+    'llama_2_13b': 5.192732655174028,
+    'swin_tiny': 0.90771484375,
+    'swin_large': 0.71240234375,
+    'whisper_tiny': 22.232662691545976,
+    'whisper_large': 5.059855323136026
+}
+
 # Set global font size
 plt.rcParams.update({'font.size': 7})
 
@@ -354,7 +364,7 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
             # FORCE x-tick labels to show on EVERY heatmap at the bottom
             ax.set_xticks([x + 0.5 for x in range(len(heatmap_data.columns))])  # Offset by 0.5 to center on cells
             ax.set_xticklabels(heatmap_data.columns, visible=True, fontsize=1)
-            ax.tick_params(axis='x', labelbottom=True, labeltop=False, labelsize=5.5, pad=0)  # pad=0 moves labels closer
+            ax.tick_params(axis='x', labelbottom=True, labeltop=False, labelsize=4.5, pad=0)  # pad=0 moves labels closer
             ax.xaxis.set_ticks_position('bottom')
             ax.xaxis.set_label_position('bottom')
             
@@ -375,13 +385,13 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                 # Show labels positioned between the method pairs
                 if y_label == 'VLPActivation':  # Second row of VLP pair
                     right_label = 'Min/Max Exp'
-                    show_label = False
+                    show_label = True
                 elif y_label == 'PWLActivation':  # Second row of PWL pair
                     right_label = 'Segment Range'
-                    show_label = False
+                    show_label = True
                 elif y_label == 'TaylorSoftmax':  # Only row for Taylor
                     right_label = 'Degree Center'
-                    show_label = False
+                    show_label = True
                 
                 if show_label:
                     # Position the label between the current and previous row for pairs
@@ -412,13 +422,9 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                 key_title = 'ViViT'
             
             if j == 0:  
-                # Set title positioned to the left
-                if 'vivit' in key.lower():
-                    ax.text(0.5, 1.02, key_title, transform=ax.transAxes, 
-                        fontsize=6.75, ha='center', va='bottom')
-                else:
-                    ax.text(0.42, 1.02, key_title, transform=ax.transAxes, 
-                        fontsize=6.75, ha='center', va='bottom')
+                # Set title positioned in the center
+                ax.text(0.5, 1.02, key_title, transform=ax.transAxes, 
+                    fontsize=6.75, ha='center', va='bottom')
 
                 # ax.text(0.08, 1.25, torch_dict[key_title], transform=ax.transAxes, 
                 #         fontsize=3.5, ha='center', va='center', color='black',)
@@ -447,7 +453,7 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                       'Taylor SM'
 
             if i == 0:
-                ax.set_ylabel(y_label_title, fontsize=7, rotation=90, labelpad=4, 
+                ax.set_ylabel(y_label_title, fontsize=7, rotation=90, labelpad=11, 
                              bbox=dict(boxstyle='round,pad=0.1', facecolor="#C5C7C9", edgecolor="#4A92DA", linewidth=0.5))
             
             # Add left-side y-axis labels for y-data only for the first column, positioned between method pairs
@@ -458,22 +464,22 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                 # Show labels positioned between the method pairs for y-axis data
                 if y_label == 'VLPActivation':  # Second row of VLP pair
                     left_label = 'LUT Size'
-                    show_left_label = False
+                    show_left_label = True
                 elif y_label == 'PWLActivation':  # Second row of PWL pair
                     left_label = 'Segments'
-                    show_left_label = False
+                    show_left_label = True
                 elif y_label == 'TaylorSoftmax':  # Only row for Taylor
                     left_label = 'Degrees'
-                    show_left_label = False
+                    show_left_label = True
                 
                 if show_left_label:
                     # Position the label between the current and previous row for pairs
                     if y_label in ['VLPActivation', 'PWLActivation']:
                         # Create text positioned between this row and the previous row
-                        fig.text(0.11, (axes[j, i].get_position().y0 + axes[j-1, i].get_position().y1) / 2, 
+                        fig.text(0.109, (axes[j, i].get_position().y0 + axes[j-1, i].get_position().y1) / 2, 
                                 left_label, fontsize=6, rotation=90, ha='right', va='center')
                     else:  # TaylorSoftmax - centered on its own row
-                        fig.text(0.11, (axes[j, i].get_position().y0 + axes[j, i].get_position().y1) / 2,
+                        fig.text(0.109, (axes[j, i].get_position().y0 + axes[j, i].get_position().y1) / 2,
                                 left_label, fontsize=6, rotation=90, ha='right', va='center')
             
             # Set tick parameters for consistent styling
@@ -485,9 +491,9 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
             # Ensure y-tick labels are handled properly
             if yticklabels:
                 if y_label == 'TaylorSoftmax':
-                    plt.setp(ax.get_yticklabels(), visible=True, fontsize=6, rotation=0)
+                    plt.setp(ax.get_yticklabels(), visible=True, fontsize=4.5, rotation=0)
                 else:
-                    plt.setp(ax.get_yticklabels(), visible=True, fontsize=6)
+                    plt.setp(ax.get_yticklabels(), visible=True, fontsize=4.5)
 
         # Create table for best perplexity values in the bottom row
         table_ax = axes[5, i]  # Bottom row for table
@@ -506,22 +512,29 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
         taylor_data = data[data['attn_fn'] == 'TaylorSoftmax']
         best_taylor = f'{taylor_data["value"].min():.2f}'
         
+        # Get base accuracy for this model
+        base_value = base_acc.get(key, 'N/A')
+        if isinstance(base_value, (int, float)):
+            base_str = f'{base_value:.2f}'
+        else:
+            base_str = str(base_value)
+        
         # Create table data
-        table_data = [['VLP', 'PWL', 'Taylor'], 
-                     [best_vlp, best_pwl, best_taylor]]
+        table_data = [['Base', 'VLP', 'PWL', 'T'], 
+                     [base_str, best_vlp, best_pwl, best_taylor]]
         
         # Create table
         table = table_ax.table(cellText=table_data,
                               cellLoc='center',
                               loc='center',
-                              colWidths=[0.33, 0.33, 0.33])
+                              colWidths=[0.25, 0.25, 0.25, 0.25])
         
         # Style the table
         table.auto_set_font_size(False)
-        table.set_fontsize(5)
+        table.set_fontsize(4.5)
         
         # Style header row and make border lines thinner
-        for j in range(3):
+        for j in range(4):
             table[(0, j)].set_facecolor('#E8E8E8')
             table[(0, j)].set_text_props(weight='bold')
             table[(0, j)].set_linewidth(0.5)
@@ -531,7 +544,7 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
     # Add "Full PPL" label for the first column only (outside the loop)
     if len(data_dict) > 0:
         table_ax_first = axes[5, 0]  # First column table
-        fig.text(0.095, (table_ax_first.get_position().y0 + table_ax_first.get_position().y1) / 2,
+        fig.text(0.081, (table_ax_first.get_position().y0 + table_ax_first.get_position().y1) / 2,
                 'Full PPL', fontsize=7, rotation=90, ha='center', va='center',
                 bbox=dict(boxstyle='round,pad=0.1', facecolor="#C5C7C9", edgecolor="#4A92DA", linewidth=0.5))
 
