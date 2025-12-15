@@ -1,0 +1,5 @@
+model,modality,value,function_name,patch_attention,patch_ffn,attn_fn,ffn_fn,attn_exp_dim,attn_max_exp,attn_min_exp,attn_window_size,attn_lut_build,ffn_exp_dim,ffn_max_pos_exp,ffn_min_pos_exp,ffn_window_size,ffn_lut_build,attn_segments,attn_segment_0,ffn_segments,ffn_segment_0,attn_degree_center,attn_degrees
+meta-llama/Llama-2-7b-hf,nlp,6.216854827706362,vlp,True,True,VLPSoftmax,VLPSilu,10.0,2.0,2.0,32.0,max,11.0,3.0,3.0,32.0,max,,,,,,
+meta-llama/Llama-2-7b-hf,nlp,5.67942231576971,pwl,True,True,PWLSoftmax,PWLSilu,,,,,,,,,,,25.0,-16.0,25.0,4.0,,
+meta-llama/Llama-2-7b-hf,nlp,6.002524870553592,pwl_mobilenet,False,True,CustomSoftmax,PWLMobilenet,,,,,,,,,,,,,,,,
+meta-llama/Llama-2-7b-hf,nlp,5.724087559000343,taylor,True,False,TaylorSoftmax,CustomSilu,,,,,,,,,,,,,,,-5.0,6.0

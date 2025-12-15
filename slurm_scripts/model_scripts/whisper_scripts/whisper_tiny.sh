@@ -1,28 +1,31 @@
 #!/bin/bash
 
-#SBATCH --time=01:00:00
-#SBATCH --cpus-per-task=8
+#SBATCH --account=bebv-delta-gpu
+#SBATCH --time=4:00:00
+#SBATCH --cpus-per-task=1
+#SBATCH --ntasks=8
+#SBATCH --partition=gpuA100x4,gpuA100x8
 #SBATCH --gres=gpu:1
-#SBATCH --job-name=whisper_tiny
-#SBATCH --constraint=gpu32
+#SBATCH --mem=64g
+#SBATCH --job-name=whisper_profiling_tiny
 #SBATCH --error=output/run/whisper/whisper_tiny/error.txt
 #SBATCH --output=output/run/whisper/whisper_tiny/output.txt
 
-# module load anaconda
+# module load python
+# module load anaconda3_gpu
 # module load cuda
-# module load openblas
 
-# Initialize conda properly for bash script
+# # Initialize conda properly for bash script
 # source $(conda info --base)/etc/profile.d/conda.sh
-# eval "$(conda shell.bash hook)"
 
+# conda deactivate
 # conda activate mugi_profiling
 
-cd ~/mugi_profiling
+# cd ~/mugi_profiling
 
 # Configuration files to process
 model_config="config/model_config/whisper/whisper_tiny.yaml"
-nonlinear_config="config/nonlinear_config/vlp/vlp_softmax.yaml"
+nonlinear_config="config/nonlinear_config/pwl/pwl_softmax.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 
@@ -35,6 +38,15 @@ echo "----------------------------------------"
 
 # Run the transformer script with the current config
 export PYTHONPATH=~/mugi_profiling:$PYTHONPATH
+
+# NUM_GPUS=$(nvidia-smi -L | wc -l)
+
+# python -m torch.distributed.run \
+#     --nproc_per_node=$NUM_GPUS \
+#     src/model_script.py \
+#     --model_config "$model_config" \
+#     --nonlinear_config "$nonlinear_config" \
+#     --parameter_config "$parameter_config"
 
 python src/model_script.py --model_config "$model_config" \
                             --nonlinear_config "$nonlinear_config" \

@@ -3,3 +3,4 @@
 *.pyd
 
  profile/
+ profile_dep/

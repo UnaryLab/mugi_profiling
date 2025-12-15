@@ -2,10 +2,10 @@ nonlinear_function: softmax
 approx_function: vlp
 patch_per_layer: False
 parameters:
-  exp_dim: 8
+  exp_dim: [8, 9, 10, 11, 12]
   window_dim: 16
-  window_size: 32
+  window_size: 256
   lut_build: max
   mant_dim: 16
-  # max_min_exp: [-6, -5, -4, -3, -2, -1, 0]
-  max_min_exp: [-3, -2, -1, 0, 1, 2, 3]
+  # max_min_exp: [-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2]
+  max_min_exp: [-4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7]

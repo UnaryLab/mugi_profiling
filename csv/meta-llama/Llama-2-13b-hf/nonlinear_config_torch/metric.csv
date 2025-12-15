@@ -1,0 +1,3 @@
+model,modality,value,function_name,patch_attention,patch_ffn,attn_fn,ffn_fn
+meta-llama/Llama-2-13b-hf,nlp,5.192732655174028,torch,True,False,CustomSoftmax,CustomSilu
+meta-llama/Llama-2-13b-hf,nlp,4.556197676823823,torch,True,True,CustomSoftmax,CustomSilu

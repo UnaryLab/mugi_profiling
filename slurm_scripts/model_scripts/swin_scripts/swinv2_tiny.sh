@@ -1,27 +1,31 @@
 #!/bin/bash
 
-#SBATCH --time=1:00:00
-#SBATCH --cpus-per-task=8
+#SBATCH --account=bebv-delta-gpu
+#SBATCH --time=4:00:00
+#SBATCH --cpus-per-task=1
+#SBATCH --ntasks=8
+#SBATCH --partition=gpuA100x4,gpuA100x8
 #SBATCH --gres=gpu:1
-#SBATCH --job-name=swinv2_tiny
+#SBATCH --mem=64g
+#SBATCH --job-name=swinv2_profiling_tiny
 #SBATCH --error=output/run/swin/swin_tiny/error.txt
 #SBATCH --output=output/run/swin/swin_tiny/output.txt
 
-module load cuda
-module load openblas
-module load anaconda
+# module load python
+# module load anaconda3_gpu
+# module load cuda
 
-# Initialize conda properly for bash script
-source $(conda info --base)/etc/profile.d/conda.sh
+# # Initialize conda properly for bash script
+# source $(conda info --base)/etc/profile.d/conda.sh
 
-conda deactivate
-conda activate mugi_profiling
+# conda deactivate
+# conda activate mugi_profiling
 
-cd ~/mugi_profiling
+# cd ~/mugi_profiling
 
 # Configuration files to process
 model_config="config/model_config/swin/swinv2_tiny.yaml"
-nonlinear_config="config/nonlinear_config_dep/nonlinear_config.yaml"
+nonlinear_config="config/nonlinear_config/vlp/vlp_softmax.yaml"
 parameter_config="config/parameter_config/parameter_config.yaml"
 hf_token="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"
 

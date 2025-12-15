@@ -112,10 +112,14 @@ class InferenceModel(ABC):
         ppl = torch.exp(total_loss / num_batches)
         return ppl
 
+    def compute_loss(self, total_loss, num_batches):
+        return total_loss / num_batches
+
     def run_batched_inference(self):
         total_loss = torch.tensor(0, dtype=torch.float64)
         num_batches = torch.tensor(0, dtype=torch.float64)
-        for batch in tqdm(self.inputs, desc="Batched Inference"):
+        #for batch in tqdm(self.inputs, desc="Batched Inference"):
+        for batch in self.inputs:
             batched_loss = self.run_inference(
                 batch=batch
             )
@@ -393,6 +397,22 @@ class InferenceModel(ABC):
                             self.run_layer_configuration(attn_params=attn_params, ffn_params=ffn_params)
             # Loop through all combinations (same patch for all layers)
             else:
+                # for funct_key, funct_val in tqdm(self.nonlinear_function_parameters.items(),  desc="Running configurations"):
+                #     for nl_key, nl_val in funct_val.items():
+                #         (keys, values) = zip(*nl_val.items())
+                #         combinations = list(product(*values))
+                #         combinations = [dict(zip(keys, combo)) for combo in combinations]
+                #         for combination in tqdm(combinations, desc=f"Running {funct_key} configurations"):
+                #             if nl_key in ['attention', 'both']:
+                #                 attn_params = combination
+                #             else:
+                #                 attn_params = {}
+                #             if self.nonlinear_function in ['ffn', 'both']:
+                #                 ffn_params = combination
+                #             else:
+                #                 ffn_params = {}
+                #             self.run_configuration(attn_params=attn_params, ffn_params=ffn_params)
+                        
                 for key, value in self.nonlinear_function_parameters.items():
                     if not isinstance(value, list):
                         self.nonlinear_function_parameters[key] = [value]
@@ -400,7 +420,6 @@ class InferenceModel(ABC):
                 (keys, values) = zip(*self.nonlinear_function_parameters.items())
                 combinations = list(product(*values))
                 combinations = [dict(zip(keys, combo)) for combo in combinations]
-                
                 for combination in tqdm(combinations, desc="Running configurations"):
                     if self.nonlinear_function in ['softmax', 'both']:
                         attn_params = combination

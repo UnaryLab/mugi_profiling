@@ -43,17 +43,23 @@ class SwinModel(InferenceModel):
             self.inputs.append(processed_example)
 
     def patch_layers(self, attention_class, ffn_class, attention_parameters: dict = {}, ffn_parameters: dict = {}, attention_keys: list = [], ffn_keys: list = [], path: str = None):
+        block_idx = 0
         for i, layers in enumerate(self.model.swinv2.encoder.layers):
-            for j, block in enumerate(block.blocks):
-                block_idx = i * len(layers) + j
+            for j, block in enumerate(layers.blocks):
                 layer_device = next(block.parameters()).device
                 
-                attention_object = attention_class(**attention_parameters, layer=block_idx, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=attention_keys, profile=self.profile)
-                ffn_object = ffn_class(**ffn_parameters, layer=block_idx, device=layer_device, profile_path=path, profile_dims=self.profile_dims, keys=ffn_keys, profile=self.profile)
-                forward = swin_forward(attention_object)
+                self.append_nonlinear_list(attention_class=attention_class,
+                                           ffn_class=ffn_class,
+                                           layer=i,
+                                           device=layer_device,
+                                           path=path,
+                                           profiling_dims=self.profile_dims)
+
+                forward = swin_forward(self.attention_objects[block_idx])
                 
                 block.attention.self.forward = types.MethodType(forward, block.attention.self)
-                block.intermediate.intermediate_act_fn = ffn_object
+                block.intermediate.intermediate_act_fn = self.ffn_objects[block_idx]
+                block_idx += 1
 
             # elif 'swinv2' in self.model_name:
         #     for i, block in enumerate(self.model.swinv2.encoder.layers):
@@ -68,10 +74,10 @@ class SwinModel(InferenceModel):
         #             layer.attention.self.forward = types.MethodType(forward, layer.attention.self)
         #             layer.intermediate.intermediate_act_fn = ffn_object
 
-    def compute_metric(self):
-        return self.compute_loss()
+    def compute_metric(self, total_loss, num_batches):
+        return self.compute_loss(total_loss, num_batches)
     
-    def compute_loss(self, batch):
+    def run_inference(self, batch):
         pixel_values = torch.stack([ex["pixel_values"].squeeze(0) for ex in batch]).to(self.device).to(torch.float16)
         labels = torch.stack([ex["labels"] for ex in batch]).squeeze(-1).to(self.device)
         with torch.no_grad():
