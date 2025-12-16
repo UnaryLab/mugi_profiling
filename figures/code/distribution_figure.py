@@ -695,4 +695,4 @@ if not os.path.exists('figures/output'):
 
 
 plt.savefig('figures/output/value_distribution.png', dpi=300, bbox_inches='tight')
-plt.savefig('figures/value_distribution.pdf', dpi=1200, bbox_inches='tight')
+plt.savefig('figures/output/value_distribution.pdf', dpi=1200, bbox_inches='tight')
