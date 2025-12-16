@@ -8,12 +8,12 @@
 #SBATCH --gres=gpu:2
 #SBATCH --mem=64g
 #SBATCH --job-name=llama_profiling
-#SBATCH --error=output/llama/error.txt
-#SBATCH --output=output/llama/output.txt
+#SBATCH --error=output/distribution/llama/error.txt
+#SBATCH --output=output/distribution/llama/output.txt
 
-module load python
-module load anaconda3_gpu
-module load cuda
+# module load python
+# module load anaconda3_gpu
+# module load cuda
 
 # Initialize conda properly for bash script
 source $(conda info --base)/etc/profile.d/conda.sh

@@ -384,16 +384,8 @@ model_config = {
         'layers': [0, 15, 31],
         'seq': [1023, 2047, 4095],
     },
-    'Llama-2-70b-hf': {
-        'layers': [0, 39, 79],
-        'seq': [1023, 2047, 4095],
-    },
-    'Llama-3.1-8B': {
-        'layers': [0, 15, 31],
-        'seq': [1023, 2047, 4095],
-    },
-    'Llama-3.1-405B': {
-        'layers': [0, 62, 125],
+    'Llama-2-13b-hf': {
+        'layers': [0, 19, 39],
         'seq': [1023, 2047, 4095],
     },
     'whisper-tiny': {
@@ -436,8 +428,6 @@ window_size = 3
 
 model_dict = get_subdirs(base_dir, model_config)
 
-print(model_dict)
-
 per_fig_width = 506 / 72.27
 per_fig_height = per_fig_width * 0.3
 
@@ -445,9 +435,9 @@ per_fig_height = per_fig_width * 0.3
 fig = plt.figure(figsize=(per_fig_width, per_fig_height))
 
 # Create gridspec with proper column arrangement for seamless pairs
-# Columns: Llama2_L, Llama2_R, gap, Llama3_L, Llama3_R, gap, Whisper_L, Whisper_R, gap, SwinV2_L, SwinV2_R, gap, ViViT
-gs = gridspec.GridSpec(4, 13, figure=fig, hspace=0.285, wspace=0,
-                       width_ratios=[1, 1, 0.25, 1, 1, 0.25, 1, 1, 0.25, 1, 1, 0.25, 1])
+# Columns: Llama2_L, Llama2_R, gap, Whisper_L, Whisper_R, gap, SwinV2_L, SwinV2_R, gap, ViViT
+gs = gridspec.GridSpec(4, 10, figure=fig, hspace=0.285, wspace=0,
+                       width_ratios=[1, 1, 0.25, 1, 1, 0.25, 1, 1, 0.25, 1])
 
 # Create axes manually - pairs are adjacent (no gap), with spacing between model families
 axes = {}
@@ -457,40 +447,81 @@ for row in range(4):
     axes[(row, 0)] = fig.add_subplot(gs[row, 0])
     axes[(row, 1)] = fig.add_subplot(gs[row, 1])
 
-# Llama 3 (columns 3,4 - adjacent) 
+# Whisper (columns 3,4 - adjacent)
 for row in range(4):
     axes[(row, 2)] = fig.add_subplot(gs[row, 3])
     axes[(row, 3)] = fig.add_subplot(gs[row, 4])
 
-# Whisper (columns 6,7 - adjacent)
+# SwinV2 (columns 6,7 - adjacent)
 for row in range(4):
     axes[(row, 4)] = fig.add_subplot(gs[row, 6])
     axes[(row, 5)] = fig.add_subplot(gs[row, 7])
 
-# SwinV2 (columns 9,10 - adjacent)
+# ViViT (column 9 - solo)
 for row in range(4):
     axes[(row, 6)] = fig.add_subplot(gs[row, 9])
-    axes[(row, 7)] = fig.add_subplot(gs[row, 10])
-
-# ViViT (column 12 - solo)
-for row in range(4):
-    axes[(row, 8)] = fig.add_subplot(gs[row, 12])
 
 model_dict_sorted = {}
 model_dict_sorted['Llama 2 7B'] = model_dict['Llama-2-7b-hf']
-model_dict_sorted['Llama 2 70B'] = model_dict['Llama-2-70b-hf']
-model_dict_sorted['Llama 3.1 8B'] = model_dict['Llama-3.1-8B']
-model_dict_sorted['Llama 3.1 405B'] = model_dict['Llama-3.1-405B']
+model_dict_sorted['Llama 2 13B'] = model_dict['Llama-2-13b-hf']
 model_dict_sorted['Whisper Tiny'] = model_dict['whisper-tiny']
 model_dict_sorted['Whisper Large'] = model_dict['whisper-large']
 model_dict_sorted['SwinV2 Tiny'] = model_dict['swinv2-tiny-patch4-window8-256']
 model_dict_sorted['SwinV2 Large'] = model_dict['swinv2-large-patch4-window12to16-192to256-22kto1k-ft']
 model_dict_sorted['ViViT Base'] = model_dict['vivit-b-16x2']
 
-model_list = ['Llama 2 7B', 'Llama 2 70B', 'Llama 3.1 8B', 'Llama 3.1 405B', 'Whisper Tiny', 'Whisper Large', 'SwinV2 Tiny', 'SwinV2 Large', 'ViViT Base']
+model_list = ['Llama 2 7B', 'Llama 2 13B', 'Whisper Tiny', 'Whisper Large', 'SwinV2 Tiny', 'SwinV2 Large', 'ViViT Base']
 nonlinear_ops = ['softmax', 'silu', 'gelu']
 distribution_list = ['value_dist', 'exp_dist']
 layer_type_list = ['encoder', 'decoder']
+
+# Dictionary to set x-axis limits for each model subplot
+# Format: model_name -> {'softmax_value': (xmin, xmax), 'activation_value': (xmin, xmax), 
+#                        'softmax_exp': (xmin, xmax), 'activation_exp': (xmin, xmax)}
+model_xlim_config = {
+    'Llama 2 7B': {
+        'softmax_value': (-16, 0),  # None means auto
+        'activation_value': (-2, 2),
+        'softmax_exp': (-8, 8),
+        'activation_exp': (-8, 8)
+    },
+    'Llama 2 13B': {
+        'softmax_value': (-16, 0),
+        'activation_value': (-8, 8),
+        'softmax_exp': (-8, 8),
+        'activation_exp': (-8, 8)
+    },
+    'Whisper Tiny': {
+        'softmax_value': (-16, 0),
+        'activation_value': (-10, 0),
+        'softmax_exp': (-8, 8),
+        'activation_exp': (-8, 8)
+    },
+    'Whisper Large': {
+        'softmax_value': (-12, 0),
+        'activation_value': (-4, 0),
+        'softmax_exp': (-8, 8),
+        'activation_exp': (-8, 8)
+    },
+    'SwinV2 Tiny': {
+        'softmax_value': (-16, 0),
+        'activation_value': (-8, 8),
+        'softmax_exp': (-8, 8),
+        'activation_exp': (-8, 8)
+    },
+    'SwinV2 Large': {
+        'softmax_value': (-16, 0),
+        'activation_value': (-8, 8),
+        'softmax_exp': (-8, 8),
+        'activation_exp': (-8, 8)
+    },
+    'ViViT Base': {
+        'softmax_value': (-12, 0),
+        'activation_value': (-10, 0),
+        'softmax_exp': (-8, 8),
+        'activation_exp': (-8, 8)
+    }
+}
 
 model_dict_sorted = sort_dict(model_dict_sorted, model_list)
 for model in model_dict_sorted.keys():
@@ -543,27 +574,21 @@ axes[(1, 1)].sharey(axes[(1, 0)])
 axes[(2, 1)].sharey(axes[(2, 0)])
 axes[(3, 1)].sharey(axes[(3, 0)])
 
-axes[(0, 3)].sharey(axes[(0, 2)])  # Llama 3s
+axes[(0, 3)].sharey(axes[(0, 2)])  # Whispers
 axes[(1, 3)].sharey(axes[(1, 2)])
 axes[(2, 3)].sharey(axes[(2, 2)])
 axes[(3, 3)].sharey(axes[(3, 2)])
 
-axes[(0, 5)].sharey(axes[(0, 4)])  # Whispers
+axes[(0, 5)].sharey(axes[(0, 4)])  # SwinV2s
 axes[(1, 5)].sharey(axes[(1, 4)])
 axes[(2, 5)].sharey(axes[(2, 4)])
 axes[(3, 5)].sharey(axes[(3, 4)])
 
-axes[(0, 7)].sharey(axes[(0, 6)])  # SwinV2s
-axes[(1, 7)].sharey(axes[(1, 6)])
-axes[(2, 7)].sharey(axes[(2, 6)])
-axes[(3, 7)].sharey(axes[(3, 6)])
-
 # Hide y-axis labels and ticks on right subplots of each pair to create seamless appearance
 for row in range(4):
     axes[(row, 1)].tick_params(left=False, labelleft=False)  # Llama 2 right
-    axes[(row, 3)].tick_params(left=False, labelleft=False)  # Llama 3 right
-    axes[(row, 5)].tick_params(left=False, labelleft=False)  # Whisper right
-    axes[(row, 7)].tick_params(left=False, labelleft=False)  # SwinV2 right
+    axes[(row, 3)].tick_params(left=False, labelleft=False)  # Whisper right
+    axes[(row, 5)].tick_params(left=False, labelleft=False)  # SwinV2 right
 
 for i, (model, model_value) in enumerate(model_dict_sorted.items()):
 
@@ -614,6 +639,17 @@ for i, (model, model_value) in enumerate(model_dict_sorted.items()):
                     if nonlinear_op == 'softmax':
                         ax.set_title(f'{model.split(' ')[-1]}', fontsize=6, pad=2)
 
+                # Apply x-axis limits from config if specified
+                if model in model_xlim_config:
+                    if 'exp' in distribution:
+                        xlim_key = 'softmax_exp' if nonlinear_op == 'softmax' else 'activation_exp'
+                    else:
+                        xlim_key = 'softmax_value' if nonlinear_op == 'softmax' else 'activation_value'
+                    
+                    xlim = model_xlim_config[model].get(xlim_key)
+                    if xlim is not None:
+                        ax.set_xlim(xlim)
+
                 ax_text = 'SM' if nonlinear_op == 'softmax' else 'S' if 'llama' in model.lower() else 'G'
 
                 if i % 2 != 1:
@@ -635,7 +671,7 @@ range_value = 10
 
 
 for row in range(4):
-    for col in range(9):  # Still 9 logical columns for our axes dict
+    for col in range(7):  # Now 7 logical columns for our axes dict
         ax = axes[(row, col)]
 
         
@@ -665,10 +701,9 @@ for row in range(4):
             spine.set_linewidth(0.375)
 
 set_ax_title(axes[(0, 0)], axes[(0, 1)], 'Llama 2')
-set_ax_title(axes[(0, 2)], axes[(0, 3)], 'Llama 3.1')
-set_ax_title(axes[(0, 4)], axes[(0, 5)], 'Whisper')
-set_ax_title(axes[(0, 6)], axes[(0, 7)], 'SwinV2')
-set_ax_title(axes[(0, 8)], axes[(0, 8)], 'ViViT')
+set_ax_title(axes[(0, 2)], axes[(0, 3)], 'Whisper')
+set_ax_title(axes[(0, 4)], axes[(0, 5)], 'SwinV2')
+set_ax_title(axes[(0, 6)], axes[(0, 6)], 'ViViT')
 
 value_pos_test = axes[(0, 0)].get_position().y1
 value_pos1 = axes[(0, 0)].get_position().y0

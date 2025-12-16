@@ -8,12 +8,12 @@
 #SBATCH --gres=gpu:2
 #SBATCH --mem=64g
 #SBATCH --job-name=whisper_profiling
-#SBATCH --error=output/whisper/error.txt
-#SBATCH --output=output/whisper/output.txt
+#SBATCH --error=output/distribution/whisper/error.txt
+#SBATCH --output=output/distribution/whisper/output.txt
 
-module load python
-module load anaconda3_gpu
-module load cuda
+# module load python
+# module load anaconda3_gpu
+# module load cuda
 
 # Initialize conda properly for bash script
 source $(conda info --base)/etc/profile.d/conda.sh

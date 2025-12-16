@@ -1,0 +1,5 @@
+model,modality,value,function_name,patch_attention,patch_ffn,attn_fn,ffn_fn
+microsoft/swinv2-tiny-patch4-window8-256,vision,0.90771484375,torch,True,False,CustomSoftmax,CustomGelu
+microsoft/swinv2-tiny-patch4-window8-256,vision,0.90771484375,torch,True,False,CustomSoftmax,CustomGelu
+microsoft/swinv2-tiny-patch4-window8-256,vision,0.90771484375,torch,True,False,CustomSoftmax,CustomGelu
+microsoft/swinv2-tiny-patch4-window8-256,vision,0.90771484375,torch,True,False,CustomSoftmax,CustomGelu

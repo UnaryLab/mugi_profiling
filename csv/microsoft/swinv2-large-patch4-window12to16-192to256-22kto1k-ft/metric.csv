@@ -1,0 +1,5 @@
+model,modality,value,function_name,patch_attention,patch_ffn,attn_fn,ffn_fn
+microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft,vision,0.71240234375,torch,True,False,CustomSoftmax,CustomGelu
+microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft,vision,0.71240234375,torch,True,False,CustomSoftmax,CustomGelu
+microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft,vision,0.71240234375,torch,True,False,CustomSoftmax,CustomGelu
+microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft,vision,0.71240234375,torch,True,False,CustomSoftmax,CustomGelu

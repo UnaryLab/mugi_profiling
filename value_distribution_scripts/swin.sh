@@ -8,12 +8,14 @@
 #SBATCH --gres=gpu:2
 #SBATCH --mem=64g
 #SBATCH --job-name=swin_profiling
-#SBATCH --error=output/swin/error.txt
-#SBATCH --output=output/swin/output.txt
+#SBATCH --error=output/distribution/swin/error.txt
+#SBATCH --output=output/distribution/swin/output.txt
 
-module load python
-module load anaconda3_gpu
-module load cuda
+# module purge
+
+# module load python
+# module load anaconda3_gpu
+# module load cuda
 
 # Initialize conda properly for bash script
 source $(conda info --base)/etc/profile.d/conda.sh
@@ -23,8 +25,10 @@ conda activate mugi_profiling
 
 cd ~/mugi_profiling
 
-model_configs=("config/model_config/swin/swin2_tiny.yaml"
-               "config/model_config/swin/swin2_large.yaml")
+ls config/model_config/swin/
+
+model_configs=("config/model_config/swin/swinv2_tiny.yaml"
+               "config/model_config/swin/swinv2_large.yaml")
 nonlinear_config="config/nonlinear_config/nonlinear_config_torch.yaml"
 parameter_config="config/parameter_config/profile_config.yaml"
 hf_token="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"

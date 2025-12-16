@@ -4,16 +4,16 @@
 #SBATCH --time=1:00:00
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=16
-#SBATCH --partition=gpuA100x4,gpuA40x4,gpuA100x8,gpuH200x8
-#SBATCH --gres=gpu:2
+#SBATCH --partition=gpuH200x8
+#SBATCH --gres=gpu:1
 #SBATCH --mem=64g
 #SBATCH --job-name=vivit_profiling
-#SBATCH --error=output/vivit/error.txt
-#SBATCH --output=output/vivit/output.txt
+#SBATCH --error=output/distribution/vivit/error.txt
+#SBATCH --output=output/distribution/vivit/output.txt
 
-module load python
-module load anaconda3_gpu
-module load cuda
+# module load python
+# module load anaconda3_gpu
+# module load cuda
 
 # Initialize conda properly for bash script
 source $(conda info --base)/etc/profile.d/conda.sh
