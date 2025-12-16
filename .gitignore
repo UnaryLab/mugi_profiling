@@ -10,3 +10,5 @@ null/
 *.pyd
 
  /profile/
+__pycache__/
+.vscode/

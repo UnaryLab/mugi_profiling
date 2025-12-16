@@ -1,15 +1,15 @@
 #!/bin/bash
 
 #SBATCH --account=bebv-delta-gpu
-#SBATCH --time=4:00:00
+#SBATCH --time=2:00:00
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=16
-#SBATCH --partition=gpuA100x4,gpuA40x4,gpuA100x8,gpuH200x8
+#SBATCH --partition=gpuH200x8
 #SBATCH --gres=gpu:2
 #SBATCH --mem=64g
-#SBATCH --job-name=whisper_profiling
-#SBATCH --error=output/whisper/error.txt
-#SBATCH --output=output/whisper/output.txt
+#SBATCH --job-name=llama_profiling
+#SBATCH --error=output/llama/error.txt
+#SBATCH --output=output/llama/output.txt
 
 module load python
 module load anaconda3_gpu
@@ -23,10 +23,10 @@ conda activate mugi_profiling
 
 cd ~/mugi_profiling
 
-model_configs=("config/model_config/swin/swinv2_small.yaml"
-               "config/model_config/swin/swinv2_base.yaml")
-nonlinear_config="config/nonlinear_config/nonlinear_config.yaml"
-parameter_config="config/parameter_config/parameter_config.yaml"
+model_configs=("config/model_config/llama/llama_2_7b.yaml"
+               "config/model_config/llama/llama_2_13b.yaml")
+nonlinear_config="config/nonlinear_config/nonlinear_config_torch.yaml"
+parameter_config="config/parameter_config/profile_config.yaml"
 hf_token="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"
 
 huggingface-cli login --token "$hf_token"
@@ -61,6 +61,4 @@ for model_config in "${model_configs[@]}"; do
     fi
     
     echo "----------------------------------------"
-
-    # rm -rf ~/.cache/huggingface
 done
