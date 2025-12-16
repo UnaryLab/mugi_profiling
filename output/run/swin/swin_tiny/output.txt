@@ -1,0 +1,6 @@
+
+Running experiment with configuration: config/model_config/swin/swinv2_tiny.yaml
+----------------------------------------
+Loading configuration files...
+✗ Error occurred while running experiment with config/model_config/swin/swinv2_tiny.yaml (exit code: 1)
+----------------------------------------

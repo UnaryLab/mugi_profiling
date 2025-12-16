@@ -1,0 +1,14 @@
+The token has not been saved to the git credentials helper. Pass `add_to_git_credential=True` in this function directly or `--add-to-git-credential` if using via `huggingface-cli` if you want to set the git credential as well.
+Token is valid (permission: read).
+The token `newton_cluster` has been saved to /home/da109073/.cache/huggingface/stored_tokens
+Your token has been saved to /home/da109073/.cache/huggingface/token
+Login successful.
+The current active token is: `newton_cluster`
+Traceback (most recent call last):
+  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 100, in <module>
+    main()
+    ~~~~^^
+  File "/lustre/fs1/home/da109073/mugi_profiling/src/model_script.py", line 91, in main
+    nonlinear_config = yaml.safe_load(open(args.nonlinear_config))
+                                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'config/nonlinear_config/nonlinear_config_dep/nonlinear_config.yaml'
