@@ -8,6 +8,5 @@ null/
 *.pyc
 *.pyo
 *.pyd
- profile/*
 
- */profile
+ /profile/
