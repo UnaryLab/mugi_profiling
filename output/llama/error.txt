@@ -1,39 +1,0 @@
-Lmod has detected the following error: The following module(s) are unknown:
-"anaconda3_gpu"
-
-Please check the spelling or version number. Also try "module spider ..."
-It is also possible your cache file is out-of-date; it may help to try:
-  $ module --ignore_cache load "anaconda3_gpu"
-
-Also make sure that all modulefiles written in TCL start with the string
-#%Module
-
-
-
-Lmod has detected the following error: Cannot load module "cuda/12.8" because
-these module(s) are loaded:
-   cudatoolkit
-
-While processing the following module(s):
-    Module fullname  Module Filename
-    ---------------  ---------------
-    cuda/12.8        /opt/cray/pe/lmod/modulefiles/core/cuda/12.8.lua
-
-The token has not been saved to the git credentials helper. Pass `add_to_git_credential=True` in this function directly or `--add-to-git-credential` if using via `hf`CLI if you want to set the git credential as well.
-Token is valid (permission: read).
-The token `newton_cluster` has been saved to /u/dprice1/.cache/huggingface/stored_tokens
-Your token has been saved to /u/dprice1/.cache/huggingface/token
-Login successful.
-The current active token is: `newton_cluster`
-Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  9.86it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 19.71it/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.60s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.02it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.08s/it]
-Patching configurations:   0%|          | 0/1 [00:00<?, ?it/s]
-Processing torch combinations:   0%|          | 0/1 [00:00<?, ?it/s][A
-Processing torch combinations: 100%|██████████| 1/1 [00:57<00:00, 57.17s/it][AProcessing torch combinations: 100%|██████████| 1/1 [00:57<00:00, 57.17s/it]
-Patching configurations: 100%|██████████| 1/1 [00:57<00:00, 57.17s/it]Patching configurations: 100%|██████████| 1/1 [00:57<00:00, 57.17s/it]
-Fetching 3 files:   0%|          | 0/3 [00:00<?, ?it/s]Fetching 3 files: 100%|██████████| 3/3 [00:00<00:00, 34.60it/s]
-Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:01<00:03,  1.55s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:03<00:01,  1.54s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:04<00:00,  1.27s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:04<00:00,  1.35s/it]
-Patching configurations:   0%|          | 0/1 [00:00<?, ?it/s]
-Processing torch combinations:   0%|          | 0/1 [00:00<?, ?it/s][A
-Processing torch combinations: 100%|██████████| 1/1 [01:36<00:00, 96.62s/it][AProcessing torch combinations: 100%|██████████| 1/1 [01:36<00:00, 96.62s/it]
-Patching configurations: 100%|██████████| 1/1 [01:36<00:00, 96.62s/it]Patching configurations: 100%|██████████| 1/1 [01:36<00:00, 96.62s/it]
