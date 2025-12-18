@@ -5,14 +5,23 @@ import seaborn as sns
 import numpy as np
 import os
 
+vivit_torch_csv = pd.read_csv('csv/google/vivit-b-16x2/nonlinear_config_torch/metric.csv')
+llama_7b_torch_csv = pd.read_csv('csv/meta-llama/Llama-2-7b-hf/nonlinear_config_torch/metric.csv')
+llama_13b_torch_csv = pd.read_csv('csv/meta-llama/Llama-2-13b-hf/nonlinear_config_torch/metric.csv')
+swin_tiny_torch_csv = pd.read_csv('csv/microsoft/swinv2-tiny-patch4-window8-256/nonlinear_config_torch/metric.csv')
+swin_large_torch_csv = pd.read_csv('csv/microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft/nonlinear_config_torch/metric.csv')
+whisper_tiny_torch_csv = pd.read_csv('csv/openai/whisper-tiny/nonlinear_config_torch/metric.csv')
+whisper_large_torch_csv = pd.read_csv('csv/openai/whisper-large/nonlinear_config_torch/metric.csv')
+
+
 base_acc = {
-    'vivit': 1.77392578125,
-    'llama_2_7b': 5.754334063454066,
-    'llama_2_13b': 5.192732655174028,
-    'swin_tiny': 0.90771484375,
-    'swin_large': 0.71240234375,
-    'whisper_tiny': 22.232662691545976,
-    'whisper_large': 5.059855323136026
+    'vivit': vivit_torch_csv.iloc[0]['value'],
+    'llama_2_7b': llama_7b_torch_csv.iloc[0]['value'],
+    'llama_2_13b': llama_13b_torch_csv.iloc[0]['value'],
+    'swin_tiny': swin_tiny_torch_csv.iloc[0]['value'],
+    'swin_large': swin_large_torch_csv.iloc[0]['value'],
+    'whisper_tiny': whisper_tiny_torch_csv.iloc[0]['value'],
+    'whisper_large': whisper_large_torch_csv.iloc[0]['value']
 }
 
 # Set global font size
@@ -40,24 +49,50 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
 
     n_models = len(data_dict)
 
-    ppl_dict = {
-        'Llama 2 7B': '6.21/5.68',
-        'Llama 2 13B': '6.00/5.21',
-        'Whisper Tiny': '11.1/22.2',
-        'Whisper Large': '3.52/5.05',
-        'SwinV2 Tiny': '0.83/0.91',
-        'SwinV2 Large': '0.67/0.71',
-        'ViViT': '1.75/1.77'
-    }
+    vivit_e2e_csv = pd.read_csv('csv/google/vivit-b-16x2/nonlinear_e2e_config/metric.csv')
+    llama_7b_e2e_csv = pd.read_csv('csv/meta-llama/Llama-2-7b-hf/nonlinear_e2e_config/metric.csv')
+    llama_13b_e2e_csv = pd.read_csv('csv/meta-llama/Llama-2-13b-hf/nonlinear_e2e_config/metric.csv')
+    swin_tiny_e2e_csv = pd.read_csv('csv/microsoft/swinv2-tiny-patch4-window8-256/nonlinear_e2e_config/metric.csv')
+    swin_large_e2e_csv = pd.read_csv('csv/microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft/nonlinear_e2e_config/metric.csv')
+    whisper_tiny_e2e_csv = pd.read_csv('csv/openai/whisper-tiny/nonlinear_e2e_config/metric.csv')
+    whisper_large_e2e_csv = pd.read_csv('csv/openai/whisper-large/nonlinear_e2e_config/metric.csv')
 
-    torch_dict = {
-        'Llama 2 7B': '5.75',
-        'Llama 2 13B': '5.19',
-        'Whisper Tiny': '22.2',
-        'Whisper Large': '5.06',
-        'SwinV2 Tiny': '0.91',
-        'SwinV2 Large': '0.71',
-        'ViViT': '1.77'
+    ppl_dict = {
+        'vivit': {
+            'vlp': vivit_e2e_csv[vivit_e2e_csv['attn_fn'].str.contains('VLP', na=False)]['value'].values[0],
+            'pwl': vivit_e2e_csv[vivit_e2e_csv['attn_fn'].str.contains('PWL', na=False)]['value'].values[0],
+            'taylor': vivit_e2e_csv[vivit_e2e_csv['attn_fn'].str.contains('Taylor', na=False)]['value'].values[0]
+        },
+        'llama_2_7b': {
+            'vlp': llama_7b_e2e_csv[llama_7b_e2e_csv['attn_fn'].str.contains('VLP', na=False)]['value'].values[0],
+            'pwl': llama_7b_e2e_csv[llama_7b_e2e_csv['attn_fn'].str.contains('PWL', na=False)]['value'].values[0],
+            'taylor': llama_7b_e2e_csv[llama_7b_e2e_csv['attn_fn'].str.contains('Taylor', na=False)]['value'].values[0]
+        },
+        'llama_2_13b': {
+            'vlp': llama_13b_e2e_csv[llama_13b_e2e_csv['attn_fn'].str.contains('VLP', na=False)]['value'].values[0],
+            'pwl': llama_13b_e2e_csv[llama_13b_e2e_csv['attn_fn'].str.contains('PWL', na=False)]['value'].values[0],
+            'taylor': llama_13b_e2e_csv[llama_13b_e2e_csv['attn_fn'].str.contains('Taylor', na=False)]['value'].values[0]
+        },
+        'swin_tiny': {
+            'vlp': swin_tiny_e2e_csv[swin_tiny_e2e_csv['attn_fn'].str.contains('VLP', na=False)]['value'].values[0],
+            'pwl': swin_tiny_e2e_csv[swin_tiny_e2e_csv['attn_fn'].str.contains('PWL', na=False)]['value'].values[0],
+            'taylor': swin_tiny_e2e_csv[swin_tiny_e2e_csv['attn_fn'].str.contains('Taylor', na=False)]['value'].values[0]
+        },
+        'swin_large': {
+            'vlp': swin_large_e2e_csv[swin_large_e2e_csv['attn_fn'].str.contains('VLP', na=False)]['value'].values[0],
+            'pwl': swin_large_e2e_csv[swin_large_e2e_csv['attn_fn'].str.contains('PWL', na=False)]['value'].values[0],
+            'taylor': swin_large_e2e_csv[swin_large_e2e_csv['attn_fn'].str.contains('Taylor', na=False)]['value'].values[0]
+        },
+        'whisper_tiny': {
+            'vlp': whisper_tiny_e2e_csv[whisper_tiny_e2e_csv['attn_fn'].str.contains('VLP', na=False)]['value'].values[0],
+            'pwl': whisper_tiny_e2e_csv[whisper_tiny_e2e_csv['attn_fn'].str.contains('PWL', na=False)]['value'].values[0],
+            'taylor': whisper_tiny_e2e_csv[whisper_tiny_e2e_csv['attn_fn'].str.contains('Taylor', na=False)]['value'].values[0]
+        },
+        'whisper_large': {
+            'vlp': whisper_large_e2e_csv[whisper_large_e2e_csv['attn_fn'].str.contains('VLP', na=False)]['value'].values[0],
+            'pwl': whisper_large_e2e_csv[whisper_large_e2e_csv['attn_fn'].str.contains('PWL', na=False)]['value'].values[0],
+            'taylor': whisper_large_e2e_csv[whisper_large_e2e_csv['attn_fn'].str.contains('Taylor', na=False)]['value'].values[0]
+        }
     }
 
     # Use the same per-axes size as single_heatmap, then scale by grid dimensions
@@ -73,7 +108,7 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
     plt.subplots_adjust(wspace=0.03, hspace=0.2)
 
     for i, (key, value) in enumerate(data_dict.items()):
-        data = pd.read_csv(value)
+        data = value
         data = data.drop(columns=['model', 'modality', 'function_name', 'patch_attention', 'patch_ffn'])
 
         for j, y_label in enumerate(y_labels):
@@ -295,12 +330,12 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
 
                 lut_slice = plot_data[plot_data['attn_degree_center'].between(lut_lower_bound, lut_upper_bound)]
                 
-                
-                
-
                 heatmap_data = lut_slice.pivot_table(index='attn_degrees', columns='attn_degree_center', values='value')
-                max_row_idx = heatmap_data.stack().idxmax()[0]
-                heatmap_data = heatmap_data.drop(index=max_row_idx)
+                
+                # For TaylorSoftmax, filter to keep only degrees 6-10
+                available_degrees = heatmap_data.index
+                degrees_to_keep = [d for d in available_degrees if 6 <= d <= 10]
+                heatmap_data = heatmap_data.loc[degrees_to_keep]
                 
 
             else:
@@ -338,10 +373,10 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
             if 'whisper_tiny' in key.lower():
             # Build mask to hide only NaN cells, keep colored cells for values > 10
                 mask = heatmap_data.isna()
-                ann = heatmap_data.copy().applymap(lambda v: f"{v:.1f}" if pd.notna(v) and v <= 25 else "")
+                ann = heatmap_data.copy().map(lambda v: f"{v:.1f}" if pd.notna(v) and v <= 25 else "")
             else:
                 mask = heatmap_data.isna()
-                ann = heatmap_data.copy().applymap(lambda v: f"{v:.2f}" if pd.notna(v) and v <= 10 else "")
+                ann = heatmap_data.copy().map(lambda v: f"{v:.2f}" if pd.notna(v) and v <= 10 else "")
             
             if i == 0:
                 yticklabels = True
@@ -425,25 +460,6 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                 # Set title positioned in the center
                 ax.text(0.5, 1.02, key_title, transform=ax.transAxes, 
                     fontsize=6.75, ha='center', va='bottom')
-
-                # ax.text(0.08, 1.25, torch_dict[key_title], transform=ax.transAxes, 
-                #         fontsize=3.5, ha='center', va='center', color='black',)
-                # Split ppl values and display vertically with line separator
-                # ppl_values = str(ppl_dict[key_title]).split('/')
-                # if len(ppl_values) == 2:
-                #     # First value (top)
-                #     ax.text(.91, 1.32, ppl_values[0], transform=ax.transAxes, 
-                #            fontsize=5.5, ha='center', va='center')
-                #     # Separator line
-                #     ax.text(.91, 1.29, '_____', transform=ax.transAxes, 
-                #            fontsize=5.0, ha='center', va='center')
-                #     # Second value (bottom)
-                #     ax.text(.91, 1.1, ppl_values[1], transform=ax.transAxes, 
-                #            fontsize=5.5, ha='center', va='center')
-                # else:
-                #     # Fallback for single values
-                #     ax.text(0.5, 1.08, str(ppl_dict[key_title]), transform=ax.transAxes, 
-                #            fontsize=5.5, ha='center', va='bottom')
             
             # Add method labels on the y-axis for the first column only
             y_label_title = 'VLP SM' if y_label == 'VLPSoftmax' else \
@@ -499,23 +515,17 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
         table_ax = axes[5, i]  # Bottom row for table
         table_ax.axis('off')  # Turn off axis
         
-        # Get perplexity values from ppl_dict (same as shown at top of figure)
-        ppl_values = str(ppl_dict[key_title]).split('/')
-        best_vlp = ppl_values[0]  # First value (VLP)
-        best_pwl = ppl_values[1]  # Second value (PWL) 
-        
-        # Get best Taylor values from CSV
-        data = pd.read_csv(value)
-        data = data.drop(columns=['model', 'modality', 'function_name', 'patch_attention', 'patch_ffn'])
-        data['value'] = pd.to_numeric(data['value'], errors='coerce')
-        data = data.dropna(subset=['value'])
-        taylor_data = data[data['attn_fn'] == 'TaylorSoftmax']
-        best_taylor = f'{taylor_data["value"].min():.2f}'
+        # Get perplexity values from ppl_dict using the original key (not key_title)
+        ppl_values = ppl_dict[key]
+        # Format with 1 decimal if >= 10, else 2 decimals
+        best_vlp = f'{ppl_values["vlp"]:.1f}' if ppl_values["vlp"] >= 10 else f'{ppl_values["vlp"]:.2f}'
+        best_pwl = f'{ppl_values["pwl"]:.1f}' if ppl_values["pwl"] >= 10 else f'{ppl_values["pwl"]:.2f}'
+        best_taylor = f'{ppl_values["taylor"]:.1f}' if ppl_values["taylor"] >= 10 else f'{ppl_values["taylor"]:.2f}'
         
         # Get base accuracy for this model
         base_value = base_acc.get(key, 'N/A')
         if isinstance(base_value, (int, float)):
-            base_str = f'{base_value:.2f}'
+            base_str = f'{base_value:.1f}' if base_value >= 10 else f'{base_value:.2f}'
         else:
             base_str = str(base_value)
         
@@ -549,7 +559,7 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
                 bbox=dict(boxstyle='round,pad=0.1', facecolor="#C5C7C9", edgecolor="#4A92DA", linewidth=0.5))
 
     # Save under local figures/ like single_heatmap and ensure path exists
-    save_dir = os.path.expanduser('figures')
+    save_dir = 'figures/output/'
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
 
@@ -557,17 +567,31 @@ def plot_perplexity(data_dict: dict, highlight_color: str = 'red'):
     plt.savefig(os.path.join(save_dir, 'perplexity_plot.pdf'), dpi=1200, bbox_inches='tight', pad_inches=0.05)
 
 if __name__ == "__main__":
-    data_dict = {
-        'llama_2_7b': 'csv/meta-llama/Llama-2-7b-hf/metric.csv',
-        'llama_2_13b': 'csv/meta-llama/Llama-2-13b-hf/metric.csv',
-        #'llama_3_8b': 'csv/meta-llama/Llama-3.1-8B/metric.csv',
-        #'llama_2_13b': 'csv/meta-llama/Llama-2-7b-hf/metric.csv',
-        'whisper_tiny': 'csv/openai/whisper-tiny/nonlinear_config/metric.csv',
-        'whisper_large': 'csv/openai/whisper-large/metric.csv',
-        'swin_tiny': 'csv/microsoft/swinv2-tiny-patch4-window8-256/metric.csv',
-        'swin_large': 'csv/microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft/metric.csv',
-        'vivit': 'csv/google/vivit-b-16x2/metric.csv'
+    # Load and combine split_0 and split_1 CSVs for each model
+    data_dict = {}
+    
+    models = {
+        'llama_2_7b': 'csv/meta-llama/Llama-2-7b-hf',
+        'llama_2_13b': 'csv/meta-llama/Llama-2-13b-hf',
+        'whisper_tiny': 'csv/openai/whisper-tiny',
+        'whisper_large': 'csv/openai/whisper-large',
+        'swin_tiny': 'csv/microsoft/swinv2-tiny-patch4-window8-256',
+        'swin_large': 'csv/microsoft/swinv2-large-patch4-window12to16-192to256-22kto1k-ft',
+        'vivit': 'csv/google/vivit-b-16x2'
     }
+    
+    for model_name, base_path in models.items():
+        split_0_path = f'{base_path}/nonlinear_config_split_0/metric.csv'
+        split_1_path = f'{base_path}/nonlinear_config_split_1/metric.csv'
+        
+        # Load both splits
+        split_0_df = pd.read_csv(split_0_path)
+        split_1_df = pd.read_csv(split_1_path)
+        
+        # Combine them
+        combined_df = pd.concat([split_0_df, split_1_df], ignore_index=True)
+        
+        data_dict[model_name] = combined_df
 
     # You can customize the highlight color here (e.g., 'red', 'orange', 'yellow', '#FF5733', etc.)
     highlight_color = "#FF5E00"  # Example: a shade of orange

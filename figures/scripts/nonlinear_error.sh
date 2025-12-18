@@ -7,9 +7,9 @@
 #SBATCH --partition=gpuA100x4,gpuA40x4,gpuA100x8,gpuH200x8
 #SBATCH --gres=gpu:1
 #SBATCH --mem=64g
-#SBATCH --job-name=value_distribution_figure
-#SBATCH --error=output/figures/value_distribution/error.txt
-#SBATCH --output=output/figures/value_distribution/output.txt
+#SBATCH --job-name=nonlinear_error
+#SBATCH --error=output/figures/nonlinear_error/error.txt
+#SBATCH --output=output/figures/nonlinear_error/output.txt
 
 # module load python
 # module load anaconda3_gpu
@@ -23,4 +23,5 @@ conda activate mugi_profiling
 
 cd ~/mugi_profiling
 
-python figures/code/distribution_figure.py
+python figures/code/nonlinear_data.py
+python figures/code/nonlinear_error.py

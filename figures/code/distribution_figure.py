@@ -230,7 +230,7 @@ def exp_distribution(model, figure_dict, ax, nonlinear_op, s, linewidths, thresh
 
     for seq, seq_list in lines.items():
         layer_lines.extend(seq_list)
-    #exit()
+
     return layer_lines
 
 def value_distribution(model, figure_dict, ax, nonlinear_op, s, linewidths, threshold, pad, window_size, color_map, window=False):
@@ -251,7 +251,7 @@ def value_distribution(model, figure_dict, ax, nonlinear_op, s, linewidths, thre
                 y = tensor.numpy()
                 if len(y) > 400:
                     y = y[:400]
-
+                
                 x_trimmed, y_trimmed = trim_distribution(x, y, threshold=threshold, pad=pad)
                 if window:
                     y_trimmed = moving_average(y_trimmed, window_size=20, threshold=80, detect_outliers=False)
@@ -324,7 +324,6 @@ def merge_dicts(d1, d2):
     return d1
 
 def get_subdirs(base_dir, model_dict):
-    print(base_dir)
     if os.path.isdir(base_dir):
         output_dict = {}
         for subdir in os.listdir(base_dir):
@@ -475,54 +474,6 @@ nonlinear_ops = ['softmax', 'silu', 'gelu']
 distribution_list = ['value_dist', 'exp_dist']
 layer_type_list = ['encoder', 'decoder']
 
-# Dictionary to set x-axis limits for each model subplot
-# Format: model_name -> {'softmax_value': (xmin, xmax), 'activation_value': (xmin, xmax), 
-#                        'softmax_exp': (xmin, xmax), 'activation_exp': (xmin, xmax)}
-model_xlim_config = {
-    'Llama 2 7B': {
-        'softmax_value': (-16, 0),  # None means auto
-        'activation_value': (-2, 2),
-        'softmax_exp': (-8, 8),
-        'activation_exp': (-8, 8)
-    },
-    'Llama 2 13B': {
-        'softmax_value': (-16, 0),
-        'activation_value': (-8, 8),
-        'softmax_exp': (-8, 8),
-        'activation_exp': (-8, 8)
-    },
-    'Whisper Tiny': {
-        'softmax_value': (-16, 0),
-        'activation_value': (-10, 0),
-        'softmax_exp': (-8, 8),
-        'activation_exp': (-8, 8)
-    },
-    'Whisper Large': {
-        'softmax_value': (-12, 0),
-        'activation_value': (-4, 0),
-        'softmax_exp': (-8, 8),
-        'activation_exp': (-8, 8)
-    },
-    'SwinV2 Tiny': {
-        'softmax_value': (-16, 0),
-        'activation_value': (-8, 8),
-        'softmax_exp': (-8, 8),
-        'activation_exp': (-8, 8)
-    },
-    'SwinV2 Large': {
-        'softmax_value': (-16, 0),
-        'activation_value': (-8, 8),
-        'softmax_exp': (-8, 8),
-        'activation_exp': (-8, 8)
-    },
-    'ViViT Base': {
-        'softmax_value': (-12, 0),
-        'activation_value': (-10, 0),
-        'softmax_exp': (-8, 8),
-        'activation_exp': (-8, 8)
-    }
-}
-
 model_dict_sorted = sort_dict(model_dict_sorted, model_list)
 for model in model_dict_sorted.keys():
     model_dict_sorted[model] = sort_dict(model_dict_sorted[model], nonlinear_ops)
@@ -639,17 +590,6 @@ for i, (model, model_value) in enumerate(model_dict_sorted.items()):
                     if nonlinear_op == 'softmax':
                         ax.set_title(f'{model.split(' ')[-1]}', fontsize=6, pad=2)
 
-                # Apply x-axis limits from config if specified
-                if model in model_xlim_config:
-                    if 'exp' in distribution:
-                        xlim_key = 'softmax_exp' if nonlinear_op == 'softmax' else 'activation_exp'
-                    else:
-                        xlim_key = 'softmax_value' if nonlinear_op == 'softmax' else 'activation_value'
-                    
-                    xlim = model_xlim_config[model].get(xlim_key)
-                    if xlim is not None:
-                        ax.set_xlim(xlim)
-
                 ax_text = 'SM' if nonlinear_op == 'softmax' else 'S' if 'llama' in model.lower() else 'G'
 
                 if i % 2 != 1:
@@ -715,8 +655,8 @@ exp_pos1 = axes[(2, 0)].get_position().y0
 exp_pos2 = axes[(3, 0)].get_position().y1
 exp_pos = (exp_pos1 + exp_pos2) / 2
 
-fig.text(0.09, value_pos + 0.01, "Value Distribution", va='center', rotation='vertical', fontsize=6)
-fig.text(0.09, exp_pos - 0.01, "Exp Distribution", va='center', rotation='vertical', fontsize=6)
+fig.text(0.09, value_pos + 0.01, "Value", va='center', rotation='vertical', fontsize=6)
+fig.text(0.09, exp_pos - 0.01, "Exp", va='center', rotation='vertical', fontsize=6)
 # fig.text(0.05, value_pos_test + 0.01, "Value", va='center', fontsize=6)
 # fig.text(0.05, exp_pos_test + 0.01, "Exp", va='center', fontsize=6)
 
