@@ -77,7 +77,7 @@ class CustomNonlinear(torch.nn.Module):
                     exp_path = os.path.join(exp_path, f'{key}/')
             exp_path = os.path.join(self.profile_path, exp_path)
             exp_file = os.path.join(exp_path, f'seq_len_{write_dim}.pt')
-
+            
             value_path = f'{profile_path}/value_dist/layer_{self.layer}/'
             if self.blocks is not None:
                 value_path = os.path.join(value_path, f'block_{self.blocks}/')
@@ -86,20 +86,28 @@ class CustomNonlinear(torch.nn.Module):
                     value_path = os.path.join(value_path, f'{key}/')
             value_path = os.path.join(self.profile_path, value_path)
             value_file = os.path.join(value_path, f'seq_len_{write_dim}.pt')
-            if os.path.exists(exp_file):
-                prev_exp_count = torch.load(exp_file, weights_only=False).to(self.device)
-                if len(prev_exp_count) != len(exp_count):
-                    raise ValueError(f"Previous exp count length {len(prev_exp_count)} does not match current {len(exp_count)} for save_dim {write_dim}.")
-                exp_count += prev_exp_count
+            if os.path.exists(exp_file) and os.path.getsize(exp_file) > 0:
+                try:
+                    prev_exp_count = torch.load(exp_file, weights_only=False).to(self.device)
+                    if len(prev_exp_count) != len(exp_count):
+                        raise ValueError(f"Previous exp count length {len(prev_exp_count)} does not match current {len(exp_count)} for save_dim {write_dim}.")
+                    exp_count += prev_exp_count
+                except (EOFError, RuntimeError) as e:
+                    print(f"Warning: Failed to load {exp_file}: {e}. Creating new file.")
+                    os.makedirs(os.path.dirname(exp_file), exist_ok=True)
             else:
                 os.makedirs(os.path.dirname(exp_file), exist_ok=True)
             torch.save(exp_count, exp_file)
 
-            if os.path.exists(value_file):
-                prev_value_count = torch.load(value_file, weights_only=False).to(self.device)
-                if len(prev_value_count) != len(value_count):
-                    raise ValueError(f"Previous value count length {len(prev_value_count)} does not match current {len(value_count)} for save_dim {write_dim}.")
-                value_count += prev_value_count
+            if os.path.exists(value_file) and os.path.getsize(value_file) > 0:
+                try:
+                    prev_value_count = torch.load(value_file, weights_only=False).to(self.device)
+                    if len(prev_value_count) != len(value_count):
+                        raise ValueError(f"Previous value count length {len(prev_value_count)} does not match current {len(value_count)} for save_dim {write_dim}.")
+                    value_count += prev_value_count
+                except (EOFError, RuntimeError) as e:
+                    print(f"Warning: Failed to load {value_file}: {e}. Creating new file.")
+                    os.makedirs(os.path.dirname(value_file), exist_ok=True)
             else:
                 os.makedirs(os.path.dirname(value_file), exist_ok=True)
             torch.save(value_count, value_file)

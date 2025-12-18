@@ -21,7 +21,5 @@ source $(conda info --base)/etc/profile.d/conda.sh
 conda deactivate
 conda activate mugi_profiling
 
-cd ~/mugi_profiling
-
 python figures/code/nonlinear_data.py
 python figures/code/nonlinear_error.py

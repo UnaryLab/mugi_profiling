@@ -307,7 +307,6 @@ class InferenceModel:
             self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
 
     def loop_configuration(self):
-
         if self.end_to_end:
             path_0 = f'csv/{self.model_name}/nonlinear_config_split_0/metric.csv'
             path_1 = f'csv/{self.model_name}/nonlinear_config_split_1/metric.csv'

@@ -53,7 +53,6 @@ def evaluate_model(model_dict, nonlinear_dict, parameter_dict, nonlinear_config_
         inference_model.loop_configuration()
         print('Saving results')
 
-        print(inference_model.csv_file)
         inference_model.df.to_csv(inference_model.csv_file, index=False)
 
     finally:

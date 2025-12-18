@@ -336,4 +336,6 @@ def main():
     plt.show()
 
 if __name__ == '__main__':
+    if not os.path.exists('figures/output/'):
+        os.makedirs('figures/output/')
     main()

@@ -14,14 +14,13 @@
 # module load python
 # module load anaconda3_gpu
 # module load cuda
+module swap cudatoolkit cuda/11.8
 
 # Initialize conda properly for bash script
 source $(conda info --base)/etc/profile.d/conda.sh
 
 conda deactivate
-conda activate mugi_profiling
-
-cd ~/mugi_profiling
+conda activate mugi_profiling_test
 
 model_configs=("config/model_config/llama/llama_2_7b.yaml")
 nonlinear_config="config/nonlinear_config/nonlinear_config_split_0.yaml"
