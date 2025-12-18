@@ -12,3 +12,7 @@ null/
  /profile/
 __pycache__/
 .vscode/
+
+csv/
+profile/
+output/
