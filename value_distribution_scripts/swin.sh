@@ -7,7 +7,7 @@
 #SBATCH --partition=gpuA100x4,gpuA40x4,gpuA100x8,gpuH200x8
 #SBATCH --gres=gpu:2
 #SBATCH --mem=64g
-#SBATCH --job-name=swin_profiling
+#SBATCH --job-name=swin_distribution
 #SBATCH --error=output/distribution/swin/error.txt
 #SBATCH --output=output/distribution/swin/output.txt
 
@@ -31,7 +31,7 @@ model_configs=("config/model_config/swin/swinv2_tiny.yaml"
                "config/model_config/swin/swinv2_large.yaml")
 nonlinear_config="config/nonlinear_config/nonlinear_config_torch.yaml"
 parameter_config="config/parameter_config/profile_config.yaml"
-hf_token="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"
+hf_token="${TOKEN}"
 
 huggingface-cli login --token "$hf_token"
 

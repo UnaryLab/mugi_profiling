@@ -1,0 +1,3 @@
+model,modality,value,function_name,patch_attention,patch_ffn,attn_fn,ffn_fn
+google/vivit-b-16x2,video,1.77392578125,torch,True,False,CustomSoftmax,CustomFastGelu
+google/vivit-b-16x2,video,1.77392578125,torch,True,False,CustomSoftmax,CustomFastGelu

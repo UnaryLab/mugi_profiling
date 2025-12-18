@@ -56,12 +56,4 @@ class VisionModel(InferenceModel):
         del self.processor
         del self.inputs
         del self.dataset
-        
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-            torch.cuda.synchronize()
-        
-        model_cache_path = snapshot_download(self.model_name, local_files_only=True)
-        shutil.rmtree(model_cache_path, ignore_errors=True)
-
         gc.collect()

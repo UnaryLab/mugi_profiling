@@ -7,7 +7,7 @@
 #SBATCH --partition=gpuA100x4,gpuA40x4,gpuA100x8,gpuH200x8
 #SBATCH --gres=gpu:2
 #SBATCH --mem=64g
-#SBATCH --job-name=whisper_profiling
+#SBATCH --job-name=whisper_distribution
 #SBATCH --error=output/distribution/whisper/error.txt
 #SBATCH --output=output/distribution/whisper/output.txt
 
@@ -27,7 +27,8 @@ model_configs=("config/model_config/whisper/whisper_tiny.yaml"
                "config/model_config/whisper/whisper_large.yaml")
 nonlinear_config="config/nonlinear_config/nonlinear_config_torch.yaml"
 parameter_config="config/parameter_config/profile_config.yaml"
-hf_token="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"
+hf_token="${TOKEN}"
+
 
 huggingface-cli login --token "$hf_token"
 

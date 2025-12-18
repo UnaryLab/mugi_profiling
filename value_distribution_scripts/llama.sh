@@ -1,13 +1,13 @@
 #!/bin/bash
 
 #SBATCH --account=bebv-delta-gpu
-#SBATCH --time=2:00:00
+#SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=16
 #SBATCH --partition=gpuH200x8
 #SBATCH --gres=gpu:2
 #SBATCH --mem=64g
-#SBATCH --job-name=llama_profiling
+#SBATCH --job-name=llama_distribution
 #SBATCH --error=output/distribution/llama/error.txt
 #SBATCH --output=output/distribution/llama/output.txt
 
@@ -27,7 +27,7 @@ model_configs=("config/model_config/llama/llama_2_7b.yaml"
                "config/model_config/llama/llama_2_13b.yaml")
 nonlinear_config="config/nonlinear_config/nonlinear_config_torch.yaml"
 parameter_config="config/parameter_config/profile_config.yaml"
-hf_token="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"
+hf_token="${TOKEN}"
 
 huggingface-cli login --token "$hf_token"
 

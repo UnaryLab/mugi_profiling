@@ -7,7 +7,7 @@
 #SBATCH --partition=gpuH200x8
 #SBATCH --gres=gpu:1
 #SBATCH --mem=64g
-#SBATCH --job-name=vivit_profiling
+#SBATCH --job-name=vivit_distribution
 #SBATCH --error=output/distribution/vivit/error.txt
 #SBATCH --output=output/distribution/vivit/output.txt
 
@@ -26,7 +26,7 @@ cd ~/mugi_profiling
 model_configs=("config/model_config/vivit/vivit-b-16x2.yaml")
 nonlinear_config="config/nonlinear_config/nonlinear_config_torch.yaml"
 parameter_config="config/parameter_config/profile_config.yaml"
-hf_token="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"
+hf_token="${TOKEN}"
 
 huggingface-cli login --token "$hf_token"
 

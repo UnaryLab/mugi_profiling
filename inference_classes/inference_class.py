@@ -318,6 +318,7 @@ class InferenceModel:
 
             nonlinear_combinations = self.nonlinear_combinations(function_operations) if function_name != 'torch' else [function_operations]
 
+
             for nonlinear_combination in tqdm(nonlinear_combinations, desc=f'Processing {function_name} combinations'):
                 nonlinear_combination = self.flatten_dict(nonlinear_combination)
 
@@ -342,7 +343,7 @@ class InferenceModel:
                 elif (attn_op and not ffn_op) or (attn_op and ffn_op and not ffn_parameters):
                     patch_attention = True
                     if attention_parameters:
-                        for attention_combination in attention_parameters:
+                        for attention_combination in tqdm(attention_parameters, desc='Attention combinations'):
                             self.patch_model(function_name, attention_parameters=attention_combination, patch_attention=patch_attention, patch_ffn=patch_ffn)
                     else:
                         self.patch_model(function_name, patch_attention=patch_attention, patch_ffn=patch_ffn)
@@ -350,7 +351,7 @@ class InferenceModel:
                 elif (not attn_op and ffn_op) or (attn_op and ffn_op and not attention_parameters):
                     patch_ffn = True
                     if ffn_parameters:
-                        for ffn_combination in ffn_parameters:
+                        for ffn_combination in tqdm(ffn_parameters, desc='FFN combinations'):
                             self.patch_model(function_name, ffn_parameters=ffn_combination, patch_attention=patch_attention, patch_ffn=patch_ffn)
                     else:
                         self.patch_model(function_name, patch_attention=patch_attention, patch_ffn=patch_ffn)
@@ -374,8 +375,4 @@ class InferenceModel:
             self.df.to_csv(csv_file, index=False)
 
     def cleanup(self):
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-            torch.cuda.synchronize()
-
         gc.collect()

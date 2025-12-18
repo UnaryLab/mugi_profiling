@@ -63,5 +63,5 @@ class VideoModel(InferenceModel):
         del self.processor
         del self.inputs
         del self.dataset
-        
+        gc.collect()
         return

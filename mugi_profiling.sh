@@ -1,17 +1,36 @@
+#!/usr/bin/env bash
+export TOKEN=""
+
+PROFILE_DIR="profile"
+PPL_DIR="csv"
+ERROR_DIR="output"
+[ -d "$PROFILE_DIR" ] && rm -rf "$PROFILE_DIR"
+[ -d "$PPL_DIR" ] && rm -rf "$PPL_DIR"
+[ -d "$ERROR_DIR" ] && rm -rf "$ERROR_DIR"
 
 # value distribution profiling
-# sbatch value_distribution_scripts/swin.sh
-# sbatch value_distribution_scripts/llama.sh
-# sbatch value_distribution_scripts/whisper.sh
-sbatch value_distribution_scripts/vivit.sh
+llama_job=$(sbatch --parsable value_distribution_scripts/llama.sh)
+swin_job=$(sbatch --parsable value_distribution_scripts/swin.sh)
+vivit_job=$(sbatch --parsable value_distribution_scripts/vivit.sh)
+whisper_job=$(sbatch --parsable value_distribution_scripts/whisper.sh)
+sbatch --dependency=afterok:$llama_job:$swin_job:$vivit_job:$whisper_job figures/scripts/value_distribution_figure.sh
 
 # perplexity profiling
-sbatch ppl_distribution_scripts/swim/swin_tiny.sh
-sbatch ppl_distribution_scripts/swim/swin_large.sh
-#sbatch ppl_distribution_scripts/whisper/whisper_tiny.sh
-#sbatch ppl_distribution_scripts/whisper/whisper_large.sh
-sbatch ppl_distribution_scripts/vivit/vivit.sh
-#sbatch ppl_distribution_scripts/llama/llama_2_7b.sh
-sbatch ppl_distribution_scripts/llama/llama_2_13b.sh
+st_0=$(sbatch --parsable ppl_distribution_scripts/swin/swin_tiny_0.sh)
+st_1=$(sbatch --parsable ppl_distribution_scripts/swin/swin_tiny_1.sh)
+sl_0=$(sbatch --parsable ppl_distribution_scripts/swin/swin_large_0.sh)
+sl_1=$(sbatch --parsable ppl_distribution_scripts/swin/swin_large_1.sh)
+wt_0=$(sbatch --parsable ppl_distribution_scripts/whisper/whisper_tiny_0.sh)
+wt_1=$(sbatch --parsable ppl_distribution_scripts/whisper/whisper_tiny_1.sh)
+wl_0=$(sbatch --parsable ppl_distribution_scripts/whisper/whisper_large_0.sh)
+wl_1=$(sbatch --parsable ppl_distribution_scripts/whisper/whisper_large_1.sh)
+v_0=$(sbatch --parsable ppl_distribution_scripts/vivit/vivit_0.sh)
+v_1=$(sbatch --parsable ppl_distribution_scripts/vivit/vivit_1.sh)
+l7_0=$(sbatch --parsable ppl_distribution_scripts/llama/llama_2_7b_0.sh)
+l7_1=$(sbatch --parsable ppl_distribution_scripts/llama/llama_2_7b_1.sh)
+l13_0=$(sbatch --parsable ppl_distribution_scripts/llama/llama_2_13b_0.sh)
+l13_1=$(sbatch --parsable ppl_distribution_scripts/llama/llama_2_13b_1.sh)
+sbatch --dependency=afterok:$st_0:$st_1:$sl_0:$sl_1:$wt_0:$wt_1:$wl_0:$wl_1:$v_0:$v_1:$l7_0:$l7_1:$l13_0:$l13_1 figures/scripts/perplexity_figure.sh
 
-# theoretical nonlinear error
+theoretical nonlinear error
+sbatch figures/scripts/nonlinear_error.sh
