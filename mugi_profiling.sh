@@ -30,7 +30,12 @@ l7_0=$(sbatch --parsable ppl_distribution_scripts/llama/llama_2_7b_0.sh)
 l7_1=$(sbatch --parsable ppl_distribution_scripts/llama/llama_2_7b_1.sh)
 l13_0=$(sbatch --parsable ppl_distribution_scripts/llama/llama_2_13b_0.sh)
 l13_1=$(sbatch --parsable ppl_distribution_scripts/llama/llama_2_13b_1.sh)
-sbatch --dependency=afterok:$st_0:$st_1:$sl_0:$sl_1:$wt_0:$wt_1:$wl_0:$wl_1:$v_0:$v_1:$l7_0:$l7_1:$l13_0:$l13_1 figures/scripts/perplexity_figure.sh
 
-theoretical nonlinear error
+swin_e2e=$(sbatch --parsable --dependency=afterok:$st_0:$st_1:$sl_0:$sl_1 end_to_end_scripts/swin.sh)
+whisper_e2e=$(sbatch --parsable --dependency=afterok:$wt_0:$wt_1:$wl_0:$wl_1 end_to_end_scripts/whisper.sh)
+vivit_e2e=$(sbatch --parsable --dependency=afterok:$v_0:$v_1 end_to_end_scripts/vivit.sh)
+llama_e2e=$(sbatch --parsable --dependency=afterok:$l7_0:$l7_1:$l13_0:$l13_1 end_to_end_scripts/llama.sh)
+
+sbatch --dependency=afterok:$swin_e2e:$whisper_e2e:$vivit_e2e:$llama_e2e figures/scripts/heatmap.sh
+
 sbatch figures/scripts/nonlinear_error.sh

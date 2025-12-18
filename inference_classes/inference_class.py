@@ -52,6 +52,7 @@ class InferenceModel:
 
         self.n_samples = parameter_dict.get('n_samples', 1)
         self.profile = parameter_dict.get('profile', False)
+        self.end_to_end = parameter_dict.get('end_to_end', False)
         self.batch_size = self.inference_parameters.get('batch_size', 1)
         
         # Initialize DataFrame for collecting results
@@ -306,6 +307,68 @@ class InferenceModel:
             self.df = pd.concat([self.df, new_row], axis=0, ignore_index=True)
 
     def loop_configuration(self):
+
+        if self.end_to_end:
+            path_0 = f'csv/{self.model_name}/nonlinear_config_split_0/metric.csv'
+            path_1 = f'csv/{self.model_name}/nonlinear_config_split_1/metric.csv'
+            if not os.path.exists(path_0) or not os.path.exists(path_1):
+                raise FileNotFoundError(f'End-to-end CSV files not found for model {self.model_name}. Please run profiling first.')
+
+            df_0 = pd.read_csv(path_0)
+            df_1 = pd.read_csv(path_1)
+            df_merged = pd.concat([df_0, df_1], ignore_index=True)
+            
+            # Filter rows where attn_fn or ffn_fn don't contain 'Custom'
+            filtered_df = df_merged[
+                (~df_merged['attn_fn'].str.contains('Custom', na=False)) | 
+                (~df_merged['ffn_fn'].str.contains('Custom', na=False))
+            ]
+            
+            # VLP Group - find minimum for attn_fn and ffn_fn separately
+            vlp_attn = filtered_df[filtered_df['attn_fn'].str.contains('VLP', na=False)]
+            vlp_ffn = filtered_df[filtered_df['ffn_fn'].str.contains('VLP', na=False)]
+            vlp_min_attn = vlp_attn.loc[vlp_attn['value'].idxmin()] if not vlp_attn.empty else None
+            vlp_min_ffn = vlp_ffn.loc[vlp_ffn['value'].idxmin()] if not vlp_ffn.empty else None
+            
+            # PWL Group - find minimum for attn_fn and ffn_fn separately
+            pwl_attn = filtered_df[filtered_df['attn_fn'].str.contains('PWL', na=False)]
+            pwl_ffn = filtered_df[filtered_df['ffn_fn'].str.contains('PWL', na=False)]
+            pwl_min_attn = pwl_attn.loc[pwl_attn['value'].idxmin()] if not pwl_attn.empty else None
+            pwl_min_ffn = pwl_ffn.loc[pwl_ffn['value'].idxmin()] if not pwl_ffn.empty else None
+            
+            # Taylor Group - only has attn_fn
+            taylor_attn = filtered_df[filtered_df['attn_fn'].str.contains('Taylor', na=False)]
+            taylor_min_attn = taylor_attn.loc[taylor_attn['value'].idxmin()] if not taylor_attn.empty else None
+
+            # vlp patch
+            vlp_attn_params = {'exp_dim': int(vlp_min_attn.get('attn_exp_dim')),
+                           'max_exp': int(vlp_min_attn.get('attn_max_exp')),
+                           'min_exp': int(vlp_min_attn.get('attn_min_exp')),
+                           'window_size': int(vlp_min_attn.get('attn_window_size')),
+                           'lut_build': vlp_min_attn.get('attn_lut_build')}
+            vlp_ffn_params = {'exp_dim': int(vlp_min_ffn.get('ffn_exp_dim')),
+                          'max_pos_exp': int(vlp_min_ffn.get('ffn_max_pos_exp')),
+                          'min_pos_exp': int(vlp_min_ffn.get('ffn_min_pos_exp')),
+                          'window_size': int(vlp_min_ffn.get('ffn_window_size')),
+                          'lut_build': vlp_min_ffn.get('ffn_lut_build')}
+
+            self.patch_model('vlp', attention_parameters=vlp_attn_params, ffn_parameters=vlp_ffn_params, patch_attention=True, patch_ffn=True)
+
+            # pwl patch
+            pwl_attn_params = {'segments': int(pwl_min_attn.get('attn_segments')),
+                               'segment_0': int(pwl_min_attn.get('attn_segment_0'))}
+
+            pwl_ffn_params = {'segments': int(pwl_min_ffn.get('ffn_segments')),
+                              'segment_0': int(pwl_min_ffn.get('ffn_segment_0'))}
+            self.patch_model('pwl', attention_parameters=pwl_attn_params, ffn_parameters=pwl_ffn_params, patch_attention=True, patch_ffn=True)
+
+            # Taylor patch
+            taylor_attn_params = {'degree_center': int(taylor_min_attn.get('attn_degree_center')),
+                                  'degrees': int(taylor_min_attn.get('attn_degrees'))}
+
+            self.patch_model('taylor', attention_parameters=taylor_attn_params, patch_attention=True, patch_ffn=False)
+            return
+
         for function_name, function_operations in tqdm(self.nonlinear_functions.items(), desc='Patching configurations'):
             if 'ffn' in function_operations:
                 if self.ffn_op not in function_operations['ffn']:
@@ -320,6 +383,7 @@ class InferenceModel:
 
 
             for nonlinear_combination in tqdm(nonlinear_combinations, desc=f'Processing {function_name} combinations'):
+                
                 nonlinear_combination = self.flatten_dict(nonlinear_combination)
 
                 function_parameters = self.nonlinear_function_parameters.get(function_name)

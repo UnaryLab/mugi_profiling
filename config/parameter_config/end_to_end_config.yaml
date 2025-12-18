@@ -1,3 +1,3 @@
 n_samples: 100
 profile: False
-end_to_end: False
+end_to_end: True
