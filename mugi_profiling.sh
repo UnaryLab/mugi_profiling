@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 export TOKEN=""
 
+pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu118
+pip install triton==3.3.0
+pip install transformers==4.54.1
+pip install tokenizers==0.21.4
+pip install accelerate==1.9.0
+pip install datasets==3.6.0
+
 PROFILE_DIR="profile"
 PPL_DIR="csv"
 ERROR_DIR="output"
