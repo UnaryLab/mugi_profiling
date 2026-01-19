@@ -14,6 +14,9 @@ Make sure you have [Anaconda](https://www.anaconda.com/) installed before the st
 6. ```bash mugi_profiling.sh``` to run the simulation workflow.
 7. Output figures can be found in ```figures/output/```.
 
+## Zenodo
+A zenodo submission exists at https://zenodo.org/records/18063514
+
 ## Citation
 If Mugi has been useful in your own research, please cite us using the following bibtex citation:
 
