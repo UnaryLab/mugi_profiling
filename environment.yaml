@@ -1,4 +1,4 @@
-name: mugi_profiling_test
+name: mugi_profiling
 channels:
   - defaults
 dependencies:
